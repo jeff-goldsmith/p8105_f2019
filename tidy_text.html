@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Tidy text</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+<script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">P8105</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="schedule.html">Schedule</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Topics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="topic_what_is_data_science.html">What is Data Science?</a>
+    </li>
+    <li>
+      <a href="topic_building_blocks.html">Building Blocks</a>
+    </li>
+    <li>
+      <a href="topic_data_wrangling_i.html">Data Wrangling I</a>
+    </li>
+    <li>
+      <a href="topic_visualization_and_eda.html">Visualization and EDA</a>
+    </li>
+    <li>
+      <a href="topic_data_wrangling_ii.html">Data Wrangling II</a>
+    </li>
+    <li>
+      <a href="topic_interactivity.html">Interactivity</a>
+    </li>
+    <li>
+      <a href="topic_iteration.html">Iteration</a>
+    </li>
+    <li>
+      <a href="topic_linear_models.html">Linear Models</a>
+    </li>
+    <li>
+      <a href="topic_other_material.html">Other Materials</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Datasets
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="dataset_airbnb.html">Airbnb</a>
+    </li>
+    <li>
+      <a href="dataset_brfss.html">BRFSS</a>
+    </li>
+    <li>
+      <a href="dataset_fivethirtyeight.html">FiveThirtyEight</a>
+    </li>
+    <li>
+      <a href="dataset_instacart.html">Instacart</a>
+    </li>
+    <li>
+      <a href="dataset_mr_trash_wheel.html">Mr. Trash Wheel</a>
+    </li>
+    <li>
+      <a href="dataset_noaa.html">NOAA</a>
+    </li>
+    <li>
+      <a href="dataset_restaurant_inspections.html">NYC Restaurant Inspections</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="homework_and_projects.html">Homework and Projects</a>
+</li>
+<li>
+  <a href="course_communication.html">Communication</a>
+</li>
+<li>
+  <a href="https://github.com/P8105/p8105.github.io">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Tidy text</h1>
+
+</div>
+
+
+<p>This is a bit of a diversion for a public-health-focused course in data science, but it’s fun, related to web data, strings, and factors, and emphasizes tools in data wrangling. It’s most closely related to content in the <a href="topic_data_wrangling_ii.html">Data Wrangling II</a> topic, and the slack channel for extra topics is <a href="https://p8105-fall2018.slack.com/messages/CEC9L1JKV">here</a>.</p>
+<div id="some-slides" class="section level2">
+<h2>Some slides</h2>
+<script async class="speakerdeck-embed" data-id="ee17524f046c49a58cec601fb98bb72d" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+<div style="margin-bottom:5px">
+<strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-tidy-text" title="Tidy Text" target="_blank">Tidy Data</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
+</div>
+<p><br></p>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>I’ll write code for today’s content in a new R Markdown document called <code>tidy_text.Rmd</code>, and put it in the extra topics directory / GitHub repo. I’m going to load the usual packages, as well as <code>tidytext</code>.</p>
+<pre class="r"><code>library(tidyverse)
+library(viridis)
+## Loading required package: viridisLite
+library(p8105.datasets)
+
+library(tidytext)</code></pre>
+<div id="data" class="section level3">
+<h3>Data</h3>
+<p>We’re going to examine the <a href="dataset_restaurant_inspections.html">NYC Restuarant Inspections</a> data, which we looked at in <a href="strings_and_factors.html">strings and factors</a>. I’ll load this dataset and restrict to variables I’m interested in right now.</p>
+<pre class="r"><code>data(&quot;rest_inspec&quot;)
+
+rest_inspec = 
+  rest_inspec %&gt;% 
+  filter(grade %in% c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;)) %&gt;% 
+  mutate(inspection_num = row_number(),
+         boro = str_to_title(boro)) %&gt;% 
+  select(inspection_num, boro, grade, score, critical_flag, dba, cuisine_description, zipcode, violation_description)</code></pre>
+</div>
+<div id="words-and-wordcounts" class="section level3">
+<h3>Words and wordcounts</h3>
+<p>To illustrate tidy text and text analysis, we’ll focus on the <code>violation_description</code> which is stored as a string. To begin our analysis, we’ll un-nest the tokens (i.e. words) in each row; the result is a tidy dataset in which each word is contained within a separate row.</p>
+<pre class="r"><code>inspection_words = 
+  rest_inspec %&gt;% 
+  unnest_tokens(word, violation_description)</code></pre>
+<p>There are lots of words here that are uninformative. We’ll remove “stop words” using <code>anti_join</code>; in other settings the words you want to remove might be different.</p>
+<pre class="r"><code>data(stop_words)
+
+inspection_words = 
+  anti_join(inspection_words, stop_words)
+## Joining, by = &quot;word&quot;</code></pre>
+<p>Great! Let’s take a look at the most commonly used (informative) words in this dataset.</p>
+<pre class="r"><code>inspection_words %&gt;% 
+  count(word, sort = TRUE) %&gt;% 
+  top_n(10) %&gt;% 
+  mutate(word = fct_reorder(word, n)) %&gt;% 
+  ggplot(aes(x = word, y = n)) + 
+  geom_bar(stat = &quot;identity&quot;, fill = &quot;blue&quot;, alpha = .6) + 
+  coord_flip()
+## Selecting by n</code></pre>
+<p><img src="tidy_text_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+</div>
+<div id="comparing-words-across-groups" class="section level3">
+<h3>Comparing words across groups</h3>
+<p>Let’s compare which words are more likely to come from a “C” versus “A” inspection grade. We limit to words that appear at least 5 times and compute the approximate log odds ratio for each word.</p>
+<pre class="r"><code>word_ratios = 
+  inspection_words %&gt;%
+  filter(grade %in% c(&quot;A&quot;, &quot;C&quot;)) %&gt;% 
+  count(word, grade) %&gt;%
+  group_by(word) %&gt;% 
+  filter(sum(n) &gt;= 5) %&gt;%
+  ungroup() %&gt;%
+  spread(grade, n, fill = 0) %&gt;%
+  mutate(
+    C_odds = (C + 1) / (sum(C) + 1),
+    A_odds = (A + 1) / (sum(A) + 1),
+    log_OR = log(C_odds / A_odds)
+  ) %&gt;%
+  arrange(desc(log_OR)) </code></pre>
+<p>We plot the top 15 most distinct words (that is, words that appear much more frequently in one group than the other) below.</p>
+<pre class="r"><code>word_ratios %&gt;%
+  mutate(pos_log_OR = ifelse(log_OR &gt; 0, &quot;C &gt; A&quot;, &quot;A &gt; C&quot;)) %&gt;% 
+  group_by(pos_log_OR) %&gt;%
+  top_n(15, abs(log_OR)) %&gt;%
+  ungroup() %&gt;%
+  mutate(word = fct_reorder(word, log_OR)) %&gt;%
+  ggplot(aes(word, log_OR, fill = pos_log_OR)) +
+  geom_col() +
+  coord_flip() +
+  ylab(&quot;log odds ratio (C/A)&quot;) +
+  scale_fill_discrete(name = &quot;&quot;)</code></pre>
+<p><img src="tidy_text_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+<p>A lot of these seem pretty reasonable.</p>
+</div>
+<div id="sentiment-analysis" class="section level3">
+<h3>Sentiment analysis</h3>
+<p>Finally, let’s score the sentiment in each word. We’ll use the “bing” (like <a href="https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html">Bing Liu</a>, not like <a href="https://www.bing.com">bing.com</a>) sentiment lexicon, which simply categorizes each word as having a positive or negative sentiment.</p>
+<pre class="r"><code>bing_sentiments = get_sentiments(&quot;bing&quot;)</code></pre>
+<p>Note this is not perfect for this dataset – for example, this scores <code>cold</code> as <code>negative</code> which might not be accurate – but we’ll use it anyway.</p>
+<p>We need to combine this lexicon with our tidy dataset containing words from each inspection. Note that only words that are in the sentiment lexicon will be retained, as the rest of the words are not considered meaningful. We’ll also count the number of positive and negative words in each violation description, and create a score that is the difference between the number of positive words and negative words.</p>
+<pre class="r"><code>inspection_sentiments = 
+  inspection_words %&gt;% 
+  inner_join(., bing_sentiments) %&gt;% 
+  count(inspection_num, sentiment) %&gt;% 
+  spread(sentiment, n, fill = 0) %&gt;% 
+  mutate(sentiment = positive - negative) %&gt;% 
+  select(inspection_num, sentiment)
+## Joining, by = &quot;word&quot;</code></pre>
+<p>We now have sentiment scores for each inspection. We’ll combine these with our original dataset, which had inspections in each row rather than words in each row – the data tidied for text analysis aren’t really suitable for our current needs.</p>
+<pre class="r"><code>inspection_sentiments = 
+  right_join(rest_inspec, inspection_sentiments, 
+             by = &quot;inspection_num&quot;)</code></pre>
+<p>Finally, let’s make a plot showing inspection sentiments and grades. This could be a pretty big plot, so I’ll restrict to Manhattan and sample only a few thousand entries.</p>
+<pre class="r"><code>set.seed(1)
+
+inspection_sentiments %&gt;% 
+  filter(boro == &quot;Manhattan&quot;) %&gt;% 
+  sample_n(5000) %&gt;% 
+  mutate(inspection_num = factor(inspection_num),
+    inspection_num = fct_reorder(inspection_num, sentiment)) %&gt;% 
+  ggplot(aes(x = inspection_num, 
+             y = sentiment, fill = grade, color = grade)) + 
+  geom_bar(stat = &quot;identity&quot;) + 
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()) +
+  scale_fill_viridis(discrete = TRUE) + 
+  scale_color_viridis(discrete = TRUE) </code></pre>
+<p><img src="tidy_text_files/figure-html/unnamed-chunk-12-1.png" width="90%" /></p>
+<p>It’s not clear that sentiment is related to grade; this could reflect the very formal language of inspections or the inappropriateness of our lexicon.</p>
+</div>
+<div id="napoleon" class="section level3">
+<h3>Napoleon</h3>
+<p>A much more interesting example is the “Napoleon Dynamite reviews”, which we’ll analyze using the same basic approach as above. First, I’ll re-use code from <a href="iteration_and_listcols.html">iteration and listcols</a> to scrape the 1000 most recent reviews on Amazon (and cache the result).</p>
+<pre class="r"><code>library(rvest)
+## Loading required package: xml2
+## 
+## Attaching package: &#39;rvest&#39;
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     pluck
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding
+
+read_page_reviews = function(url) {
+  
+  h = read_html(url)
+  
+  title = h %&gt;%
+    html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
+    html_text()
+  
+  stars = h %&gt;%
+    html_nodes(&quot;#cm_cr-review_list .review-rating&quot;) %&gt;%
+    html_text() %&gt;%
+    str_extract(&quot;\\d&quot;) %&gt;%
+    as.numeric()
+  
+  text = h %&gt;%
+    html_nodes(&quot;.review-data:nth-child(5)&quot;) %&gt;%
+    html_text()
+  
+  data_frame(title, stars, text)
+}
+
+url_base = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=&quot;
+
+dynamite_reviews = 
+  tibble(page = 1:100,
+         urls = str_c(url_base, page)) %&gt;% 
+  mutate(reviews = map(urls, read_page_reviews)) %&gt;% 
+  unnest()</code></pre>
+<p>The output of the code above is a successfully scraped dataset with 5 and 1000 rows – one row for each review. For each review we get the title of that review, the number of stars it received, and text that describers the users feelings about the movie.</p>
+<p>Next we’ll turn this into a tidy dataset using the text in the reviews and remove stop words.</p>
+<pre class="r"><code>dynamite_reviews = 
+  dynamite_reviews %&gt;%
+  as_tibble() %&gt;%
+  mutate(review_num = row_number())
+
+data(stop_words)
+
+dynamite_words = 
+  dynamite_reviews %&gt;% 
+  unnest_tokens(word, text) %&gt;% 
+  anti_join(stop_words) %&gt;% 
+  arrange(review_num)
+## Joining, by = &quot;word&quot;</code></pre>
+<p>The code chunk below produces a table of the most frequently used in one- and five-star reviews.</p>
+<pre class="r"><code>dynamite_words %&gt;%
+  filter(stars %in% c(1, 5)) %&gt;%
+  group_by(stars) %&gt;%
+  count(word) %&gt;% 
+  top_n(5) %&gt;%
+  knitr::kable()
+## Selecting by n</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">stars</th>
+<th align="left">word</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">dumb</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="left">funny</td>
+<td align="right">9</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">movie</td>
+<td align="right">43</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="left">time</td>
+<td align="right">9</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">watch</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="left">classic</td>
+<td align="right">115</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">funny</td>
+<td align="right">119</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="left">love</td>
+<td align="right">140</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">movie</td>
+<td align="right">393</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="left">watch</td>
+<td align="right">87</td>
+</tr>
+</tbody>
+</table>
+<p>The table above gives the top 5 most frequently used words in 1-star and 5-star reviews. <em>Movie</em> is the most used word for both 1 and 5-star reviews, though other words, like <em>dumb</em> differentiate 1-star reviews from 5-star reviews, which have words like <em>love</em>.</p>
+<p>Word frequency might be misleading because there are 774 5-star reviews and only 64 1-star reviews.</p>
+<p>To look a relative word frequency we plot the (approximate) log odds ratio for word appearance comparing 1-star reviews to 5-star reviews, shown below.</p>
+<pre class="r"><code>word_ratios &lt;- dynamite_words %&gt;%
+    filter(stars %in% c(1, 5)) %&gt;% 
+    count(word, stars) %&gt;%
+    group_by(word) %&gt;% 
+    filter(sum(n) &gt;= 3) %&gt;%
+    ungroup() %&gt;%
+    spread(stars, n, fill = 0) %&gt;%
+    mutate_if(is.numeric, funs((. + 1) / sum(. + 1))) %&gt;%
+    mutate(logratio = log(`5` / `1`)) %&gt;%
+    arrange(desc(logratio)) 
+
+word_ratios %&gt;% 
+  mutate(pos_log_OR = ifelse(logratio &gt; 0, &quot;5 star &gt; 1 star&quot;, &quot;1 star &gt; 5 star&quot;)) %&gt;%
+  group_by(pos_log_OR) %&gt;%
+  top_n(10, abs(logratio)) %&gt;%
+  ungroup() %&gt;%
+  mutate(word = fct_reorder(word, logratio)) %&gt;%
+  ggplot(aes(word, logratio, fill = pos_log_OR)) +
+  geom_col() +
+  coord_flip() +
+  ylab(&quot;log odds ratio (5/1)&quot;) +
+  scale_fill_discrete(name = &quot;&quot;)</code></pre>
+<p><img src="tidy_text_files/figure-html/logodds_plot-1.png" width="90%" /></p>
+<p>Words like “classic”, “laugh”, and “love” have high relative frequency in the 5-star reviews and “boring”, “worst”, and “waste” have high relative frequency in the 1-star reviews. This seems to be a polarizing film.</p>
+<p>Finally we conduct a sentiment analysis of the review texts. Below is a plot of the sentiment results, colored by star rating.</p>
+<pre class="r"><code>dynamite_word_sentiments &lt;- dynamite_words %&gt;% 
+  inner_join(get_sentiments(&quot;bing&quot;)) %&gt;% 
+  count(review_num, sentiment) %&gt;% 
+  spread(sentiment, n, fill = 0) %&gt;% 
+  mutate(sentiment = positive - negative) %&gt;% 
+  left_join(dynamite_reviews)
+## Joining, by = &quot;word&quot;
+## Joining, by = &quot;review_num&quot;
+
+ggplot(dynamite_word_sentiments, 
+       aes(x = reorder(review_num, -sentiment), 
+           y = sentiment, fill = stars, color = stars)) + 
+  geom_bar(stat = &quot;identity&quot;) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  scale_fill_viridis(direction = -1) + 
+  scale_color_viridis(direction = -1) </code></pre>
+<p><img src="tidy_text_files/figure-html/sentiment_plot-1.png" width="90%" /></p>
+<p>Sentiment seems to be at least somewhat associated with star rating in that more positive sentiments are more blue-purple (4-5 stars) and more negative sentiments are more green-yellow.</p>
+<p>Here is the text from the most positive review:</p>
+<pre class="r"><code>dynamite_word_sentiments %&gt;%
+  filter(sentiment == max(sentiment)) %&gt;% 
+  pull(text)
+## [1] &quot;Love, love and love! My children ages 13, 10 and 8 enjoy family movie nights and my husband and I were looking for something that we all could enjoy. This movie was perfect! So much fun and beyond quotable comments. A fun family film!&quot;</code></pre>
+<p><img src="images/napoleon_1.gif" style="width:50%; border:5px solid"></p>
+<p>And here is the text from the most negative 1-star review:</p>
+<pre class="r"><code>dynamite_word_sentiments %&gt;%
+  filter(sentiment == min(sentiment),
+         stars == 1) %&gt;% 
+  pull(text)
+## [1] &quot;Let me start by openly admitting that I am an 80&#39;s throwback and proud of it. I understand that my era did not produce horribly intelligent, deeply touching movies. That being said, this movie puts the Du-h! in Dumb!!  My teenage daughter had seen it a sleepover, so we rented it so she could show me how silly it is for our girly night.  She actually got tickled at a few spots on her second run through it. I sat open mouthed, amazed at the sheer senselessness of the whole thing...waiting desperately for a plot or growth of a character. None came. Since we had it rented for the weekend, she showed it to her older brother the next night. She giggled again, and he snickered with a confused look on his face once in a while. Then we couldn&#39;t let my Hubby miss out on the sheer stupidity of it all, so we watched it with him on Sunday afternoon.  Our daughter and son both snickered here and there, mostly at the looks on their parents&#39; faces.  My husband was, as was I, gobsmackered. We kept looking at each other as if to assure each other that it was indeed that painfully dumb.  The only real emotion I felt was a horribly heartbroken, sick to my stomach feeling for Napoleon and his friends for being so awkward and socially inept...I remember kids who struggled in school that way, and I always almost cried every time I saw them in a tough situation.  If anything it brought back bad memories of school....who needs that?  Anyway, all this to say it is a story about an awkward boy who uses bluster and dumb responses to deal with not fitting in.  It follows (if you can exaggerate and say there is a plot) him as he finds friends (just as goofy as he) and finds romance...sort of.&quot;</code></pre>
+<p><img src="images/napoleon_2.gif" style="width:50%; border:5px solid"></p>
+</div>
+</div>
+<div id="other-materials" class="section level2">
+<h2>Other materials</h2>
+<ul>
+<li>The framework we used is explained in detail in the <a href="http://tidytextmining.com">Tidy Text book</a></li>
+<li>One of the book’s authors, Julia Silge, has a <a href="https://www.youtube.com/watch?v=0poJP8WQxew">nice video</a> talking about the work</li>
+<li>The other of the book’s authors, Dave Robinson, used the approach to examine Donald Trump’s tweets in this this <a href="http://varianceexplained.org/r/trump-tweets/">blog post</a></li>
+</ul>
+<p>The code that I produced working examples in lecture is <a href="https://github.com/jeff-goldsmith/example_data_wrangling_ii">here</a>.</p>
+</div>
+
+<br><br>
+<footer>
+  <img src="images/p8105_stickers.png" alt="stickers" style="width:30%">
+  <br>
+  <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+</footer>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,364 @@
+---
+title: "Writing functions"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+---
+
+If you use the same code twice, you need a function -- this will improve code readability, facilitate troubleshooting, and reduce chances for mistakes. This content looks at the best approaches for writing R functions.
+
+This is the first module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105-fall2017.slack.com/messages/C7WC2UPT7).
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+library(tidyverse)
+
+theme_set(theme_bw() + theme(legend.position = "bottom"))
+```
+
+
+## Some slides
+
+<script async class="speakerdeck-embed" data-id="3f91d97c70e641cea46366ac9d90c929" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-writing-functions" title="Writing Functions" target="_blank">Writing Functions</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
+
+
+## Example
+
+For this topic, I'll create a GitHub repo + directory / R Project called `iteration`. I'll write code for today's content in a new R Markdown document called `writing_functions.Rmd`, and I'm going to load the usual packages. I'm also setting the seed so that the output on this page is fixed. 
+
+```{r}
+library(tidyverse)
+library(rvest)
+
+set.seed(1)
+```
+
+### My first function
+
+The best way to build up a function is to start with code you've written outside a function. To see how this might work, I'll start with a simple example: the chunk below takes a sample from a normal distribution and then computes the vector of Z scores for the sample. 
+
+```{r}
+x = rnorm(25, mean = 5, sd = 3)
+
+(x - mean(x)) / sd(x)
+```
+
+If I want to repeat this (admittedly simple) process for lots of samples, I might want to have a function that takes the sample as an *argument*, computes the vector of Z scores in the *body*, and *returns* the result. I define such a function below. 
+
+```{r}
+z_scores = function(x) {
+  
+  z = (x - mean(x)) / sd(x)
+  z
+  
+}
+
+z_scores(x)
+```
+
+I can try this with a few samples and confirm that it works. I should also try to think of ways this code might break; the attempts below try a variety of inputs to see what happens. 
+
+```{r, error = TRUE}
+z_scores(3)
+z_scores("my name is jeff")
+z_scores(iris)
+z_scores(sample(c(TRUE, FALSE), 25, replace = TRUE))
+```
+
+These all did something I didn't want, but only two returned errors. To avoid behavior you don't want (i.e. to ["fail noisily and as soon as possible"](http://www.faqs.org/docs/artu/ch01s06.html)) we'll add some checks on the argument values using conditional statements.
+
+```{r}
+z_scores = function(x) {
+  
+  if (!is.numeric(x)) {
+    stop("Argument x should be numeric")
+  } else if (length(x) == 1) {
+    stop("Z scores cannot be computed for length 1 vectors")
+  }
+  
+  z = mean(x) / sd(x)
+  
+  z
+}
+```
+
+Fantastic -- we have a pretty solid function for computing Z scores!
+
+### Multiple outputs
+
+In some cases it might be better to return the mean and standard deviation instead of the Z scores. A first option is to store each of the values in a named list, and to return that list. (We'll talk more about lists in [iteration and listcols](iteration_and_listcols.html).)
+
+```{r}
+mean_and_sd = function(x) {
+  
+  if (!is.numeric(x)) {
+    stop("Argument x should be numeric")
+  } else if (length(x) == 1) {
+    stop("Cannot be computed for length 1 vectors")
+  }
+  
+  mean_x = mean(x)
+  sd_x = sd(x)
+
+  list(mean = mean_x, 
+       sd = sd_x)
+}
+```
+
+Alternatively, we might store values in a data frame. 
+
+```{r}
+mean_and_sd = function(x) {
+  
+  if (!is.numeric(x)) {
+    stop("Argument x should be numeric")
+  } else if (length(x) == 1) {
+    stop("Cannot be computed for length 1 vectors")
+  }
+  
+  mean_x = mean(x)
+  sd_x = sd(x)
+
+  tibble(
+    mean = mean_x, 
+    sd = sd_x
+  )
+}
+```
+
+In general, either of these will be fine; which one you choose will depend on what kind of values you want to return, and what you plan to do with the function itself. If you want to return the original sample along with the computed values, a list might make sense; if you plan to run your function a lot and study the results, having a data frame will make it easier to use other tools. We'll see more of that in [iteration and simulation](iteration_and_simulation.html).
+
+
+### Multiple inputs
+
+As exciting as it is to compute Z scores, let's start setting our sights higher. I'd like to have a function that takes a given sample size and true simple linear regression line, simulates data from that model, and returns the estimated intercept and slope. I'll start from the code below.
+
+```{r}
+sim_data = tibble(
+  x = rnorm(30, mean = 1, sd = 1),
+  y = 2 + 3 * x + rnorm(30, 0, 1)
+)
+
+ls_fit = lm(y ~ x, data = sim_data)
+  
+beta0_hat = coef(ls_fit)[1]
+beta1_hat = coef(ls_fit)[2]
+```
+
+You should take a few minutes to examine this code -- make a plot of the simulated data to make sure it "makes sense", take a look at the result of the `lm` call, etc. 
+
+Once you're satisfied, it's time to wrap things up in a function. I'd like to be able to change the sample size and regression parameters, so those will be my *arguments*; the code that simulates data and fits the regression goes in the *body*; and the *return* statement should include the intercept and slope. A function that does all this, using default values for the intercept and slope, is below. 
+
+```{r}
+sim_regression = function(n, beta0 = 2, beta1 = 3) {
+  
+  sim_data = tibble(
+    x = rnorm(n, mean = 1, sd = 1),
+    y = beta0 + beta1 * x + rnorm(n, 0, 1)
+  )
+  
+  ls_fit = lm(y ~ x, data = sim_data)
+  
+  tibble(
+    beta0_hat = coef(ls_fit)[1],
+    beta1_hat = coef(ls_fit)[2]
+  )
+}
+```
+
+Repeated calls to `sim_regression()` will give a sense of sampling variability in regression coefficients in SLR; take a few minutes to run `sim_regression(30)` a few times, and then to run `sim_regression(300)`, and think about the results. We'll examine this more formally in [iteration](iteration_and_listcols.html) and in [simulation](simulation_and_bootstrapping.html).
+
+This is also a good time to point out how R handles argument matching. We can use _positional_ matching, meaning the first value supplied is taken to be the first argument, the second value is the second argument, and so on. We do this with `tidyverse` functions a lot; the first argument is always a dataframe, and we just supply that dataframe in the first position. We also use positional matching when we call `mean(x)` or `sim_regression(30, 5, -1)`.
+
+Alternatively, we can use _named_ matching, which uses the argument name in the function call. Named matching can be a bit more stable when you're writing your own functions (in case you decide to change the order of the inputs, for example) but isn't strictly necessary. Named arguments can be supplied in any order: `sim_regression(n = 30, beta0 = 5, beta1 = -1)` is equivalent to `sim_regression(beta1 = -1, n = 30, beta0 = 5)`.
+
+
+### Revisiting past examples
+
+There have been a couple of times in this class that I've had to write code I didn't like, because it would have made sense to write a function. We'll revisit those quickly to see how we could improve our code. 
+
+#### Scraping Amazon
+
+In [reading data from the web](reading_data_from_the_web.html), we wrote code that allowed us to scrape information in Amazon reviews. That code is below.
+
+```{r, eval = FALSE}
+url = "https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1"
+
+dynamite_html = read_html(url)
+
+review_titles = dynamite_html %>%
+  html_nodes("#cm_cr-review_list .review-title") %>%
+  html_text()
+
+review_stars = dynamite_html %>%
+  html_nodes("#cm_cr-review_list .review-rating") %>%
+  html_text()
+
+review_text = dynamite_html %>%
+    html_nodes(".review-data:nth-child(4)") %>%
+    html_text()
+
+reviews = tibble(
+  title = review_titles,
+  stars = review_stars,
+  text = review_text
+)
+```
+
+Let's write a quick function to scrape review information for any URL to an Amazon review page. 
+
+```{r}
+read_page_reviews <- function(url) {
+  
+  h = read_html(url)
+  
+  review_titles = h %>%
+    html_nodes("#cm_cr-review_list .review-title") %>%
+    html_text()
+  
+  review_stars = h %>%
+    html_nodes("#cm_cr-review_list .review-rating") %>%
+    html_text() %>%
+    str_extract("\\d") %>%
+    as.numeric()
+  
+  review_text = h %>%
+    html_nodes(".review-data:nth-child(4)") %>%
+    html_text()
+  
+  tibble(
+    title = review_titles,
+    stars = review_stars,
+    text = review_text
+  )
+}
+```
+
+Next we'll use this to read in reviews from a few pages and combine the results.
+
+```{r}
+url_base = "https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber="
+vec_urls = str_c(url_base, 1:5)
+
+dynamite_reviews = bind_rows(
+  read_page_reviews(vec_urls[1]),
+  read_page_reviews(vec_urls[2]),
+  read_page_reviews(vec_urls[3]),
+  read_page_reviews(vec_urls[4]),
+  read_page_reviews(vec_urls[5])
+)
+
+dynamite_reviews
+```
+
+
+#### Loading LoTR data
+
+In [tidy data](tidy_data.html), we broke the "only copy code twice" rule when we used the code below to process the [LoTR words data](./data/LotR_Words.xlsx):
+
+```{r}
+fellowship_ring = readxl::read_excel("./data/LotR_Words.xlsx", range = "B3:D6") %>%
+  mutate(movie = "fellowship_ring")
+
+two_towers = readxl::read_excel("./data/LotR_Words.xlsx", range = "F3:H6") %>%
+  mutate(movie = "two_towers")
+
+return_king = readxl::read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>%
+  mutate(movie = "return_king")
+
+lotr_tidy = bind_rows(fellowship_ring, two_towers, return_king) %>%
+  janitor::clean_names() %>%
+  gather(key = sex, value = words, female:male) %>%
+  mutate(race = str_to_lower(race)) %>% 
+  select(movie, everything()) 
+```
+
+**_Learning Assessment:_** Try to write a function that can be used to abstract the data loading and cleaning process. Use this function to recreate the tidied LoTR dataset.
+
+<details>
+<summary> Solution </summary>
+
+The function below will read in and clean LoTR data -- it differs from the previous code by including some data tidying steps in the function rather than after data have been combined, but produces the same result. 
+
+```{r, eval = FALSE}
+lotr_load_and_tidy = function(path, range, movie_name) {
+  
+  df = readxl::read_excel(path, range = range) %>%
+    janitor::clean_names() %>%
+    gather(key = sex, value = words, female:male) %>%
+    mutate(race = str_to_lower(race),
+           movie = movie_name)
+  
+  df
+  
+}
+
+lotr_tidy = 
+  bind_rows(
+    lotr_load_and_tidy("./data/LotR_Words.xlsx", "B3:D6", "fellowship_ring"),
+    lotr_load_and_tidy("./data/LotR_Words.xlsx", "F3:H6", "two_towers"),
+    lotr_load_and_tidy("./data/LotR_Words.xlsx", "J3:L6", "return_king")) %>%
+  select(movie, everything()) 
+```
+
+Having a function that handles the loading and cleaning is great -- if I decide I want to change the tidying step, I only have to do it once, and I don't have to worry about mistakes creeping in through copy-and-paste errors!
+
+</details>
+
+
+### Functions as arguments
+
+One powerful tool is the ability to pass functions as arguments into functions. This might seem like a weird thing to do, but it has a lot of handy applications -- we'll see just how far it goes in the next modules in this topic.
+
+As a quick example, suppose we wanted to get a sense of how similar or different values in a vector are to each other. There are lots of ways to measure this -- variance, standard deviation, range, inter-quartile range -- and some are more appropriate in some cases than in others. The function below allows you to input a vector and a function, and returns the result of applying the specified function to the vector input.
+
+```{r}
+x = rnorm(25, 0, 1)
+
+my_summary = function(x, summ_func) {
+  summ_func(x)
+}
+
+my_summary(x, sd)
+my_summary(x, IQR)
+my_summary(x, var)
+```
+
+This example is pretty trivial -- you could just apply those functions directly to  `x` and skip the hassle -- but in many cases the idea of passing functions as arguments is really powerful. As a practical example, remember that you can reorder factors according to different summaries in `fct_reorder`!
+
+
+### Scoping and names
+
+Take a look at the code below. Will the call `f(x = y)` work? If so, what will it produce? What is the current value of `x`, `y`, and `z`?
+
+```{r, eval = FALSE}
+f = function(x) {
+  z = x + y
+  z
+}
+
+x = 1
+y = 2
+
+f(x = y)
+```
+
+Examples like this are tricky, but emphasize an issue that comes up a lot in writing functions: you define a variable in your global environment and use it in your function, but it isn't passed as an argument. This is easy to miss, especially when you go from  code written in chunks to a function, and can be hard to track down if you empty your working directory or change a variable name. The best advice I have is to give your arguments useful names and think carefully about where everything is defined, and to periodically restart R and try everything again!
+
+
+## Other materials
+
+* There are chapters on functions in [R for Data Science](http://r4ds.had.co.nz/functions.html) and [Advanced R](http://adv-r.had.co.nz/Functions.html)
+* Jenny Bryan has a [three](http://stat545.com/block011_write-your-own-function-01.html) [part](http://stat545.com/block011_write-your-own-function-02.html) [series](http://stat545.com/block011_write-your-own-function-03.html) on writing functions (each part is short)
+* R Programming for Data Science has nice chapters on [functions](https://bookdown.org/rdpeng/rprogdatascience/functions.html) and [scoping](https://bookdown.org/rdpeng/rprogdatascience/scoping-rules-of-r.html)
+* The [Basics of UNIX Philosophy](http://www.faqs.org/docs/artu/ch01s06.html), linked to above, apply broadly to designing code
+
+The code that I produced working examples in lecture is [here](https://github.com/p8105/iteration).

@@ -1,0 +1,35 @@
+---
+title: "Homework and projects"
+output:
+  html_document
+---
+
+
+### Homework
+
+All homework assignments are covered by the course [policy on collaboration](policy_on_collaboration.html). 
+
+In addition to grading for content, we reserve the right to deduct points for stylistic elements (e.g. proper spacing and indentation; relevant variable names; clear text; etc). Having code that runs and answers homework questions doesn't mean you have **good** code and text! The course [style rubric](homework_style_rubric.html) details point deductions for style.
+
+|               | Available  | Due               | Assignment                                                | Solution                                                                   |
+|:------------- |:---------- |:----------------- | :--------------------------------------------------------:| :-------------------------------------------------------------------------:|
+| Homework 0    | Sept 4     | Sept 6 by 10:00am | [<i class="far fa-file-code fa-lg"></i>](homework_0.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
+| Homework 1    | Sept 13    | Sept 21 by 4:00pm | [<i class="far fa-file-code fa-lg"></i>](homework_1.html) | [<i class="fas fa-check fa-lg"></i>](resources/p8105_hw1_ajg2202.zip)      |
+| Homework 2    | Sept 25    | Oct 5 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](homework_2.html) | [<i class="fas fa-check fa-lg"></i>](resources/p8105_hw2_ajg2202.zip)      |
+| Homework 3    | Oct 4      | Oct 15 by 4:00pm  | [<i class="far fa-file-code fa-lg"></i>](homework_3.html) | [<i class="fas fa-check fa-lg"></i>](resources/p8105_hw3_ajg2202.zip)      |
+| Homework 4    | Oct 23     | Nov 2 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](homework_4.html) | [<i class="fas fa-check fa-lg"></i>](link)      |
+| Homework 5    | Nov 1      | Nov 9 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](homework_5.html) | [<i class="fas fa-check fa-lg"></i>](resources/p8105_hw5_ajg2202.zip)      |
+| Homework 6    | Nov 15     | Nov 27 by 11:00pm | [<i class="far fa-file-code fa-lg"></i>](homework_6.html)            | [<i class="fas fa-check fa-lg"></i>](link)      |
+| Homework 7    | Nov 29     | Dec 7 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](link)            | [<i class="fas fa-check fa-lg"></i>](link)      |
+
+### Midterm
+
+The midterm project is not covered by the course policy on collaboration -- you are expected to work independently. 
+
+|                 | Available  | Due              | Assignment                                                     | Solution |
+|:--------------- |:---------- |:---------------- | :-------------------------------------------------------------:| :----------------------------------------------:|
+| Midterm Project | Oct 16     | Oct 26 at 4:00pm | [<i class="far fa-file-code fa-lg"></i>](midterm_project.html) | [<i class="fas fa-check fa-lg"></i>](link)      |
+
+### Final
+    
+The final project differs substantially from both homework assignments and the midterm project. Detailed instructions, including deliverables and due dates, are [here](final_project.html).

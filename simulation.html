@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Simulation</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+<script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">P8105</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="schedule.html">Schedule</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Topics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="topic_what_is_data_science.html">What is Data Science?</a>
+    </li>
+    <li>
+      <a href="topic_building_blocks.html">Building Blocks</a>
+    </li>
+    <li>
+      <a href="topic_data_wrangling_i.html">Data Wrangling I</a>
+    </li>
+    <li>
+      <a href="topic_visualization_and_eda.html">Visualization and EDA</a>
+    </li>
+    <li>
+      <a href="topic_data_wrangling_ii.html">Data Wrangling II</a>
+    </li>
+    <li>
+      <a href="topic_interactivity.html">Interactivity</a>
+    </li>
+    <li>
+      <a href="topic_iteration.html">Iteration</a>
+    </li>
+    <li>
+      <a href="topic_linear_models.html">Linear Models</a>
+    </li>
+    <li>
+      <a href="topic_other_material.html">Other Materials</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Datasets
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="dataset_airbnb.html">Airbnb</a>
+    </li>
+    <li>
+      <a href="dataset_brfss.html">BRFSS</a>
+    </li>
+    <li>
+      <a href="dataset_fivethirtyeight.html">FiveThirtyEight</a>
+    </li>
+    <li>
+      <a href="dataset_instacart.html">Instacart</a>
+    </li>
+    <li>
+      <a href="dataset_mr_trash_wheel.html">Mr. Trash Wheel</a>
+    </li>
+    <li>
+      <a href="dataset_noaa.html">NOAA</a>
+    </li>
+    <li>
+      <a href="dataset_restaurant_inspections.html">NYC Restaurant Inspections</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="homework_and_projects.html">Homework and Projects</a>
+</li>
+<li>
+  <a href="course_communication.html">Communication</a>
+</li>
+<li>
+  <a href="https://github.com/P8105/p8105.github.io">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Simulation</h1>
+
+</div>
+
+
+<p>We’ve noted that functions are helpful when you repeat code more than twice; we’ve also noted that a lot of statistical methods involve doing the same thing a large number of times. Simulation is a common statistical approach that takes advantage of the ability to iterate many times using computers.</p>
+<p>This is the third module in the <a href="topic_iteration.html">Iteration</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCAAE7XDW">here</a>.</p>
+<div id="some-slides" class="section level2">
+<h2>Some slides</h2>
+<script async class="speakerdeck-embed" data-id="285289b17d194a4282d53f1800d37199" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+<div style="margin-bottom:5px">
+<strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-simulation" title="Simulation and Bootstrapping" target="_blank">Simulation</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
+</div>
+<p><br></p>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>I’ll write code for today’s content in a new R Markdown document called <code>simulation.Rmd</code> in the <code>iteration</code> directory / repo. The code chunk below loads the usual packages and sets a seed for reproducibility.</p>
+<pre class="r"><code>library(tidyverse)
+
+set.seed(1)</code></pre>
+<div id="simulation-slr-for-one-n" class="section level3">
+<h3>Simulation: SLR for one <span class="math inline">\(n\)</span></h3>
+<p>In <a href="writing_functions.html">writing functions</a> we wrote a short function to simulate data from a simple linear regression, fit the regression model, and return estimates of regression coefficients. Specifically, we generate data from <span class="math display">\[ y_i = \beta_0 + \beta_1 x_i + \epsilon_i \]</span></p>
+<p>for subjects <span class="math inline">\(1 \leq i \leq n\)</span> with <span class="math inline">\(\epsilon_i \sim N[0,1]\)</span> and return estimates</p>
+<p><span class="math inline">\(\hat{\beta}_0, \hat{\beta}_1\)</span>. That function is below.</p>
+<pre class="r"><code>sim_regression = function(n, beta0 = 2, beta1 = 3) {
+  
+  sim_data = tibble(
+    x = rnorm(n, mean = 1, sd = 1),
+    y = beta0 + beta1 * x + rnorm(n, 0, 1)
+  )
+  
+  ls_fit = lm(y ~ x, data = sim_data)
+  
+  tibble(
+    beta0_hat = coef(ls_fit)[1],
+    beta1_hat = coef(ls_fit)[2]
+  )
+}</code></pre>
+<p>Important statistical properties of estimates <span class="math inline">\(\hat{\beta}_0, \hat{\beta}_1\)</span> are established under the conceptual framework of repeated sampling. If you could draw from a population over and over, your estimates will have a known mean and variance:</p>
+<p><span class="math display">\[ \hat{\beta}_0 \sim \left[\beta_0, \sigma^2 \left(\frac{1}{n} + \frac{\bar{x}}{\sum (x_i - \bar{x})^2}\right) \right] \mbox{ and } \hat{\beta}_1 \sim \left[\beta_1,\frac{\sigma^2}{\sum (x_i - \bar{x})^2} \right] \]</span></p>
+<p>(Because our simulation design generates errors from a Normal distribution we also know that the estimates follow a Normal distribution, although that’s not guaranteed by least squares estimation.)</p>
+<p>In the real world, drawing samples is time consuming and costly, so “repeated sampling” remains conceptual. On a computer, though, drawing samples is pretty easy. That makes simulation an appealing way to examine the statistical properties of your estimators.</p>
+<p>Let’s run <code>sim_regression()</code> 100 times to see the effect of randomness in <span class="math inline">\(\epsilon\)</span> on estimates <span class="math inline">\(\hat{\beta}_0, \hat{\beta}_1\)</span>.</p>
+<pre class="r"><code>output = vector(&quot;list&quot;, 100)
+
+for (i in 1:100) {
+  output[[i]] = sim_regression(30)
+}
+
+sim_results = bind_rows(output)</code></pre>
+<p>Taking a look at the <code>for</code> loop we used to create these results, you might notice that there’s no <code>input</code> list – the sequence is used to keep track of the output but doesn’t affect the computation performed inside the <code>for</code> loop. In cases like these, the <code>purrr::rerun</code> function is very handy.</p>
+<pre class="r"><code>sim_results = 
+  rerun(100, sim_regression(30, 2, 3)) %&gt;% 
+  bind_rows()</code></pre>
+<p>Structurally, <code>rerun</code> is a lot like <code>map</code> – the first argument defines the amount of iteration and the second argument is the function to use in each iteration step. As with <code>map</code>, we’ve replaced a for loop with a segment of code that makes our purpose much more transparent but both approaches give the same results.</p>
+<p>Let’s make some quick plots and compute some summaries for our simulation results.</p>
+<pre class="r"><code>sim_results %&gt;% 
+  ggplot(aes(x = beta0_hat, y = beta1_hat)) + 
+  geom_point()</code></pre>
+<p><img src="simulation_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
+<pre class="r"><code>
+sim_results %&gt;% 
+  gather(key = parameter, value = estimate, beta0_hat:beta1_hat) %&gt;% 
+  group_by(parameter) %&gt;% 
+  summarize(emp_mean = mean(estimate),
+            emp_var = var(estimate)) %&gt;% 
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">parameter</th>
+<th align="right">emp_mean</th>
+<th align="right">emp_var</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beta0_hat</td>
+<td align="right">1.995</td>
+<td align="right">0.081</td>
+</tr>
+<tr class="even">
+<td align="left">beta1_hat</td>
+<td align="right">3.021</td>
+<td align="right">0.056</td>
+</tr>
+</tbody>
+</table>
+<p>This is <strong><em>great</em></strong>! We’ve seen how our estimates are distributed under our simulation scenario, and can compare empirical results to theoretical ones. In this way, we can build intution for fundamental statistical procedures under repeated sampling in a way that’s not possible with single data sets.</p>
+</div>
+<div id="simulation-slr-for-several-ns" class="section level3">
+<h3>Simulation: SLR for several <span class="math inline">\(n\)</span>s</h3>
+<p>Sample size makes a huge difference on the variance of estimates in SLR (and pretty much every statistical method). Let’s try to clarify that effect through simulating at a few sample sizes.</p>
+<p>I’ll start this process with a for loop around the code I established above using <code>rerun</code> (I could start from scratch by nesting one for loop in another for loop, but let’s not).</p>
+<pre class="r"><code>n_list = list(&quot;n_30&quot;  = 30, 
+              &quot;n_60&quot;  = 60, 
+              &quot;n_120&quot; = 120, 
+              &quot;n_240&quot; = 240)
+output = vector(&quot;list&quot;, length = 4)
+
+for (i in 1:4) {
+  output[[i]] = rerun(100, sim_regression(n_list[[i]])) %&gt;% 
+    bind_rows
+}</code></pre>
+<p>After this loop, <code>output</code> is a list of 4 data frames; each data frame contains the results of 100 simulations at different sample sizes.</p>
+<p>Before we spend time looking at the results of the simulation, let’s recast this using list columns and <code>map</code>. I want to use a single function in my call to <code>map_df</code>, so I’m going to write a wrapper for the call to <code>rerun</code> that allows me to change the parameters of the simulation (i.e. the argument to <code>sim_regression</code>) and the number of simulation replicates (i.e. the first argument to <code>rerun</code>). Once I have this, I’ll call <code>map_df</code> to perform the complete simulation.</p>
+<pre class="r"><code>simulate_n_regressions = function(n_runs = 100, n, beta0 = 2, beta1 = 3) {
+  
+  rerun(n_runs, sim_regression(n, beta0, beta1)) %&gt;% 
+    bind_rows()
+  
+}
+
+sim_results = 
+  tibble(sample_size = c(30, 60, 120, 240)) %&gt;% 
+  mutate(estimate_dfs = map(.x = sample_size, ~simulate_n_regressions(n = .x))) %&gt;% 
+  unnest</code></pre>
+<p>Using a different call, I could increase the number of simulation runs or vary the parameters in the regression model:</p>
+<pre class="r"><code>sim_results = 
+  tibble(sample_size = c(30, 60, 120, 240)) %&gt;% 
+  mutate(
+    estimate_dfs = map(.x = sample_size, ~simulate_n_regressions(n_runs = 1000, n = .x))
+  ) %&gt;% 
+  unnest</code></pre>
+<p>Let’s take a look at what we’ve accomplished in our simulations! First I’ll take a look at the distribution of slope estimates across sample sizes.</p>
+<pre class="r"><code>sim_results %&gt;% 
+  mutate(
+    sample_size = str_c(&quot;n = &quot;, sample_size),
+    sample_size = fct_inorder(sample_size)) %&gt;% 
+  ggplot(aes(x = sample_size, y = beta1_hat, fill = sample_size)) + 
+  geom_violin()</code></pre>
+<p><img src="simulation_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+<p>These estimates are centered around the truth (3) for each sample size, and the width of the distribution shrinks as sample size grows.</p>
+<p>Next, I’ll look at the bivariate distribution of intercept and slope estimates across sample sizes.</p>
+<pre class="r"><code>sim_results %&gt;% 
+  mutate(
+    sample_size = str_c(&quot;n = &quot;, sample_size),
+    sample_size = fct_inorder(sample_size)) %&gt;% 
+  ggplot(aes(x = beta0_hat, y = beta1_hat)) + 
+  geom_point(alpha = .2) + 
+  facet_grid(~sample_size)</code></pre>
+<p><img src="simulation_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
+<p>The variability in the slope estimates was shown in the violin plot, but now we have a sense for the bivariate distribution of intercepts and slopes. Estimates of the intercept and slope are correlated with each other; this is expected from theoretical results describing the joint distribution of estimated regression coefficients.</p>
+<p>Lastly I’ll look at the empirical mean and variance of these estimates.</p>
+<pre class="r"><code>sim_results %&gt;% 
+  gather(key = parameter, value = estimate, beta0_hat:beta1_hat) %&gt;% 
+  group_by(parameter, sample_size) %&gt;% 
+  summarize(emp_mean = mean(estimate),
+            emp_var = var(estimate)) %&gt;% 
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">parameter</th>
+<th align="right">sample_size</th>
+<th align="right">emp_mean</th>
+<th align="right">emp_var</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beta0_hat</td>
+<td align="right">30</td>
+<td align="right">1.998</td>
+<td align="right">0.073</td>
+</tr>
+<tr class="even">
+<td align="left">beta0_hat</td>
+<td align="right">60</td>
+<td align="right">2.000</td>
+<td align="right">0.037</td>
+</tr>
+<tr class="odd">
+<td align="left">beta0_hat</td>
+<td align="right">120</td>
+<td align="right">2.003</td>
+<td align="right">0.017</td>
+</tr>
+<tr class="even">
+<td align="left">beta0_hat</td>
+<td align="right">240</td>
+<td align="right">1.996</td>
+<td align="right">0.008</td>
+</tr>
+<tr class="odd">
+<td align="left">beta1_hat</td>
+<td align="right">30</td>
+<td align="right">3.003</td>
+<td align="right">0.036</td>
+</tr>
+<tr class="even">
+<td align="left">beta1_hat</td>
+<td align="right">60</td>
+<td align="right">3.000</td>
+<td align="right">0.019</td>
+</tr>
+<tr class="odd">
+<td align="left">beta1_hat</td>
+<td align="right">120</td>
+<td align="right">2.997</td>
+<td align="right">0.008</td>
+</tr>
+<tr class="even">
+<td align="left">beta1_hat</td>
+<td align="right">240</td>
+<td align="right">3.003</td>
+<td align="right">0.004</td>
+</tr>
+</tbody>
+</table>
+<p>These values are consistent with the formulas presented above. This kind of check is a useful way to support derivations (although they don’t serve as a formal proof in any way).</p>
+</div>
+<div id="simulation-publication-bias" class="section level3">
+<h3>Simulation: “Publication bias”</h3>
+<p>We’ll build on our existing simulations to explore an important phenomenon – the tendency to publish “significant” results – and the effect this has results reported in the scientific literature.</p>
+<p>We’ll start with a slightly altered version of <code>sim_regression</code> that uses <code>broom::tidy</code> to cleanly format the results of <code>lm</code>.</p>
+<pre class="r"><code>sim_regression = function(n_samp = 30, beta0 = 2, beta1 = 3) {
+  
+  sim_data = tibble(
+    x = rnorm(n_samp),
+    y = beta0 + beta1 * x + rnorm(n_samp, 0, sqrt(50))
+  )
+  
+  ls_fit = lm(y ~ x, data = sim_data)
+  
+  broom::tidy(ls_fit) 
+  
+}</code></pre>
+<p>Using this function, along with <code>simulate_n_regressions</code> and <code>map</code>, I’ll 10000 datasets from the model</p>
+<p><span class="math display">\[y_i = \beta_0 + \beta_1 x_{i}  + \epsilon_i \]</span></p>
+<p>for each <span class="math inline">\(\beta_1 \in \{0, 1, 2, 3, 4, 5, 6\}\)</span> and save the results.</p>
+<pre class="r"><code>sim_results = 
+  tibble(beta1_true = 0:6) %&gt;% 
+  mutate(
+    estimate_dfs = map(.x = beta1_true, ~simulate_n_regressions(n_runs = 10000, n = 30, beta1 = .x))
+  )  </code></pre>
+<p>The chunk below does some tidying up of the simulation results by focusing only on estimates for the <code>x</code> term in our model and creating an indicator for statistical significance of a test that the slope is equal to zero.</p>
+<pre class="r"><code>sim_results = 
+  sim_results %&gt;% 
+  unnest() %&gt;% 
+  filter(term == &quot;x&quot;) %&gt;% 
+  select(beta1_true, estimate, p.value) %&gt;% 
+  mutate(significant = as.numeric(p.value &lt; 0.05))</code></pre>
+<p>The plot below shows the proportion of times the null was rejected (i.e. the power of the test for a fixed alternative) on the y axis and the true value of <span class="math inline">\(\beta_1\)</span> on the x axis.</p>
+<p><img src="simulation_files/figure-html/simulation_summary-1.png" width="90%" /></p>
+<p>The power increases as the effect size of <span class="math inline">\(\beta_1\)</span> increases. For <span class="math inline">\(\beta_1=0\)</span>, the probability of rejection is near 0.05, which is exactly as expected.</p>
+<p>The next plot shows the average of <span class="math inline">\(\hat{\beta}_1\)</span> on the y axis and the true value of <span class="math inline">\(\beta_1\)</span> on the x axis (in red), along with the average of <span class="math inline">\(\hat{\beta}_1\)</span> in cases for which the null is rejected.</p>
+<pre class="r"><code>results_summary = 
+  sim_results %&gt;% 
+  group_by(beta1_true) %&gt;%
+  nest() %&gt;% 
+  mutate(
+    all = map_dbl(.x = data, ~ .x %&gt;% pull(estimate) %&gt;% mean),
+    signif = map_dbl(.x = data, ~ .x %&gt;% filter(significant == 1) %&gt;% pull(estimate) %&gt;% mean)
+  ) %&gt;% 
+  select(-data) %&gt;% 
+  gather(key = results, value = average, all:signif) 
+
+results_summary %&gt;% 
+  ggplot(aes(x = beta1_true, y = average, color = results)) + 
+  geom_point() +
+  geom_path() </code></pre>
+<p><img src="simulation_files/figure-html/summary2-1.png" width="90%" /></p>
+<p>As before, the average of <span class="math inline">\(\hat{\beta}_1\)</span> is approximately equal to the true value when looking at all simulated datasets for that true value. However, the sample average of <span class="math inline">\(\hat{\beta}_1\)</span> only when the null hypothesis is rejected is not approximately equal to the true value of <span class="math inline">\(\beta_1\)</span>.</p>
+<p>To help see why this is the case, the following figure shows the distribution of <span class="math inline">\(\hat{\beta}_1\)</span> values, separately for each true <span class="math inline">\(\beta_1\)</span> and according to whether the associated test rejects the null hypothesis.</p>
+<pre class="r"><code>sim_results %&gt;% 
+  ggplot(aes(x = estimate)) + geom_histogram() + 
+  facet_grid(significant ~ beta1_true)
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="simulation_files/figure-html/unnamed-chunk-13-1.png" width="90%" /></p>
+<p>For small true effect sizes (i.e. not far away from 0), only those estimates that are <strong>by chance</strong> far away from 0 (and the true value) can be rejected. For large effect sizes, the overall average and rejected average are quite similar, as the true value is already far from 0. For the special case 0, samples in both tails (both positive and negative) are rejected with equal probability and the average is close to the true value.</p>
+<p>The scary implication is that, when the true effect is small, it is likely that effect estimates reported in the literature are substantially larger than the true value.</p>
+</div>
+</div>
+<div id="other-materials" class="section level2">
+<h2>Other materials</h2>
+<ul>
+<li>Problem of small power leading to over estimation has been discussed <a href="https://www.nature.com/articles/nrn3475">here</a> among other places</li>
+</ul>
+<p>The code that I produced working examples in lecture is <a href="https://github.com/p8105/iteration">here</a>.</p>
+</div>
+
+<br><br>
+<footer>
+  <img src="images/p8105_stickers.png" alt="stickers" style="width:30%">
+  <br>
+  <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+</footer>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
