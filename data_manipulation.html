@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -25,9 +26,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -79,9 +79,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,6 +104,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +121,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -140,6 +140,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,47 +198,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -250,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +313,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -419,7 +482,7 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 ## 1 Con7  #85                 19.7               3
 ## 2 Con7  #1/2/95/2           27                 8
 ## 3 Con7  #5/5/3/83/3-3       26                 6
-## # ... with 46 more rows</code></pre>
+## # … with 46 more rows</code></pre>
 <p>You can specify the specify a range of columns to keep:</p>
 <pre class="r"><code>select(litters_data, group:gd_of_birth)
 ## # A tibble: 49 x 5
@@ -428,7 +491,7 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 ## 1 Con7  #85                 19.7        34.7          20
 ## 2 Con7  #1/2/95/2           27          42            19
 ## 3 Con7  #5/5/3/83/3-3       26          41.4          19
-## # ... with 46 more rows</code></pre>
+## # … with 46 more rows</code></pre>
 <p>You can also specify columns you’d like to remove:</p>
 <pre class="r"><code>select(litters_data, -pups_survive)
 ## # A tibble: 49 x 7
@@ -437,7 +500,7 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 ## 1 Con7  #85                 19.7        34.7          20               3
 ## 2 Con7  #1/2/95/2           27          42            19               8
 ## 3 Con7  #5/5/3/83/3-3       26          41.4          19               6
-## # ... with 46 more rows, and 1 more variable: pups_dead_birth &lt;int&gt;</code></pre>
+## # … with 46 more rows, and 1 more variable: pups_dead_birth &lt;int&gt;</code></pre>
 <p>You can rename variables as part of this process:</p>
 <pre class="r"><code>select(litters_data, GROUP = group, LiTtEr_NuMbEr = litter_number)
 ## # A tibble: 49 x 2
@@ -446,7 +509,7 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 ## 1 Con7  #85          
 ## 2 Con7  #1/2/95/2    
 ## 3 Con7  #5/5/3/83/3-3
-## # ... with 46 more rows</code></pre>
+## # … with 46 more rows</code></pre>
 <p>If all you want to do is rename something, you can use <code>rename</code> instead of <code>select</code>. This will rename the variables you care about, and keep everything else:</p>
 <pre class="r"><code>rename(litters_data, GROUP = group, LiTtEr_NuMbEr = litter_number)
 ## # A tibble: 49 x 8
@@ -455,7 +518,7 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 ## 1 Con7  #85                 19.7        34.7          20               3
 ## 2 Con7  #1/2/95/2           27          42            19               8
 ## 3 Con7  #5/5/3/83/3-3       26          41.4          19               6
-## # ... with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
+## # … with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
 ## #   pups_survive &lt;int&gt;</code></pre>
 <p>There are some handy helper functions for <code>select</code>; read about all of them using <code>?select_helpers</code>. The one I use most frequently is <code>everything()</code>, which is handy for reorganizing columns without discarding anything:</p>
 <pre class="r"><code>select(litters_data, litter_number, group, everything())
@@ -465,12 +528,13 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 ## 1 #85           Con7        19.7        34.7          20               3
 ## 2 #1/2/95/2     Con7        27          42            19               8
 ## 3 #5/5/3/83/3-3 Con7        26          41.4          19               6
-## # ... with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
+## # … with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
 ## #   pups_survive &lt;int&gt;</code></pre>
 <p>In larger datasets, I also use <code>starts_with()</code>, <code>ends_with()</code>, and <code>contains()</code> often.</p>
 <p>Lastly, like other functions in <code>dplyr</code>, <code>select</code> will export a dataframe even if you only select one column. Mostly this is fine, but sometimes you want the vector stored in the column. To pull a single variable, use <code>pull</code>.</p>
 <p><strong><em>Learning Assessment:</em></strong> In the pups data, select the columns containing litter number, sex, and PD ears.</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The chunk below performs this action:</p>
 <pre class="r"><code>select(pups_data, litter_number, sex, pd_ears)
 ## # A tibble: 313 x 3
@@ -479,8 +543,8 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 ## 1 #85               1       4
 ## 2 #85               1       4
 ## 3 #1/2/95/2         1       5
-## # ... with 310 more rows</code></pre>
-<p></details></p>
+## # … with 310 more rows</code></pre>
+</details>
 </div>
 <div id="filter" class="section level3">
 <h3><code>filter</code></h3>
@@ -502,7 +566,8 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 <li>Filter to include only pups with sex 1</li>
 <li>Filter to include only pups with PD walk less than 11 and sex 2</li>
 </ul>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The chunk below performs these actions:</p>
 <pre class="r"><code>filter(pups_data, sex == 1)
 ## # A tibble: 155 x 6
@@ -511,7 +576,7 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 ## 1 #85               1       4      13        7      11
 ## 2 #85               1       4      13        7      12
 ## 3 #1/2/95/2         1       5      13        7       9
-## # ... with 152 more rows
+## # … with 152 more rows
 filter(pups_data, sex == 2, pd_walk &lt; 11)
 ## # A tibble: 127 x 6
 ##   litter_number   sex pd_ears pd_eyes pd_pivot pd_walk
@@ -519,8 +584,8 @@ filter(pups_data, sex == 2, pd_walk &lt; 11)
 ## 1 #1/2/95/2         2       4      13        7       9
 ## 2 #1/2/95/2         2       4      13        7      10
 ## 3 #1/2/95/2         2       5      13        8      10
-## # ... with 124 more rows</code></pre>
-<p></details></p>
+## # … with 124 more rows</code></pre>
+</details>
 </div>
 <div id="mutate" class="section level3">
 <h3><code>mutate</code></h3>
@@ -528,7 +593,7 @@ filter(pups_data, sex == 2, pd_walk &lt; 11)
 <p>The example below creates a new variable measuring the difference between <code>gd18_weight</code> and <code>gd0_weight</code> and modifies the existing <code>group</code> variable.</p>
 <pre class="r"><code>mutate(litters_data,
   wt_gain = gd18_weight - gd0_weight,
-  group = tolower(group)
+  group = str_to_lower(group)
 )
 ## # A tibble: 49 x 9
 ##   group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
@@ -536,7 +601,7 @@ filter(pups_data, sex == 2, pd_walk &lt; 11)
 ## 1 con7  #85                 19.7        34.7          20               3
 ## 2 con7  #1/2/95/2           27          42            19               8
 ## 3 con7  #5/5/3/83/3-3       26          41.4          19               6
-## # ... with 46 more rows, and 3 more variables: pups_dead_birth &lt;int&gt;,
+## # … with 46 more rows, and 3 more variables: pups_dead_birth &lt;int&gt;,
 ## #   pups_survive &lt;int&gt;, wt_gain &lt;dbl&gt;</code></pre>
 <p>A few things in this example are worth noting:</p>
 <ul>
@@ -551,7 +616,8 @@ filter(pups_data, sex == 2, pd_walk &lt; 11)
 <li>Create a variable that subtracts 7 from PD pivot</li>
 <li>Create a variable that is the sum of all the PD variables</li>
 </ul>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The chunk below performs these actions:</p>
 <pre class="r"><code>mutate(pups_data, pivot_minus7 = pd_pivot - 7)
 ## # A tibble: 313 x 7
@@ -560,7 +626,7 @@ filter(pups_data, sex == 2, pd_walk &lt; 11)
 ## 1 #85               1       4      13        7      11            0
 ## 2 #85               1       4      13        7      12            0
 ## 3 #1/2/95/2         1       5      13        7       9            0
-## # ... with 310 more rows
+## # … with 310 more rows
 mutate(pups_data, pd_sum = pd_ears + pd_eyes + pd_pivot + pd_walk)
 ## # A tibble: 313 x 7
 ##   litter_number   sex pd_ears pd_eyes pd_pivot pd_walk pd_sum
@@ -568,8 +634,8 @@ mutate(pups_data, pd_sum = pd_ears + pd_eyes + pd_pivot + pd_walk)
 ## 1 #85               1       4      13        7      11     35
 ## 2 #85               1       4      13        7      12     36
 ## 3 #1/2/95/2         1       5      13        7       9     34
-## # ... with 310 more rows</code></pre>
-<p></details></p>
+## # … with 310 more rows</code></pre>
+</details>
 </div>
 <div id="arrange" class="section level3">
 <h3><code>arrange</code></h3>
@@ -588,7 +654,7 @@ mutate(pups_data, pd_sum = pd_ears + pd_eyes + pd_pivot + pd_walk)
 ##  8 Con8  #2/2/95/2           NA          NA            19               5
 ##  9 Con8  #1/6/2/2/95-2       NA          NA            20               7
 ## 10 Con8  #3/6/2/2/95-3       NA          NA            20               7
-## # ... with 2 more variables: pups_dead_birth &lt;int&gt;, pups_survive &lt;int&gt;</code></pre>
+## # … with 2 more variables: pups_dead_birth &lt;int&gt;, pups_survive &lt;int&gt;</code></pre>
 </div>
 <div id="section" class="section level3">
 <h3><code>%&gt;%</code></h3>
@@ -604,7 +670,7 @@ litters_data_clean_names = janitor::clean_names(litters_data_raw)
 litters_data_selected_cols = select(litters_data_clean_names, -pups_survive)
 litters_data_with_vars = mutate(litters_data_selected_cols, 
   wt_gain = gd18_weight - gd0_weight,
-  group = tolower(group))
+  group = str_to_lower(group))
 litters_data_with_vars
 ## # A tibble: 49 x 8
 ##   group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
@@ -612,7 +678,7 @@ litters_data_with_vars
 ## 1 con7  #85                 19.7        34.7          20               3
 ## 2 con7  #1/2/95/2           27          42            19               8
 ## 3 con7  #5/5/3/83/3-3       26          41.4          19               6
-## # ... with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
+## # … with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
 ## #   wt_gain &lt;dbl&gt;</code></pre>
 <p>Below, we try the second option:</p>
 <pre class="r"><code>litters_data_clean = 
@@ -624,7 +690,7 @@ litters_data_with_vars
     -pups_survive
     ),
   wt_gain = gd18_weight - gd0_weight,
-  group = tolower(group)
+  group = str_to_lower(group)
   )
 litters_data_clean
 ## # A tibble: 49 x 8
@@ -633,7 +699,7 @@ litters_data_clean
 ## 1 con7  #85                 19.7        34.7          20               3
 ## 2 con7  #1/2/95/2           27          42            19               8
 ## 3 con7  #5/5/3/83/3-3       26          41.4          19               6
-## # ... with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
+## # … with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
 ## #   wt_gain &lt;dbl&gt;</code></pre>
 <p>These are both confusing and bad: the first gets confusing and clutters our workspace, and the second has to be read inside out.</p>
 <p>Piping solves this problem. It allows you to turn the nested approach into a sequential chain by passing the result of one function call as an argument to the next function call:</p>
@@ -643,7 +709,7 @@ litters_data_clean
   select(-pups_survive) %&gt;%
   mutate(
     wt_gain = gd18_weight - gd0_weight,
-    group = tolower(group))
+    group = str_to_lower(group))
 
 litters_data
 ## # A tibble: 49 x 8
@@ -652,7 +718,7 @@ litters_data
 ## 1 con7  #85                 19.7        34.7          20               3
 ## 2 con7  #1/2/95/2           27          42            19               8
 ## 3 con7  #5/5/3/83/3-3       26          41.4          19               6
-## # ... with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
+## # … with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
 ## #   wt_gain &lt;dbl&gt;</code></pre>
 <p>All three approaches result in the same dataset, but the piped commands are by far the most straightforward. The easiest way to read <code>%&gt;%</code> is “then”; the keyboard shortcuts are Ctrl + Shift + M (Windows) and Cmd + Shift + M (Mac).</p>
 <p>The functions in <code>dplyr</code> (and much of the <code>tidyverse</code>) are designed to work smoothly with the pipe operator. By default, the pipe will take the result of one function call and use that as the first argument of the next function call; by design, functions in <code>dplyr</code> will take a tibble as an input and return a tibble as a result. As a consequence, functions in <code>dplyr</code> are easy to connect in a data cleaning chain. You can make this more explicit by using <code>.</code> as a placeholder for the result of the preceding call:</p>
@@ -662,7 +728,7 @@ litters_data
   select(.data = ., -pups_survive) %&gt;%
   mutate(.data = .,
     wt_gain = gd18_weight - gd0_weight,
-    group = tolower(group))</code></pre>
+    group = str_to_lower(group))</code></pre>
 <p>In this example, the dataset argument is called <code>dat</code> in <code>janitor::clean_names</code> and <code>.data</code> in the <code>dplyr</code> functions (which can be confusing). In the majority of cases (and everywhere in the tidyverse) you’ll elide the first argument and be happy with life, but there are some cases where the placeholder is necessary. For example, to regress <code>wt_gain</code> on <code>pups_born_alive</code>, you might use:</p>
 <pre class="r"><code>litters_data %&gt;%
   lm(wt_gain ~ pups_born_alive, data = .) %&gt;%
@@ -681,7 +747,8 @@ litters_data
 <li>removes the PD ears variable</li>
 <li>creates a variable that indicates whether PD pivot is 7 or more days</li>
 </ul>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The chunk below performs these actions:</p>
 <pre class="r"><code>read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;) %&gt;%
   janitor::clean_names() %&gt;% 
@@ -694,8 +761,8 @@ litters_data
 ## 1 #85               1      13        7      11 FALSE       
 ## 2 #85               1      13        7      12 FALSE       
 ## 3 #1/2/95/2         1      13        7       9 FALSE       
-## # ... with 152 more rows</code></pre>
-<p></details></p>
+## # … with 152 more rows</code></pre>
+</details>
 </div>
 </div>
 <div id="other-materials" class="section level2">
@@ -714,7 +781,7 @@ litters_data
 <footer>
   <img src="images/p8105_stickers.png" alt="stickers" style="width:30%">
   <br>
-  <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+  <p class="copyright text-muted" align="center">Copyright &copy; 2019 Jeff Goldsmith</p>
 </footer>
 
 
@@ -734,6 +801,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

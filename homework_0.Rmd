@@ -16,15 +16,17 @@ Due: September 6 at 10:00am.
 
 ### Problem 1
 
-Download and install the latest versions of [R](https://cran.r-project.org) (3.5.1) and [RStudio](https://www.rstudio.com/products/rstudio/download/) (1.1.456). 
+Download and install the latest versions of [R](https://cran.r-project.org) (3.6.1) and [RStudio](https://www.rstudio.com/products/rstudio/download/) (1.1.1335). 
 
-Install several packages (and their dependencies) using the code below:
+Open RStudio and install several packages (and their dependencies) using the code below:
 
 ```{r eval = FALSE}
-install.packages(c("tidyverse", "knitr", "janitor", "broom", "here", "shiny", "readxl", "haven", "rnoaa", "ggridges", "viridis", "skimr", "rvest", "httr", "flexdashboard", "devtools", "rmarkdown", "modelr", "mgcv"))
+install.packages(c("tidyverse", "knitr", "rmarkdown", "janitor", "broom", "here", "readxl", "haven", "rnoaa", "ggridges", "ggthemes", "viridis", "skimr", "rvest", "httr", "flexdashboard", "devtools", "usethis", "modelr", "mgcv", "tidytext", "shiny"))
 ```
 
-Upload a screenshot of RStudio that shows your R version and that you can successfully load the packages `tidyverse` and `knitr`; include your UNI on the command line. Here's an example "solution":
+(Note: on a Mac running OSX, you may need to install the [command line tools](http://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/) for these pacakges to install.)
+
+Upload a screenshot of RStudio that shows your R version, and that you can successfully load the packages `tidyverse` and `knitr`; include your UNI on the command line. Here's an example "solution":
 
 <img src="images/homework_0_r.png" style="width:90%">
 
@@ -39,4 +41,6 @@ Upload a screenshot of RStudio's terminal pane that shows a successful execution
 ### Problem 3
 
 Create a user account on GitHub, and submit your user name using [this google form](https://docs.google.com/forms/d/e/1FAIpQLSf-BnbRDsen2y2Bv9corM4PWmDGfzx1ZJB77uJTrSqVqybQBA/viewform?usp=sf_link).
+
+It is **very strongly recommended** that you register your account with an educational / academic discount -- later in the semester we will require private repos, which are free under this plan. 
 

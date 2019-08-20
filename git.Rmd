@@ -24,7 +24,7 @@ For this example, I'm going to re-do stuff from [Writing with Data](writing_with
 
 We talked about a good workflow in [Writing with Data](writing_with_data.html), with a focus on R Projects for organization and R Markdown for reproducibility. We're adding version control using git to that workflow; git is useful by itself, and is also a popular tool to collaboration. There are a couple of ways include git in our workflow, but the one we'll start with is:
 
-* **Create a GitHub rep with an informative name**
+* **Create a GitHub repo with an informative name**
 * Create a linked R Project using File > New Project **> Version Control**
 * Keep everything related to the analysis -- data inputs, scripts, reports, output -- in the directory, and use R Markdown as much as possible
 * **Keep track of changes using version control (save, commit, push)**
@@ -146,9 +146,9 @@ That said, try to coordinate with teammates so it's clear who is working on what
 
 The "GitHub first" workflow works well, but it's not the only way to add version control to an R Project. An alternative is "Project first":
 
-* Create an R Project with a reasonable name and path
-* **Turn on version control for the project using git**
-* **Optionally, create remote repository**
+* Create an R Project with a reasonable name and path (via `usethis::create_project()`)
+* **Turn on version control for the project using git** (via `usethis::use_git()`)
+* **Optionally, create remote repository** (via `usethis::use_github()`)
 * Keep everything related to the analysis -- data inputs, scripts, reports, output -- in the directory, and use R Markdown as much as possible
 * **Keep track of changes using version control (save, commit, push)**
 * Periodically check for reproducibility of the analysis

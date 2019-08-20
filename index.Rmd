@@ -12,13 +12,16 @@ This course is being offered in the Fall of 2018 through the Biostatistics Depar
 ### People
 
 * Jeff Goldsmith (Instructor; [email Jeff](mailto:jeff.goldsmith@columbia.edu))
+* Angel Garcia de la Garza (Lead TA; [email Angel](mailto:ag3914@cumc.columbia.edu))
 * Erin McDonnell (Lead TA; [email Erin](mailto:eim2117@cumc.columbia.edu))
-* Angel Garcia de la Garza (TA; [email Angel](mailto:ag3914@cumc.columbia.edu))
-* Jingxuan He (TA; [email Jingxuan](mailto:jh3909@cumc.columbia.edu))
-* He Jin (TA; [email He](mailto:hj2479@cumc.columbia.edu))
-* Gaeun Kim (TA; [email Gaeun](mailto:gk2501@cumc.columbia.edu))
-* Junting Ren (TA; [email Junting](mailto:jr3755@cumc.columbia.edu))
-* Yuqi Tu (TA; [email Yuqi](mailto:yt2604@cumc.columbia.edu))
+* Rui Huang
+* Courtney Johnson 
+* Christian Pasqual
+* Jiayi Shen 
+* Dana Zeng
+* Eleanor Zhang 
+* Zelos Zhu
+* Coco Zou
 
 
 ### Calendar

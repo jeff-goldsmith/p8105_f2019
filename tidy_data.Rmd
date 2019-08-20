@@ -252,6 +252,11 @@ anti_join(surv_pr_git, surv_os)
 
 </details>
 
+
+### A quick note on names
+
+`gather` and `spread` aren't really intuitive names for what the functions do. As a result, `tidyr` [is being updated](https://tidyr.tidyverse.org/dev/articles/pivot.html) to include `pivot_longer` and `pivot_wider` -- names that are at least more in keeping with how this kind of tidying is described elsewhere. `gather` and `spread` will still exist, but they're going to be less common over time. 
+
 ## Other materials
 
 * R for Data Science, of course, has a chapter on [tidy data](http://r4ds.had.co.nz/tidy-data.html). The [paper](http://www.jstatsoft.org/v59/i10/paper) that lays out the underlying ideas may also be useful.

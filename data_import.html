@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -25,9 +26,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -79,9 +79,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,6 +104,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +121,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -140,6 +140,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,47 +198,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -250,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +313,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -412,7 +475,7 @@ div.tocify {
 <p>(Hint: if you ever use <code>setwd()</code>, you’re using absolute paths and <a href="https://twitter.com/hadleywickham/status/940021008764846080">taking big risks</a>…)</p>
 <p>The code below finds my current working directory:</p>
 <pre class="r"><code>getwd()
-## [1] &quot;/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/Fall_2018/p8105.github.io&quot;</code></pre>
+## [1] &quot;/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/fall_2019/p8105.github.io&quot;</code></pre>
 <p>A relative path to the same file as the absolute path above is</p>
 <pre><code>&quot;./data/FAS_litters.csv&quot;</code></pre>
 <p>The table below, copied from <a href="https://geanders.github.io/RProgrammingForResearch/entering-and-cleaning-data-1.html#file-and-directory-pathnames">R Programming for Research</a>, gives useful shorthand notation for relative pathnames.</p>
@@ -456,10 +519,10 @@ div.tocify {
 ##   `Litter Number` = col_character(),
 ##   `GD0 weight` = col_double(),
 ##   `GD18 weight` = col_double(),
-##   `GD of Birth` = col_integer(),
-##   `Pups born alive` = col_integer(),
-##   `Pups dead @ birth` = col_integer(),
-##   `Pups survive` = col_integer()
+##   `GD of Birth` = col_double(),
+##   `Pups born alive` = col_double(),
+##   `Pups dead @ birth` = col_double(),
+##   `Pups survive` = col_double()
 ## )</code></pre>
 <p>Great – we’ve imported data! The first argument to <code>read_csv</code> is the path to the data, and the line above assigns the result of <code>read_csv</code> to <code>litters_data</code>. This function call also prints information about the column parsing. We’ll talk more about both of these shortly.</p>
 <p>I (almost always) use <code>janitor::clean_names()</code> to clean up variable names after importing data. Doing so will take whatever the column names are and convert them to lower snake case.</p>
@@ -473,12 +536,13 @@ names(litters_data)
 ## [5] &quot;gd_of_birth&quot;     &quot;pups_born_alive&quot; &quot;pups_dead_birth&quot; &quot;pups_survive&quot;</code></pre>
 <p>The <code>package::function</code> syntax lets you use a function from a package without loading the whole library. That’s really helpful, because some packages have functions with the same name (e.g. <code>dplyr::filter</code> and <code>stats::filter</code>), and R has to choose which one you mean. In general, only load the packages you need to prevent this kind of confusion. You can even use the <a href="https://github.com/r-lib/conflicted"><code>conflicted</code></a> package if you want to force yourself into using good habits!</p>
 <p><strong><em>Learning Assessment:</em></strong> Make sure you are able to load the <code>FAS_pups.csv</code> dataset. Use both absolute and relative paths. Quit R Studio and move the directory containing your project, data, and R Markdown document. Repeat the previous data import process; do both absolute and relative paths still work?</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>For me, loading the data with absolute and relative paths might look like the following:</p>
 <pre class="r"><code>pups_data = read_csv(file = &quot;./data/FAS_pups.csv&quot;)
 pups_data = read_csv(file = &quot;~/Desktop/data_wranging_i/data/FAS_litters.csv&quot;)</code></pre>
 <p>If I move the directory holding this example, the relatitve path works and the absolute path is broken.</p>
-<p></details></p>
+</details>
 </div>
 <div id="looking-at-data" class="section level3">
 <h3>Looking at data</h3>
@@ -486,7 +550,7 @@ pups_data = read_csv(file = &quot;~/Desktop/data_wranging_i/data/FAS_litters.csv
 <pre class="r"><code>litters_data
 ## # A tibble: 49 x 8
 ##    group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
-##    &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;int&gt;           &lt;int&gt;
+##    &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
 ##  1 Con7  #85                 19.7        34.7          20               3
 ##  2 Con7  #1/2/95/2           27          42            19               8
 ##  3 Con7  #5/5/3/83/3-3       26          41.4          19               6
@@ -497,18 +561,18 @@ pups_data = read_csv(file = &quot;~/Desktop/data_wranging_i/data/FAS_litters.csv
 ##  8 Con8  #3/83/3-3           NA          NA            20               9
 ##  9 Con8  #2/95/3             NA          NA            20               8
 ## 10 Con8  #3/5/2/2/95         28.5        NA            20               8
-## # ... with 39 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
-## #   pups_survive &lt;int&gt;
+## # … with 39 more rows, and 2 more variables: pups_dead_birth &lt;dbl&gt;,
+## #   pups_survive &lt;dbl&gt;
 tail(litters_data, 5)
 ## # A tibble: 5 x 8
 ##   group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
-##   &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;int&gt;           &lt;int&gt;
+##   &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
 ## 1 Low8  #100                20          39.2          20               8
 ## 2 Low8  #4/84               21.8        35.2          20               4
 ## 3 Low8  #108                25.6        47.5          20               8
 ## 4 Low8  #99                 23.5        39            20               6
 ## 5 Low8  #110                25.5        42.7          20               7
-## # ... with 2 more variables: pups_dead_birth &lt;int&gt;, pups_survive &lt;int&gt;</code></pre>
+## # … with 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
 <p>Another tool that I use often is `<code>skimr::skim</code>. The output is too wide to render well here, but is pretty slick!</p>
 <pre class="r"><code>skimr::skim(litters_data)
 ## Skim summary statistics
@@ -520,25 +584,21 @@ tail(litters_data, 5)
 ##          group       0       49 49   4   4     0        6
 ##  litter_number       0       49 49   3  15     0       49
 ## 
-## ── Variable type:integer ────────────────────────────────────────
-##         variable missing complete  n  mean   sd p0 p25 p50 p75 p100
-##      gd_of_birth       0       49 49 19.65 0.48 19  19  20  20   20
-##  pups_born_alive       0       49 49  7.35 1.76  3   6   8   8   11
-##  pups_dead_birth       0       49 49  0.33 0.75  0   0   0   0    4
-##     pups_survive       0       49 49  6.41 2.05  1   5   7   8    9
-##      hist
-##  ▅▁▁▁▁▁▁▇
-##  ▂▂▃▃▇▅▁▁
-##  ▇▂▁▁▁▁▁▁
-##  ▂▂▃▃▅▇▇▅
-## 
 ## ── Variable type:numeric ────────────────────────────────────────
-##     variable missing complete  n  mean   sd   p0   p25   p50   p75 p100
-##   gd0_weight      15       34 49 24.38 3.28 17   22.3  24.1  26.67 33.4
-##  gd18_weight      17       32 49 41.52 4.05 33.4 38.88 42.25 43.8  52.7
-##      hist
-##  ▁▃▇▇▇▆▁▁
-##  ▂▃▃▇▆▂▁▁</code></pre>
+##         variable missing complete  n  mean   sd   p0   p25   p50   p75
+##      gd_of_birth       0       49 49 19.65 0.48 19   19    20    20   
+##       gd0_weight      15       34 49 24.38 3.28 17   22.3  24.1  26.67
+##      gd18_weight      17       32 49 41.52 4.05 33.4 38.88 42.25 43.8 
+##  pups_born_alive       0       49 49  7.35 1.76  3    6     8     8   
+##  pups_dead_birth       0       49 49  0.33 0.75  0    0     0     0   
+##     pups_survive       0       49 49  6.41 2.05  1    5     7     8   
+##  p100     hist
+##  20   ▅▁▁▁▁▁▁▇
+##  33.4 ▁▃▇▇▇▆▁▁
+##  52.7 ▂▃▃▇▆▂▁▁
+##  11   ▂▂▃▃▇▅▁▁
+##   4   ▇▂▁▁▁▁▁▁
+##   9   ▂▂▃▃▅▇▇▅</code></pre>
 </div>
 <div id="arguments-to-read_" class="section level3">
 <h3>Arguments to <code>read_*</code></h3>
@@ -557,15 +617,15 @@ tail(litters_data, 5)
 ##   X2 = col_character(),
 ##   X3 = col_double(),
 ##   X4 = col_double(),
-##   X5 = col_integer(),
-##   X6 = col_integer(),
-##   X7 = col_integer(),
-##   X8 = col_integer()
+##   X5 = col_double(),
+##   X6 = col_double(),
+##   X7 = col_double(),
+##   X8 = col_double()
 ## )
 head(litters_data)
 ## # A tibble: 6 x 8
 ##   X1    X2                 X3    X4    X5    X6    X7    X8
-##   &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##   &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 Con8  #3/5/2/2/95      28.5    NA    20     8     0     8
 ## 2 Con8  #5/4/3/83/3      28      NA    19     9     0     8
 ## 3 Con8  #1/6/2/2/95-2    NA      NA    20     7     0     6
@@ -601,7 +661,7 @@ tail(litters_data)
 ## 4 Low8  #108                    25.6          47.5            20
 ## 5 Low8  #99                     23.5          39              20
 ## 6 Low8  #110                    25.5          42.7            20
-## # ... with 3 more variables: `Pups born alive` &lt;int&gt;, `Pups dead @
+## # … with 3 more variables: `Pups born alive` &lt;int&gt;, `Pups dead @
 ## #   birth` &lt;int&gt;, `Pups survive` &lt;int&gt;</code></pre>
 <p>Column parsing also allows a shorthand for almost every data type.</p>
 <pre class="r"><code>litters_data = read_csv(file = &quot;./data/FAS_litters.csv&quot;,
@@ -621,15 +681,16 @@ litters_data
 ##  8 Con8  #3/83/3-3               NA            NA              20
 ##  9 Con8  #2/95/3                 NA            NA              20
 ## 10 Con8  #3/5/2/2/95             28.5          NA              20
-## # ... with 39 more rows, and 3 more variables: `Pups born alive` &lt;int&gt;,
+## # … with 39 more rows, and 3 more variables: `Pups born alive` &lt;int&gt;,
 ## #   `Pups dead @ birth` &lt;int&gt;, `Pups survive` &lt;int&gt;</code></pre>
 <p><strong><em>Learning Assessment:</em></strong> Repeat the data import process above for the file <code>FAS_pups.csv</code>. Make sure the column names are reasonable, and take some quick looks at the dataset. What happens if your specifications for column parsing aren’t reasonable (e.g. character instead of double, or vice versa)?</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>After some tinkering, the code I’d use to import and view the pups dataset is below.</p>
 <pre class="r"><code>pups_data = read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;)
 skimr::skim(pups_data)</code></pre>
 <p>If I move the directory holding this example, the relatitve path works and the absolute path is broken.</p>
-<p></details></p>
+</details>
 </div>
 <div id="other-file-formats" class="section level3">
 <h3>Other file formats</h3>
@@ -646,8 +707,7 @@ head(mlb11_data, 5)
 ## 3 Detr…   787    5563  1540      169   0.277       1143           49    95
 ## 4 Kans…   730    5672  1560      129   0.275       1006          153    71
 ## 5 St. …   762    5532  1513      162   0.273        978           57    90
-## # ... with 3 more variables: new_onbase &lt;dbl&gt;, new_slug &lt;dbl&gt;,
-## #   new_obs &lt;dbl&gt;</code></pre>
+## # … with 3 more variables: new_onbase &lt;dbl&gt;, new_slug &lt;dbl&gt;, new_obs &lt;dbl&gt;</code></pre>
 <p>The last tidyverse package for data import we’ll note is <code>haven</code>, which is used to import into R data files from SAS, Stata, and SPSS. An example for reading data from SAS follows.</p>
 <pre class="r"><code>library(haven)
 pulse_data = read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;)
@@ -666,7 +726,8 @@ head(pulse_data, 5)
 <h3>Comparison with Base R</h3>
 <p>The functions in <code>readr</code> are relatively new, and can be used in place of base R’s <code>read.csv</code>, <code>read.table</code>, and so on. The base R versions tend to be slower (very noticeably for large datasets), and the default options can make less sense for modern datasets. Meanwhile, the <code>readr</code> functions export tibbles, and keep characters as characters (instead of converting to factors …).</p>
 <p><strong><em>Learning Assessment:</em></strong> Import the <code>FAS_pups.csv</code> dataset using <code>read.csv</code>. Compare the class of this dataset to the one produced by <code>read_csv</code>. Try printing both in the console – what happens? After cleaning up the names, try accessing the <code>Sex</code> variable using <code>S</code> (e.g., <code>pups_data$S</code>). What happens?</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The code below shows how I might load the dataset using different import functions, and how I might compare the results.</p>
 <pre class="r"><code>pups_base = read.csv(&quot;./data/FAS_pups.csv&quot;)
 pups_readr = read_csv(&quot;./data/FAS_pups.csv&quot;)
@@ -679,7 +740,8 @@ pups_readr
 
 pups_base$S
 pups_readr$S</code></pre>
-<p>In short, <code>read_csv</code> produces tibbles which are very similar to the base R data frames produced by <code>read.csv</code>. However, tibbles have some features that can help prevent mistakes and unwanted behavior. </details></p>
+In short, <code>read_csv</code> produces tibbles which are very similar to the base R data frames produced by <code>read.csv</code>. However, tibbles have some features that can help prevent mistakes and unwanted behavior.
+</details>
 </div>
 <div id="importing-using-file-import" class="section level3">
 <h3>Importing using File &gt; Import</h3>
@@ -700,7 +762,7 @@ pups_readr$S</code></pre>
 <li>R Programming for Data Science gives more detail on data import in <a href="https://bookdown.org/rdpeng/rprogdatascience/getting-data-in-and-out-of-r.html">base R</a> with some information about <a href="https://bookdown.org/rdpeng/rprogdatascience/using-the-readr-package.html">readr</a></li>
 <li>R Programming for Research also discusses <a href="https://geanders.github.io/RProgrammingForResearch/entering-and-cleaning-data-1.html">entering data</a>; the section on pathnames and directories is nicely detailed</li>
 <li>RStudio has recordings of webinars on <a href="https://www.rstudio.com/resources/webinars/getting-your-data-into-r/">Getting data into R</a> and <a href="https://www.rstudio.com/resources/webinars/whats-new-with-readxl/">What’s new with readxl</a></li>
-<li>There are pages on the tidyverse website for <a href="readr" class="uri">readr</a>, <a href="http://readxl.tidyverse.org">readxl</a>, and <a href="http://haven.tidyverse.org">haven</a></li>
+<li>There are pages on the tidyverse website for <a href="readr">readr</a>, <a href="http://readxl.tidyverse.org">readxl</a>, and <a href="http://haven.tidyverse.org">haven</a></li>
 <li>The <a href="https://github.com/rstudio/cheatsheets/raw/master/source/pdfs/data-import-cheatsheet.pdf">data import cheatsheet</a> is handy once you have a good handle on things</li>
 </ul>
 <p>The code that I produced working examples in lecture is <a href="https://github.com/P8105/data_wrangling_i">here</a>.</p>
@@ -710,7 +772,7 @@ pups_readr$S</code></pre>
 <footer>
   <img src="images/p8105_stickers.png" alt="stickers" style="width:30%">
   <br>
-  <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+  <p class="copyright text-muted" align="center">Copyright &copy; 2019 Jeff Goldsmith</p>
 </footer>
 
 
@@ -730,6 +792,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

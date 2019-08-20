@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -25,9 +26,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -79,9 +79,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,6 +104,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +121,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -140,6 +140,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,47 +198,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -250,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +313,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -424,7 +487,7 @@ div.tocify {
 ## 4 CentralPark_NY USW00094728 2016-01-04 2016-01-01     0   2.2  -9.9
 ## 5 CentralPark_NY USW00094728 2016-01-05 2016-01-01     0  -1.6 -11.6
 ## 6 CentralPark_NY USW00094728 2016-01-06 2016-01-01     0   5    -3.8
-## # ... with 1,092 more rows</code></pre>
+## # … with 1,092 more rows</code></pre>
 <p>Several important functions respect grouping structures. You will frequently use <code>summarize</code> to create one-number summaries within each group, or use <code>mutate</code> to define variables within groups. The rest of this example shows these functions in action.</p>
 <p>Because these (and other) functions will use grouping information if it exists, it is sometimes necessary to remove groups using <code>ungroup()</code>.</p>
 </div>
@@ -523,7 +586,7 @@ div.tocify {
   summarize(mean_tmax = mean(tmax),
             median_tmax = median(tmax))
 ## # A tibble: 36 x 4
-## # Groups:   name [?]
+## # Groups:   name [3]
 ##   name           month      mean_tmax median_tmax
 ##   &lt;chr&gt;          &lt;date&gt;         &lt;dbl&gt;       &lt;dbl&gt;
 ## 1 CentralPark_NY 2016-01-01      4.89         5  
@@ -532,7 +595,7 @@ div.tocify {
 ## 4 CentralPark_NY 2016-04-01     16.8         16.7
 ## 5 CentralPark_NY 2016-05-01     21.5         21.1
 ## 6 CentralPark_NY 2016-06-01     27.2         28.3
-## # ... with 30 more rows</code></pre>
+## # … with 30 more rows</code></pre>
 <p>The fact that <code>summarize()</code> produces a dataframe is important (and consistent with other functions in the <code>tidyverse</code>). You can incorporate grouping and summarizing within broader analysis pipelines. For example, we can take create a plot based on the monthly summary:</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month) %&gt;%
@@ -635,15 +698,15 @@ div.tocify {
   mutate(temp_ranking = min_rank(tmax))
 ## # A tibble: 1,098 x 8
 ## # Groups:   name, month [36]
-##   name       id       date       month       prcp  tmax  tmin temp_ranking
-##   &lt;chr&gt;      &lt;chr&gt;    &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;int&gt;
-## 1 CentralPa… USW0009… 2016-01-01 2016-01-01     0   5.6   1.1           18
-## 2 CentralPa… USW0009… 2016-01-02 2016-01-01     0   4.4   0             14
-## 3 CentralPa… USW0009… 2016-01-03 2016-01-01     0   7.2   1.7           22
-## 4 CentralPa… USW0009… 2016-01-04 2016-01-01     0   2.2  -9.9            8
-## 5 CentralPa… USW0009… 2016-01-05 2016-01-01     0  -1.6 -11.6            3
-## 6 CentralPa… USW0009… 2016-01-06 2016-01-01     0   5    -3.8           16
-## # ... with 1,092 more rows</code></pre>
+##   name        id       date       month       prcp  tmax  tmin temp_ranking
+##   &lt;chr&gt;       &lt;chr&gt;    &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;int&gt;
+## 1 CentralPar… USW0009… 2016-01-01 2016-01-01     0   5.6   1.1           18
+## 2 CentralPar… USW0009… 2016-01-02 2016-01-01     0   4.4   0             14
+## 3 CentralPar… USW0009… 2016-01-03 2016-01-01     0   7.2   1.7           22
+## 4 CentralPar… USW0009… 2016-01-04 2016-01-01     0   2.2  -9.9            8
+## 5 CentralPar… USW0009… 2016-01-05 2016-01-01     0  -1.6 -11.6            3
+## 6 CentralPar… USW0009… 2016-01-06 2016-01-01     0   5    -3.8           16
+## # … with 1,092 more rows</code></pre>
 <p>This sort of ranking is useful when filtering data based on rank. We could, for example, keep only the day with the lowest max temperature within each month:</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month) %&gt;%
@@ -658,7 +721,7 @@ div.tocify {
 ## 4 CentralPark_NY USW00094728 2016-04-05 2016-04-01     0   6.1  -3.2
 ## 5 CentralPark_NY USW00094728 2016-04-09 2016-04-01    28   6.1   2.2
 ## 6 CentralPark_NY USW00094728 2016-05-01 2016-05-01    41  10.6   7.2
-## # ... with 41 more rows</code></pre>
+## # … with 41 more rows</code></pre>
 <p>We could also keep the three days with the highest max temperature:</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month) %&gt;%
@@ -673,7 +736,7 @@ div.tocify {
 ## 4 CentralPark_NY USW00094728 2016-02-20 2016-02-01     0  16.1   3.9
 ## 5 CentralPark_NY USW00094728 2016-02-25 2016-02-01     5  16.1   2.8
 ## 6 CentralPark_NY USW00094728 2016-02-29 2016-02-01    13  16.1   8.3
-## # ... with 145 more rows</code></pre>
+## # … with 145 more rows</code></pre>
 <p>In both of these, we’ve skipped a <code>mutate()</code> statement that would create a ranking variable, and gone straight to filtering based on the result.</p>
 <p>Offsets, especially lags, are used to compare an observation to it’s previous value. This is useful, for example, to find the day-by-day change in max temperature within each station over the year:</p>
 <pre class="r"><code>weather_df %&gt;%
@@ -681,15 +744,15 @@ div.tocify {
   mutate(temp_change = tmax - lag(tmax))
 ## # A tibble: 1,098 x 8
 ## # Groups:   name [3]
-##   name        id       date       month       prcp  tmax  tmin temp_change
-##   &lt;chr&gt;       &lt;chr&gt;    &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
-## 1 CentralPar… USW0009… 2016-01-01 2016-01-01     0   5.6   1.1       NA   
-## 2 CentralPar… USW0009… 2016-01-02 2016-01-01     0   4.4   0         -1.20
-## 3 CentralPar… USW0009… 2016-01-03 2016-01-01     0   7.2   1.7        2.8 
-## 4 CentralPar… USW0009… 2016-01-04 2016-01-01     0   2.2  -9.9       -5   
-## 5 CentralPar… USW0009… 2016-01-05 2016-01-01     0  -1.6 -11.6       -3.8 
-## 6 CentralPar… USW0009… 2016-01-06 2016-01-01     0   5    -3.8        6.6 
-## # ... with 1,092 more rows</code></pre>
+##   name        id        date       month       prcp  tmax  tmin temp_change
+##   &lt;chr&gt;       &lt;chr&gt;     &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+## 1 CentralPar… USW00094… 2016-01-01 2016-01-01     0   5.6   1.1       NA   
+## 2 CentralPar… USW00094… 2016-01-02 2016-01-01     0   4.4   0         -1.20
+## 3 CentralPar… USW00094… 2016-01-03 2016-01-01     0   7.2   1.7        2.8 
+## 4 CentralPar… USW00094… 2016-01-04 2016-01-01     0   2.2  -9.9       -5   
+## 5 CentralPar… USW00094… 2016-01-05 2016-01-01     0  -1.6 -11.6       -3.8 
+## 6 CentralPar… USW00094… 2016-01-06 2016-01-01     0   5    -3.8        6.6 
+## # … with 1,092 more rows</code></pre>
 <p>This kind of variable might be used to quantify the day-by-day variability in max temperature, or to identify the largest one-day increase:</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name) %&gt;%
@@ -711,7 +774,8 @@ div.tocify {
 <h3>Revisiting examples</h3>
 <p>We’ve seen the PULSE and FAS datasets on several occasions, and we’ll briefly revisit them here.</p>
 <p><strong><em>Learning Assessment:</em></strong> In the PULSE data, the primary outcome is BDI score; it’s observed over follow-up visits, and we might ask if the typical BDI score values are roughly similar at each. Try to write a code chunk that imports, cleans, and summarizes the PULSE data to examine the mean and median at each visit. Export the results of this in a reader-friendly format.</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The code chunk below imports and tidies the PUSLE data, produces the desired information, and exports it using <code>knitr::kable</code>.</p>
 <pre class="r"><code>pulse_data = haven::read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;) %&gt;%
   janitor::clean_names() %&gt;%
@@ -727,9 +791,11 @@ pulse_data %&gt;%
   summarize(mean_bdi = mean(bdi, na.rm = TRUE),
             median_bdi = median(bdi, na.rm = TRUE)) %&gt;% 
   knitr::kable(digits = 3)</code></pre>
-<p>This quick summary suggests a relatively large drop in the typical BDI score from baseline to 1 month, with small or no changes thereafter. </details></p>
+This quick summary suggests a relatively large drop in the typical BDI score from baseline to 1 month, with small or no changes thereafter.
+</details>
 <p><strong><em>Learning Assessment:</em></strong> In the FAS data, there are several outcomes of interest; for now, focus on post-natal day on which a pup is able to pivot. Two predictors of interest are the dose level and the day of treatment. Produce a reader-friendly table</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The code chunk below imports the litters and pups data, joins them, produces the desired information, un-tidies the result, and exports a table using <code>knitr::kable</code>.</p>
 <pre class="r"><code>pup_data = read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;) %&gt;%
   janitor::clean_names() %&gt;%
@@ -751,7 +817,7 @@ fas_data %&gt;%
   spread(key = dose, value = mean_pivot) %&gt;% 
   knitr::kable(digits = 3)</code></pre>
 <p>These results may suggest that pups in the control group are able to pivot earlier than pups in the low-dose group, but it is unclear if there are differences between the control and moderate-dose groups or if day of treatment is an important predictor.</p>
-<p></details></p>
+</details>
 <p><strong><em>Note</em></strong>: In both of these examples, the data are structure such that repeated observations are made on the same study units. In the PULSE data, repeated observations are made on subjects over time; in the FAS data, pups are “repeated observations” within litters. The analyses here, and plots made previously, are <em>exploratory</em> – any more substantial claims would require appropriate statistical analysis for non-independent samples.</p>
 </div>
 </div>
@@ -769,7 +835,7 @@ fas_data %&gt;%
 <footer>
   <img src="images/p8105_stickers.png" alt="stickers" style="width:30%">
   <br>
-  <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+  <p class="copyright text-muted" align="center">Copyright &copy; 2019 Jeff Goldsmith</p>
 </footer>
 
 
@@ -789,6 +855,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

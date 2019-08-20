@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -25,9 +26,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -79,9 +79,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,6 +104,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +121,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -140,6 +140,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,47 +198,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -250,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +313,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -397,6 +460,14 @@ div.tocify {
 <h2>Example</h2>
 <p>I’ll keep using the same repo / project as in <a href="data_import.html">data import</a> and <a href="data_manipulation.html">data manipulation</a>, but create a new .Rmd for tidying. I’m also going to load some relevant packages, and limit the number of lines printed in a tibble.</p>
 <pre class="r"><code>library(tidyverse)
+## ── Attaching packages ─────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.1
+## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0
+## ── Conflicts ────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
 
 options(tibble.print_min = 5)</code></pre>
 <div id="gather" class="section level3">
@@ -413,7 +484,7 @@ pulse_data
 ## 3 10022  58.5 male            14             3             8            NA
 ## 4 10026  72.7 male            20             6            18            16
 ## 5 10035  60.4 male             4             0             1             2
-## # ... with 1,082 more rows</code></pre>
+## # … with 1,082 more rows</code></pre>
 <p>With our new understanding of tidy data, we quickly recognize a problem: the BDI score is spread across four columns, which correspond to four observation times. We can fix this problem using <code>gather</code>:</p>
 <pre class="r"><code>pulse_tidy_data = gather(pulse_data, key = visit, value = bdi, bdi_score_bl:bdi_score_12m)
 ## Warning: attributes are not identical across measure variables;
@@ -427,7 +498,7 @@ pulse_tidy_data
 ## 3 10022  58.5 male  bdi_score_bl    14
 ## 4 10026  72.7 male  bdi_score_bl    20
 ## 5 10035  60.4 male  bdi_score_bl     4
-## # ... with 4,343 more rows</code></pre>
+## # … with 4,343 more rows</code></pre>
 <p>This looks much better! However, you should notice that this produced a warning. The warning seemed pretty specific but I didn’t understand it, so I googled “tidyr gather attributes are not identical across measure variables; they will be dropped” and found <a href="https://stackoverflow.com/questions/28972386/retain-attributes-when-using-gather-from-tidyr-attributes-are-not-identical">this</a>. After some reading (and maybe a bit more googling), it started to sound like the columns containing BDI scores had different attributes, and indeed they do:</p>
 <pre class="r"><code>str(pulse_data)
 ## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    1087 obs. of  7 variables:
@@ -462,7 +533,7 @@ pulse_tidy_data
 ## 3 10022  58.5 male  bdi      score    bl       14
 ## 4 10026  72.7 male  bdi      score    bl       20
 ## 5 10035  60.4 male  bdi      score    bl        4
-## # ... with 4,343 more rows</code></pre>
+## # … with 4,343 more rows</code></pre>
 <p>This isn’t really the optimal way to isolate “visit” because I now need an additional <code>select</code> step to remove the unnecessary character variables <code>remove_1</code> and <code>remove_2</code>. However, it does illustrate the <code>separate</code> function, and we haven’t yet learned about <code>str_replace</code> and other functions from the <code>stringr</code> package that are better suited to this problem, so …</p>
 <p>In the preceding I’ve saved intermediate datasets to make each step clear. While this can be a helpful crutch as you’re trying out code, it is generally bad practice. There are also some additional transformations needed to wrap up the data wrangling process, like changing <code>bl</code> to <code>00m</code> for consistency across visits and converting <code>visit</code> to a factor variable. (It’s possible that you would want <code>visit</code> to be a numeric variable instead, which could be done with a different call to <code>mutate</code>.) Lastly, it’s nice to organize the data into a reasonable order.</p>
 <p>Altogether, then, the code below will import, tidy, and transform the PULSE dataset into a usable format:</p>
@@ -493,7 +564,7 @@ print(pulse_data, n = 12)
 ## 10 10022 01m    58.5 male      3
 ## 11 10022 06m    58.5 male      8
 ## 12 10022 12m    58.5 male     NA
-## # ... with 4,336 more rows</code></pre>
+## # … with 4,336 more rows</code></pre>
 <p>Before moving on, let’s revisit the <code>group</code> variable in the litters dataset:</p>
 <pre class="r"><code>read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;% 
   janitor::clean_names() %&gt;%
@@ -512,7 +583,7 @@ print(pulse_data, n = 12)
   read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;% 
   janitor::clean_names() %&gt;%
   separate(group, into = c(&quot;dose&quot;, &quot;day_of_tx&quot;), sep = 3) %&gt;%
-  mutate(dose = tolower(dose),
+  mutate(dose = str_to_lower(dose),
          wt_gain = gd18_weight - gd0_weight) %&gt;%
   arrange(litter_number)
 
@@ -525,11 +596,12 @@ litters_data
 ## 3 con   8         #1/6/2/2/95-2         NA        NA            20
 ## 4 mod   7         #1/82/3-2             NA        NA            19
 ## 5 low   8         #100                  20        39.2          20
-## # ... with 44 more rows, and 4 more variables: pups_born_alive &lt;int&gt;,
+## # … with 44 more rows, and 4 more variables: pups_born_alive &lt;int&gt;,
 ## #   pups_dead_birth &lt;int&gt;, pups_survive &lt;int&gt;, wt_gain &lt;dbl&gt;</code></pre>
 <p>Now we’re in pretty okay shape :-).</p>
 <p><strong><em>Learning Assessment:</em></strong> In the litters data, the variables <code>gd0_weight</code> and <code>gd18_weight</code> give the weight of the mother mouse on gestational days 0 and 18. Write a data cleaning chain that retains only <code>litter_number</code> and these columns; produces new variables <code>gd</code> and <code>weight</code>; and makes <code>gd</code> a numeric variable taking values <code>0</code> and <code>18</code> (for the last part, you might want to use <code>recode</code> …). Is this version “tidy”?</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The code below shows one approach to this data cleaning process:</p>
 <pre class="r"><code>litters_data %&gt;% 
   select(litter_number, ends_with(&quot;weight&quot;)) %&gt;% 
@@ -543,9 +615,9 @@ litters_data
 ## 3 #1/6/2/2/95-2       0     NA
 ## 4 #1/82/3-2           0     NA
 ## 5 #100                0     20
-## # ... with 93 more rows</code></pre>
+## # … with 93 more rows</code></pre>
 <p>In one sense, this is “tidy” because I have a variable for day and a variable for weight rather that using values in my variable names. However, it’s less useful if I’m interested in computing or analyzing weight gain during pregnancy.</p>
-<p></details></p>
+</details>
 </div>
 <div id="spread" class="section level3">
 <h3><code>spread</code></h3>
@@ -591,7 +663,7 @@ return_king = readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &qu
 <pre class="r"><code>lotr_tidy = bind_rows(fellowship_ring, two_towers, return_king) %&gt;%
   janitor::clean_names() %&gt;%
   gather(key = sex, value = words, female:male) %&gt;%
-  mutate(race = tolower(race)) %&gt;% 
+  mutate(race = str_to_lower(race)) %&gt;% 
   select(movie, everything()) 
 
 lotr_tidy
@@ -639,7 +711,7 @@ litter_data = read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccd
   select(-pups_survive) %&gt;%
   mutate(
     wt_gain = gd18_weight - gd0_weight,
-    group = tolower(group))
+    group = str_to_lower(group))
 
 fas_data = left_join(pup_data, litter_data, by = &quot;litter_number&quot;)
 fas_data
@@ -651,14 +723,15 @@ fas_data
 ## 3 #1/2/95/2     male        5      13        7       9 con7        27  
 ## 4 #1/2/95/2     male        5      13        8      10 con7        27  
 ## 5 #5/5/3/83/3-3 male        5      13        8      10 con7        26  
-## # ... with 308 more rows, and 5 more variables: gd18_weight &lt;dbl&gt;,
+## # … with 308 more rows, and 5 more variables: gd18_weight &lt;dbl&gt;,
 ## #   gd_of_birth &lt;int&gt;, pups_born_alive &lt;int&gt;, pups_dead_birth &lt;int&gt;,
 ## #   wt_gain &lt;dbl&gt;</code></pre>
 <p>We made the key explicit in the join. By default, the <code>*_join</code> functions in <code>dplyr</code> will try to determine the key(s) based on variable names in the datasets you want to join. This is often but not always sufficient, and an extra step to make the key clear will help you and others reading your code.</p>
 <p>Note that joining is not particularly amenable to the <code>%&gt;%</code> operator because it is fundamentally non-linear: two separate datasets are coming together, rather than a single dataset being processed in a step-by-step fashion.</p>
 <p>As a final point, the <code>*_join</code> functions are very much related to SQL syntax, but emphasize operations common to data analysis.</p>
 <p><strong><em>Learning Assessment:</em></strong> The datasets in <a href="data/survey_results.zip">this zip file</a> contain de-identified responses to surveys included in Homeworks 0 and 1. Both contain a unique student identifier; the first has reponses to a question about operating systems, and the second has responses to questions about degree program and git experience. Write a code chunk that imports and cleans both datasets, and then joins them.</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>I put both datasets in the <code>data</code> directory in my repo / project. The code below imports both datasets, cleans up variable names, and joins the datasets using <code>left_join</code>, <code>inner_join</code>, and <code>anti_join</code>.</p>
 <pre class="r"><code>surv_os = read_csv(&quot;data/surv_os.csv&quot;) %&gt;% 
   janitor::clean_names() %&gt;% 
@@ -674,7 +747,11 @@ left_join(surv_os, surv_pr_git)
 inner_join(surv_os, surv_pr_git)
 anti_join(surv_os, surv_pr_git)
 anti_join(surv_pr_git, surv_os)</code></pre>
-<p></details></p>
+</details>
+</div>
+<div id="a-quick-note-on-names" class="section level3">
+<h3>A quick note on names</h3>
+<p><code>gather</code> and <code>spread</code> aren’t really intuitive names for what the functions do. As a result, <code>tidyr</code> <a href="https://tidyr.tidyverse.org/dev/articles/pivot.html">is being updated</a> to include <code>pivot_longer</code> and <code>pivot_wider</code> – names that are at least more in keeping with how this kind of tidying is described elsewhere. <code>gather</code> and <code>spread</code> will still exist, but they’re going to be less common over time.</p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
@@ -692,7 +769,7 @@ anti_join(surv_pr_git, surv_os)</code></pre>
 <footer>
   <img src="images/p8105_stickers.png" alt="stickers" style="width:30%">
   <br>
-  <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+  <p class="copyright text-muted" align="center">Copyright &copy; 2019 Jeff Goldsmith</p>
 </footer>
 
 
@@ -712,6 +789,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

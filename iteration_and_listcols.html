@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -25,9 +26,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -79,9 +79,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,6 +104,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +121,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -140,6 +140,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,47 +198,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -250,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +313,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -568,7 +631,8 @@ read_page_reviews = function(url) {
 <p><strong><em>Learning Assessment:</em></strong> Use this function to read the five pages of reviews on the URLs defined in the code chunk below.</p>
 <pre class="r"><code>url_base = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=&quot;
 vec_urls = str_c(url_base, 1:5)</code></pre>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>First I’ll define a vector of URLs to act as an input, and then I’ll iterate over that vector using both a for loop and a <code>map_df</code> statement.</p>
 <pre class="r"><code>output = vector(&quot;list&quot;, 5)
 
@@ -580,7 +644,7 @@ dynamite_reviews = bind_rows(output)
 
 dynamite_reviews = map_df(vec_urls, read_page_reviews)</code></pre>
 <p>As with previous examples, using a for loop is pretty okay but the <code>map_df</code> call is clearer.</p>
-<p></details></p>
+</details>
 </div>
 <div id="list-columns" class="section level3">
 <h3>List columns</h3>
@@ -617,83 +681,63 @@ weather_nest
 weather_nest %&gt;% pull(data)
 ## [[1]]
 ## # A tibble: 366 x 4
-##    date        prcp  tmax  tmin
-##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 2016-01-01     0   5.6   1.1
-##  2 2016-01-02     0   4.4   0  
-##  3 2016-01-03     0   7.2   1.7
-##  4 2016-01-04     0   2.2  -9.9
-##  5 2016-01-05     0  -1.6 -11.6
-##  6 2016-01-06     0   5    -3.8
-##  7 2016-01-07     0   7.8  -0.5
-##  8 2016-01-08     0   7.8  -0.5
-##  9 2016-01-09     0   8.3   4.4
-## 10 2016-01-10   457  15     4.4
-## # ... with 356 more rows
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0   5.6   1.1
+## 2 2016-01-02     0   4.4   0  
+## 3 2016-01-03     0   7.2   1.7
+## 4 2016-01-04     0   2.2  -9.9
+## 5 2016-01-05     0  -1.6 -11.6
+## 6 2016-01-06     0   5    -3.8
+## # … with 360 more rows
 ## 
 ## [[2]]
 ## # A tibble: 366 x 4
-##    date        prcp  tmax  tmin
-##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 2016-01-01     0  29.4  16.7
-##  2 2016-01-02     0  28.3  16.7
-##  3 2016-01-03     0  28.3  16.7
-##  4 2016-01-04     0  28.3  16.1
-##  5 2016-01-05     0  27.2  16.7
-##  6 2016-01-06     0  27.2  20  
-##  7 2016-01-07    46  27.8  18.3
-##  8 2016-01-08     3  28.3  17.8
-##  9 2016-01-09     8  27.8  19.4
-## 10 2016-01-10     3  28.3  18.3
-## # ... with 356 more rows
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0  29.4  16.7
+## 2 2016-01-02     0  28.3  16.7
+## 3 2016-01-03     0  28.3  16.7
+## 4 2016-01-04     0  28.3  16.1
+## 5 2016-01-05     0  27.2  16.7
+## 6 2016-01-06     0  27.2  20  
+## # … with 360 more rows
 ## 
 ## [[3]]
 ## # A tibble: 366 x 4
-##    date        prcp  tmax  tmin
-##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 2016-01-01     0   1.7  -5.9
-##  2 2016-01-02    25  -0.1  -6  
-##  3 2016-01-03     0  -5   -10  
-##  4 2016-01-04    25   0.3  -9.8
-##  5 2016-01-05    25   1.9  -1.8
-##  6 2016-01-06    25   1.4  -2.6
-##  7 2016-01-07     0   1.4  -3.9
-##  8 2016-01-08     0   1.1  -4  
-##  9 2016-01-09     0   1.4  -4.5
-## 10 2016-01-10     0   2.3  -3.8
-## # ... with 356 more rows</code></pre>
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0   1.7  -5.9
+## 2 2016-01-02    25  -0.1  -6  
+## 3 2016-01-03     0  -5   -10  
+## 4 2016-01-04    25   0.3  -9.8
+## 5 2016-01-05    25   1.9  -1.8
+## 6 2016-01-06    25   1.4  -2.6
+## # … with 360 more rows</code></pre>
 <p>The list column really is a list, and will behave as such elsewhere in R. So, for example, you can examine the first list entry using usual list index procedures.</p>
 <pre class="r"><code>weather_nest$data[[1]]
 ## # A tibble: 366 x 4
-##    date        prcp  tmax  tmin
-##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 2016-01-01     0   5.6   1.1
-##  2 2016-01-02     0   4.4   0  
-##  3 2016-01-03     0   7.2   1.7
-##  4 2016-01-04     0   2.2  -9.9
-##  5 2016-01-05     0  -1.6 -11.6
-##  6 2016-01-06     0   5    -3.8
-##  7 2016-01-07     0   7.8  -0.5
-##  8 2016-01-08     0   7.8  -0.5
-##  9 2016-01-09     0   8.3   4.4
-## 10 2016-01-10   457  15     4.4
-## # ... with 356 more rows</code></pre>
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0   5.6   1.1
+## 2 2016-01-02     0   4.4   0  
+## 3 2016-01-03     0   7.2   1.7
+## 4 2016-01-04     0   2.2  -9.9
+## 5 2016-01-05     0  -1.6 -11.6
+## 6 2016-01-06     0   5    -3.8
+## # … with 360 more rows</code></pre>
 <p>Of course, if you can <code>nest</code> data you should be able to <code>unnest</code> it as well, and you can (with the caveat that you’re unnesting a list column that contains a data frame).</p>
 <pre class="r"><code>unnest(weather_nest)
 ## # A tibble: 1,098 x 6
-##    name           id          date        prcp  tmax  tmin
-##    &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 CentralPark_NY USW00094728 2016-01-01     0   5.6   1.1
-##  2 CentralPark_NY USW00094728 2016-01-02     0   4.4   0  
-##  3 CentralPark_NY USW00094728 2016-01-03     0   7.2   1.7
-##  4 CentralPark_NY USW00094728 2016-01-04     0   2.2  -9.9
-##  5 CentralPark_NY USW00094728 2016-01-05     0  -1.6 -11.6
-##  6 CentralPark_NY USW00094728 2016-01-06     0   5    -3.8
-##  7 CentralPark_NY USW00094728 2016-01-07     0   7.8  -0.5
-##  8 CentralPark_NY USW00094728 2016-01-08     0   7.8  -0.5
-##  9 CentralPark_NY USW00094728 2016-01-09     0   8.3   4.4
-## 10 CentralPark_NY USW00094728 2016-01-10   457  15     4.4
-## # ... with 1,088 more rows</code></pre>
+##   name           id          date        prcp  tmax  tmin
+##   &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 CentralPark_NY USW00094728 2016-01-01     0   5.6   1.1
+## 2 CentralPark_NY USW00094728 2016-01-02     0   4.4   0  
+## 3 CentralPark_NY USW00094728 2016-01-03     0   7.2   1.7
+## 4 CentralPark_NY USW00094728 2016-01-04     0   2.2  -9.9
+## 5 CentralPark_NY USW00094728 2016-01-05     0  -1.6 -11.6
+## 6 CentralPark_NY USW00094728 2016-01-06     0   5    -3.8
+## # … with 1,092 more rows</code></pre>
 <p>Nesting columns can help with data organization and comprehension by masking complexity you’re less concerned about right now and clarifying the things you are concerned about. In the weather data, it can be helpful to think of stations as the basic unit of observation, and daily weather recordings as a more granular level of observation. Nesting can also simplify the use of analytic approaches across levels of a higher variable.</p>
 </div>
 <div id="operations-on-list-columns" class="section level3">
@@ -781,11 +825,11 @@ weather_nest %&gt;% pull(data)
 
 weather_nest
 ## # A tibble: 3 x 4
-##   name           id          data               models  
-##   &lt;chr&gt;          &lt;chr&gt;       &lt;list&gt;             &lt;list&gt;  
-## 1 CentralPark_NY USW00094728 &lt;tibble [366 × 4]&gt; &lt;S3: lm&gt;
-## 2 Waikiki_HA     USC00519397 &lt;tibble [366 × 4]&gt; &lt;S3: lm&gt;
-## 3 Waterhole_WA   USS0023B17S &lt;tibble [366 × 4]&gt; &lt;S3: lm&gt;</code></pre>
+##   name           id          data               models
+##   &lt;chr&gt;          &lt;chr&gt;       &lt;list&gt;             &lt;list&gt;
+## 1 CentralPark_NY USW00094728 &lt;tibble [366 × 4]&gt; &lt;lm&gt;  
+## 2 Waikiki_HA     USC00519397 &lt;tibble [366 × 4]&gt; &lt;lm&gt;  
+## 3 Waterhole_WA   USS0023B17S &lt;tibble [366 × 4]&gt; &lt;lm&gt;</code></pre>
 <p>This is great! We now have a data frame that has rows for each station; columns contain weather datasets and fitted models. This makes it very easy to keep track of models across stations, and to perform additional analyses.</p>
 <p>This is, for sure, a fairly complex bit of code, but in just a few lines we’re able to fit separate linear models to each of our stations. And, once you get used to list columns, <code>map</code>, and the rest of it, these lines of code are pretty clear and can be extended to larger datasets with more complex structures.</p>
 </div>
@@ -812,7 +856,7 @@ lotr_tidy =
   unnest() %&gt;% 
   janitor::clean_names() %&gt;% 
   gather(key = sex, value = words, female:male) %&gt;%
-  mutate(race = tolower(race)) %&gt;% 
+  mutate(race = str_to_lower(race)) %&gt;% 
   select(movie, everything(), -cells) </code></pre>
 </div>
 </div>
@@ -838,7 +882,7 @@ lotr_tidy =
 <footer>
   <img src="images/p8105_stickers.png" alt="stickers" style="width:30%">
   <br>
-  <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+  <p class="copyright text-muted" align="center">Copyright &copy; 2019 Jeff Goldsmith</p>
 </footer>
 
 
@@ -858,6 +902,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

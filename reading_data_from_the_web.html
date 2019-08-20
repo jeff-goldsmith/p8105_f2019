@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -25,9 +26,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -79,9 +79,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,6 +104,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +121,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -140,6 +140,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,47 +198,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -250,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +313,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -445,33 +508,30 @@ drug_use_xml
 
 table_marj
 ## # A tibble: 56 x 16
-##    State `12+(2013-2014)` `12+(2014-2015)` `12+(P Value)` `12-17(2013-201…
-##    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;           
-##  1 Tota… 12.90a           13.36            0.002          13.28b          
-##  2 Nort… 13.88a           14.66            0.005          13.98           
-##  3 Midw… 12.40b           12.76            0.082          12.45           
-##  4 South 11.24a           11.64            0.029          12.02           
-##  5 West  15.27            15.62            0.262          15.53a          
-##  6 Alab… 9.98             9.60             0.426          9.90            
-##  7 Alas… 19.60a           21.92            0.010          17.30           
-##  8 Ariz… 13.69            13.12            0.364          15.12           
-##  9 Arka… 11.37            11.59            0.678          12.79           
-## 10 Cali… 14.49            15.25            0.103          15.03           
-## # ... with 46 more rows, and 11 more variables: `12-17(2014-2015)` &lt;chr&gt;,
+##   State `12+(2013-2014)` `12+(2014-2015)` `12+(P Value)` `12-17(2013-201…
+##   &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;           
+## 1 Tota… 12.90a           13.36            0.002          13.28b          
+## 2 Nort… 13.88a           14.66            0.005          13.98           
+## 3 Midw… 12.40b           12.76            0.082          12.45           
+## 4 South 11.24a           11.64            0.029          12.02           
+## 5 West  15.27            15.62            0.262          15.53a          
+## 6 Alab… 9.98             9.60             0.426          9.90            
+## # … with 50 more rows, and 11 more variables: `12-17(2014-2015)` &lt;chr&gt;,
 ## #   `12-17(P Value)` &lt;chr&gt;, `18-25(2013-2014)` &lt;chr&gt;,
 ## #   `18-25(2014-2015)` &lt;chr&gt;, `18-25(P Value)` &lt;chr&gt;,
 ## #   `26+(2013-2014)` &lt;chr&gt;, `26+(2014-2015)` &lt;chr&gt;, `26+(P Value)` &lt;chr&gt;,
 ## #   `18+(2013-2014)` &lt;chr&gt;, `18+(2014-2015)` &lt;chr&gt;, `18+(P Value)` &lt;chr&gt;</code></pre>
 <p>Success!! At least, mostly. These data aren’t <a href="tidy_data.html">tidy</a>, but we’ll worry about that <a href="strings_and_factors.html">soon</a>.</p>
 <p><strong><em>Learning assessment:</em></strong> Create a data frame that contains the cost of living table for New York from <a href="https://www.bestplaces.net/cost_of_living/city/new_york/new_york">this page</a>.</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The code below shows one approach to this data cleaning process:</p>
 <pre class="r"><code>nyc_cost = read_html(&quot;https://www.bestplaces.net/cost_of_living/city/new_york/new_york&quot;) %&gt;%
   html_nodes(css = &quot;table&quot;) %&gt;%
   .[[1]] %&gt;%
   html_table(header = TRUE)</code></pre>
 <p>In case you hadn’t known, NYC is kind of expensive.</p>
-<p></details></p>
+</details>
 </div>
 <div id="css-selectors" class="section level3">
 <h3>CSS Selectors</h3>
@@ -498,7 +558,8 @@ hpsaga_df = tibble(
   runtime = runtime_vec
 )</code></pre>
 <p><strong><em>Learning Assessment:</em></strong> <a href="https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=1">This page</a> contains the 10 most recent reviews of the movie “Napoleon Dynamite”. Use a process similar to the one above to extract the titles of the reviews. Note: getting the star ratings from Amazon is trickier, but the CSS path <code>&quot;#cm_cr-review_list .review-rating&quot;</code> helps – I discovered this after about an hour of googling around.</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The code below will give me relevant information for the ten most recent reviews on Amazon:</p>
 <pre class="r"><code>url = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=1&quot;
 
@@ -521,7 +582,7 @@ reviews = tibble(
   stars = review_stars,
   text = review_text
 )</code></pre>
-<p></details></p>
+</details>
 </div>
 <div id="using-an-api" class="section level3">
 <h3>Using an API</h3>
@@ -531,10 +592,10 @@ reviews = tibble(
   content(&quot;parsed&quot;)
 ## Parsed with column specification:
 ## cols(
+##   year = col_double(),
 ##   new_york_city_population = col_double(),
 ##   nyc_consumption_million_gallons_per_day = col_double(),
-##   per_capita_gallons_per_person_per_day = col_integer(),
-##   year = col_integer()
+##   per_capita_gallons_per_person_per_day = col_double()
 ## )</code></pre>
 <p>We can also import this dataset as a JSON file. This takes a bit more work (and this is, really, a pretty easy case), but it’s still doable.</p>
 <pre class="r"><code>nyc_water = GET(&quot;https://data.cityofnewyork.us/resource/waf7-5gvc.json&quot;) %&gt;% 
@@ -612,7 +673,7 @@ poke$abilities
 <footer>
   <img src="images/p8105_stickers.png" alt="stickers" style="width:30%">
   <br>
-  <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+  <p class="copyright text-muted" align="center">Copyright &copy; 2019 Jeff Goldsmith</p>
 </footer>
 
 
@@ -632,6 +693,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

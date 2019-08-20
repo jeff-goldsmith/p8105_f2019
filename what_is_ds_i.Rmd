@@ -13,6 +13,9 @@ In this, we'll provide a basic definition of "data science" and discuss the conn
 <script async class="speakerdeck-embed" data-id="5d70b1a8ec6344729af32f4821a312c5" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-what-is-data-science" title="What is data science?" target="_blank">What is Data Science?</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
 
+## Example
+
+
 
 ## Other materials
 

@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -25,9 +26,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -79,9 +79,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,6 +104,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +121,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -140,6 +140,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,47 +198,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -250,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +313,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -448,7 +511,8 @@ The mean is `r mean(samp)`.</code></pre>
 <p>You can also cache the results of a code chunk, but we will largely avoid this. Caching can save time by saving the results of a code chunk instead of re-executing when the document is knit. However, you have to be careful when using this option since downstream code can depend on upstream changes. Controlling this behavior through the <code>dependson</code> option can help, but if you cache code you’ll want to periodically clear you cache to ensure you’re getting reproducible results.</p>
 <p>Inserting brief code snippets inline is often helpful; I frequently use these to give the sample size or summary statistics in text. You can insert code inline using <code>`r `</code>, often in conjunction with the <code>format()</code> function to clean up your output.</p>
 <p><strong><em>Learning assessment:</em></strong> Write a named code chunk that creates a variable containing a sample of size 500 from a random normal variable, computes the absolute value of each element, and produces a histogram of the result. Add an inline summary giving the median value rounded to two decimal places. What happens if you set <code>eval = FALSE</code> to the code chunk? What about <code>echo = FALSE</code>?</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The snippet below shows the relevant section of an R Markdown document.</p>
 <pre><code>The chunk below creates a dataframe containing a sample of size 500 from a 
 random normal variable and the absolute value of each element of that sample, 
@@ -467,7 +531,7 @@ ggplot(la_df, aes(x = abs_norm_samp)) + geom_histogram()
 
 The median of the variable containing absolute values is 
 `r round(median(la_df$abs_norm_samp), digits = 2)`.</code></pre>
-<p></details></p>
+</details>
 </div>
 <div id="formatting-text" class="section level3">
 <h3>Formatting text</h3>
@@ -516,12 +580,13 @@ Content Cell  | Content Cell
 Content Cell  | Content Cell</code></pre>
 <p>You’ll need to refer to this list (or to similar resources) pretty often at first, but most of it will become second-nature after you’ve written a few documents.</p>
 <p><strong><em>Learning assessment:</em></strong> After the previous code chunk, write a bullet list given the mean, median, and standard deviation of the original random sample.</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>The snippet below shows the relevant section of an R Markdown document.</p>
 <pre><code>* The mean of the sample is `r mean(ls_df$norm_samp)`
 * The median of the sample is `r median(ls_df$norm_samp)`
 * The median of the sample is `r median(ls_df$norm_samp)`</code></pre>
-<p></details></p>
+</details>
 </div>
 <div id="yaml-and-output-formats" class="section level3">
 <h3>YAML and output formats</h3>
@@ -540,8 +605,8 @@ date: 2018-09-11</code></pre>
   pdf_document: default</code></pre>
 <pre class="yaml"><code>output:
   word_document: default</code></pre>
-<p>The formatting for both PDF and Word documents can be controlled through options as well, although these can be tricky to control (especially for Word documents).</p>
-<p>Soon we’ll see the <code>github_document</code> format, and later in the course we’ll talk about some other output formats – especially dashboards and websites – introducing other YAML options as needed.</p>
+<p>The formatting for both PDF and Word documents can be controlled through options as well, although these can be tricky to control (especially for Word documents). If you’re really interested in generating reports using Word, you probably will want to read up on the <a href="https://noamross.github.io/redoc/index.html"><code>redoc</code></a> package!</p>
+<p>We use the <code>github_document</code> format extensively in this course, and talk more about why in <a href="git.html">git and github</a>. Later in the course we’ll talk about some other output formats – especially dashboards and websites – introducing other YAML options as needed.</p>
 </div>
 </div>
 <div id="new-workflow" class="section level2">
@@ -556,7 +621,8 @@ date: 2018-09-11</code></pre>
 <p>The bold stuff is new; This should become your default behavior when starting any new project.</p>
 <p>A last note about reproducibility: each time you knit an R Markdown file, <code>knitr</code> uses a new R session to run the included code. As a result, knitting is a great way to make sure your analysis is self-contained and you should knit frequently!</p>
 <p><strong><em>Learning assessment:</em></strong> Convert the scripts for exploring vector classes and producing basic plots (from <a href="best_practices.html">best practices</a>) to self-contained R Markdown files that produce HTML documents.</p>
-<p><details> <summary> Solution </summary></p>
+<details>
+<p><summary> Solution </summary></p>
 <p>Here is a R Markdown file for vector classes:</p>
 <pre><code>---
 title: &quot;Exploring Vector Classes&quot;
@@ -619,7 +685,7 @@ Next we show a scatterplot of `y` vs `x`.
 ```{r yx_scatter}
 ggplot(plot_df, aes(x = x, y = y)) + geom_point()
 ```</code></pre>
-<p></details></p>
+</details>
 </div>
 <div id="other-materials" class="section level2">
 <h2>Other materials</h2>
@@ -659,6 +725,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

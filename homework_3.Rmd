@@ -1,0 +1,20 @@
+---
+title: "Homework 3"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+---
+
+### Context
+
+This assignment reinforces ideas in [Visualization and EDA](topic_visualization_and_eda.html). 
+
+### Due date and submission
+
+Due: October 14 at 4:00pm. 
+
+Please submit (via courseworks) the web address of the GitHub repo containing your work for this assignment; git commits after the due date will cause the assignment to be considered late.
+
+R Markdown documents included as part of your solutions must not install packages, and should only load the packages necessary for your submission to knit. 
+

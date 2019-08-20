@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -25,9 +26,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -79,9 +79,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,6 +104,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +121,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -140,6 +140,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,47 +198,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -250,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +313,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -437,19 +500,22 @@ fitted.values(fit)</code></pre>
 <p>The <code>broom</code> package has functions for obtaining a quick summary of the model and for cleaning up the coefficient table.</p>
 <pre class="r"><code>fit %&gt;% 
   broom::glance()
-##   r.squared adj.r.squared    sigma statistic       p.value df    logLik
-## 1 0.0342338    0.03410725 181.5036  270.5072 6.727024e-229  5 -202112.6
-##        AIC      BIC   deviance df.residual
-## 1 404237.3 404287.2 1005601724       30525
+## # A tibble: 1 x 11
+##   r.squared adj.r.squared sigma statistic   p.value    df  logLik    AIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1    0.0342        0.0341  182.      271. 6.73e-229     5 -2.02e5 4.04e5
+## # … with 3 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;
 
 fit %&gt;% 
   broom::tidy()
-##           term  estimate std.error  statistic       p.value
-## 1  (Intercept)  19.83946 12.189256   1.627619  1.036160e-01
-## 2        stars  31.98989  2.527500  12.656733  1.269392e-36
-## 3 boroBrooklyn -49.75363  2.234878 -22.262345 6.317605e-109
-## 4   boroQueens -77.04776  3.726632 -20.674904  2.584908e-94
-## 5    boroBronx -90.25393  8.567490 -10.534465  6.638618e-26</code></pre>
+## # A tibble: 5 x 5
+##   term         estimate std.error statistic   p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)      19.8     12.2       1.63 1.04e-  1
+## 2 stars            32.0      2.53     12.7  1.27e- 36
+## 3 boroBrooklyn    -49.8      2.23    -22.3  6.32e-109
+## 4 boroQueens      -77.0      3.73    -20.7  2.58e- 94
+## 5 boroBronx       -90.3      8.57    -10.5  6.64e- 26</code></pre>
 <p>Both of these functions produce data frames, which makes it straightforward to include the results in subsequent steps.</p>
 <pre class="r"><code>fit %&gt;% 
   broom::tidy() %&gt;% 
@@ -500,34 +566,26 @@ fit %&gt;%
 <p>The <code>modelr</code> package can be used to add residuals and fitted values to a dataframe.</p>
 <pre class="r"><code>modelr::add_residuals(nyc_airbnb, fit)
 ## # A tibble: 40,492 x 6
-##    price stars boro  neighborhood room_type        resid
-##    &lt;int&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;            &lt;dbl&gt;
-##  1    99   5   Bronx City Island  Private room      9.47
-##  2   200  NA   Bronx City Island  Private room     NA   
-##  3   300  NA   Bronx City Island  Entire home/apt  NA   
-##  4   125   5   Bronx City Island  Entire home/apt  35.5 
-##  5    69   5   Bronx City Island  Private room    -20.5 
-##  6   125   5   Bronx City Island  Entire home/apt  35.5 
-##  7    85   5   Bronx City Island  Entire home/apt  -4.53
-##  8    39   4.5 Bronx Allerton     Private room    -34.5 
-##  9    95   5   Bronx Allerton     Entire home/apt   5.47
-## 10   125   4.5 Bronx Allerton     Entire home/apt  51.5 
-## # ... with 40,482 more rows
+##   price stars boro  neighborhood room_type        resid
+##   &lt;int&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;            &lt;dbl&gt;
+## 1    99     5 Bronx City Island  Private room      9.47
+## 2   200    NA Bronx City Island  Private room     NA   
+## 3   300    NA Bronx City Island  Entire home/apt  NA   
+## 4   125     5 Bronx City Island  Entire home/apt  35.5 
+## 5    69     5 Bronx City Island  Private room    -20.5 
+## 6   125     5 Bronx City Island  Entire home/apt  35.5 
+## # … with 4.049e+04 more rows
 modelr::add_predictions(nyc_airbnb, fit)
 ## # A tibble: 40,492 x 6
-##    price stars boro  neighborhood room_type        pred
-##    &lt;int&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;           &lt;dbl&gt;
-##  1    99   5   Bronx City Island  Private room     89.5
-##  2   200  NA   Bronx City Island  Private room     NA  
-##  3   300  NA   Bronx City Island  Entire home/apt  NA  
-##  4   125   5   Bronx City Island  Entire home/apt  89.5
-##  5    69   5   Bronx City Island  Private room     89.5
-##  6   125   5   Bronx City Island  Entire home/apt  89.5
-##  7    85   5   Bronx City Island  Entire home/apt  89.5
-##  8    39   4.5 Bronx Allerton     Private room     73.5
-##  9    95   5   Bronx Allerton     Entire home/apt  89.5
-## 10   125   4.5 Bronx Allerton     Entire home/apt  73.5
-## # ... with 40,482 more rows</code></pre>
+##   price stars boro  neighborhood room_type        pred
+##   &lt;int&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;           &lt;dbl&gt;
+## 1    99     5 Bronx City Island  Private room     89.5
+## 2   200    NA Bronx City Island  Private room     NA  
+## 3   300    NA Bronx City Island  Entire home/apt  NA  
+## 4   125     5 Bronx City Island  Entire home/apt  89.5
+## 5    69     5 Bronx City Island  Private room     89.5
+## 6   125     5 Bronx City Island  Entire home/apt  89.5
+## # … with 4.049e+04 more rows</code></pre>
 <p>Like many things in the tidyverse, the first argument is a dataframe. That makes it easy to included steps adding residuals or predictions in pipeline of commands to conduct inspections and perform diagnostics.</p>
 <pre class="r"><code>nyc_airbnb %&gt;% 
   modelr::add_residuals(fit) %&gt;% 
@@ -552,9 +610,12 @@ fit_alt = lm(price ~ stars + boro + room_type, data = nyc_airbnb)</code></pre>
 <p>The test of interest is implemented in the <code>anova</code> function which, of course, can be summarized using <code>broom::tidy</code>.</p>
 <pre class="r"><code>anova(fit_null, fit_alt) %&gt;% 
   broom::tidy()
-##   res.df        rss df    sumsq statistic p.value
-## 1  30525 1005601724 NA       NA        NA      NA
-## 2  30523  921447496  2 84154228  1393.807       0</code></pre>
+## Warning: Unknown or uninitialised column: &#39;term&#39;.
+## # A tibble: 2 x 6
+##   res.df         rss    df     sumsq statistic p.value
+##    &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1  30525 1005601724.    NA       NA        NA       NA
+## 2  30523  921447496.     2 84154228.     1394.       0</code></pre>
 <p>Note that this works for <em>nested</em> models only. Comparing non-nested models is a common problem that requires other methods; we’ll see one approach in <a href="cross_validation.html">cross validation</a>.</p>
 </div>
 <div id="nesting-data" class="section level3">
@@ -775,30 +836,25 @@ manhattan_nest_lm_res =
 <pre class="r"><code>manhattan_airbnb %&gt;% 
   lme4::lmer(price ~ stars + room_type + (1 + room_type | neighborhood), data = .) %&gt;% 
   broom::tidy()
-##                                                           term
-## 1                                                  (Intercept)
-## 2                                                        stars
-## 3                                        room_typePrivate room
-## 4                                         room_typeShared room
-## 5                                  sd_(Intercept).neighborhood
-## 6                        sd_room_typePrivate room.neighborhood
-## 7                         sd_room_typeShared room.neighborhood
-## 8           cor_(Intercept).room_typePrivate room.neighborhood
-## 9            cor_(Intercept).room_typeShared room.neighborhood
-## 10 cor_room_typePrivate room.room_typeShared room.neighborhood
-## 11                                     sd_Observation.Residual
-##        estimate std.error  statistic        group
-## 1   249.8962752 26.567299   9.406160        fixed
-## 2    -3.1559390  5.000680  -0.631102        fixed
-## 3  -123.9659425  7.802407 -15.888166        fixed
-## 4  -156.5833251 12.871569 -12.165053        fixed
-## 5    59.3301651        NA         NA neighborhood
-## 6    36.6670849        NA         NA neighborhood
-## 7    43.6155574        NA         NA neighborhood
-## 8    -0.9874765        NA         NA neighborhood
-## 9    -0.9995581        NA         NA neighborhood
-## 10    0.9917299        NA         NA neighborhood
-## 11  197.8341459        NA         NA     Residual</code></pre>
+## boundary (singular) fit: see ?isSingular
+## Warning in bind_rows_(x, .id): binding factor and character vector,
+## coercing into character vector
+## Warning in bind_rows_(x, .id): binding character and factor vector,
+## coercing into character vector
+## # A tibble: 11 x 5
+##    term                               estimate std.error statistic group   
+##    &lt;chr&gt;                                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;   
+##  1 (Intercept)                         250.        26.6      9.41  fixed   
+##  2 stars                                -3.16       5.00    -0.631 fixed   
+##  3 room_typePrivate room              -124.         7.80   -15.9   fixed   
+##  4 room_typeShared room               -157.        12.9    -12.2   fixed   
+##  5 sd_(Intercept).neighborhood          59.3       NA       NA     neighbo…
+##  6 sd_room_typePrivate room.neighbor…   36.7       NA       NA     neighbo…
+##  7 sd_room_typeShared room.neighborh…   43.6       NA       NA     neighbo…
+##  8 cor_(Intercept).room_typePrivate …   -0.987     NA       NA     neighbo…
+##  9 cor_(Intercept).room_typeShared r…   -1.000     NA       NA     neighbo…
+## 10 cor_room_typePrivate room.room_ty…    0.992     NA       NA     neighbo…
+## 11 sd_Observation.Residual             198.        NA       NA     Residual</code></pre>
 <p>Mixed models are pretty great!</p>
 </div>
 <div id="binary-outcomes" class="section level3">
@@ -815,7 +871,7 @@ manhattan_nest_lm_res =
 ## Parsed with column specification:
 ## cols(
 ##   uid = col_character(),
-##   reported_date = col_integer(),
+##   reported_date = col_double(),
 ##   victim_last = col_character(),
 ##   victim_first = col_character(),
 ##   victim_race = col_character(),
@@ -897,19 +953,15 @@ manhattan_nest_lm_res =
   modelr::add_predictions(fit_logistic) %&gt;% 
   mutate(fitted_prob = boot::inv.logit(pred))
 ## # A tibble: 2,827 x 6
-##    resolved victim_age victim_race victim_sex    pred fitted_prob
-##       &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt;       &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;
-##  1        0         17 Black       Male       -0.654        0.342
-##  2        0         26 Black       Male       -0.720        0.327
-##  3        0         21 Black       Male       -0.683        0.335
-##  4        1         61 White       Male       -0.131        0.467
-##  5        1         46 Black       Male       -0.864        0.296
-##  6        1         27 Black       Male       -0.727        0.326
-##  7        1         21 Black       Male       -0.683        0.335
-##  8        1         16 Black       Male       -0.647        0.344
-##  9        1         21 Black       Male       -0.683        0.335
-## 10        1         44 Black       Female      0.0297       0.507
-## # ... with 2,817 more rows</code></pre>
+##   resolved victim_age victim_race victim_sex   pred fitted_prob
+##      &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt;       &lt;chr&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+## 1        0         17 Black       Male       -0.654       0.342
+## 2        0         26 Black       Male       -0.720       0.327
+## 3        0         21 Black       Male       -0.683       0.335
+## 4        1         61 White       Male       -0.131       0.467
+## 5        1         46 Black       Male       -0.864       0.296
+## 6        1         27 Black       Male       -0.727       0.326
+## # … with 2,821 more rows</code></pre>
 </div>
 </div>
 <div id="other-materials" class="section level2">
@@ -930,7 +982,7 @@ manhattan_nest_lm_res =
 <footer>
   <img src="images/p8105_stickers.png" alt="stickers" style="width:30%">
   <br>
-  <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+  <p class="copyright text-muted" align="center">Copyright &copy; 2019 Jeff Goldsmith</p>
 </footer>
 
 
@@ -950,6 +1002,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -25,9 +26,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -79,9 +79,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,6 +104,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -120,7 +121,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -140,6 +140,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -161,47 +198,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -250,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +313,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -398,6 +461,7 @@ div.tocify {
 <div id="a-bit-of-advice" class="section level3">
 <h3>A bit of advice</h3>
 <p>You’ve probably been using computers for as long as you can remember, but now is a good time to develop intentionality in how you use a computer for work. In the context of this class, and in your professional life more broadly, a computer is the tool you use to execute specific tasks; the more skilled you are in using a computer as a tool, the better off you’ll be.</p>
+<p>Think of your computer the way a chef thinks of a kitchen – being able to find and use something exactly when you need will make your work process more seamless. As Ellen Bennett says <a href="https://www.nytimes.com/2019/04/03/t-magazine/kitchen-organization.html">in this article</a>, “It’s about not having to do the extra work” that comes from looking for a tool when you need it. A bit closer to the topic of this class, Hilary Parker <a href="https://peerj.com/preprints/3210/">convincingly argues</a> that “increased fluency and mastery of the tooling means that the practitioner can create uninhibited.”</p>
 <p>Today we’re going to talk a lot about using R and being organized. Beyond that, getting in the habit of using an application launcher / productivity application (like <a href="https://www.alfredapp.com">Alfred</a> for OSX or maybe <a href="https://www.launchy.net">Launchy</a> for Windows 10) will help you quickly navigate on your machine, saving time and effort. You should also get in the habit of using keyboard shortcuts, both in RStudio and elsewhere on your machine.</p>
 </div>
 <div id="get-started" class="section level3">
@@ -412,12 +476,12 @@ div.tocify {
 ##################################################################</code></pre>
 <p>As part of <a href="homework_0.html">Homework 0</a>, we installed a lot of packages. You don’t need to re-install those each time you need them, but you do need to load packages you want to use with the <code>library</code> function. Although we won’t use it yet, I’m going to load the <code>tidyverse</code> package now.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ──────────────────────── tidyverse 1.2.1 ──
-## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
-## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
-## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
-## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## ── Conflicts ─────────────────────────── tidyverse_conflicts() ──
+## ── Attaching packages ─────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.1
+## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0
+## ── Conflicts ────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>You can do basic computations in R, either on the command line (in the console) or by writing things in the script and executing the code in the console. Note that you can execute commands (e.g. the line with the cursor or highlighted code) in the console from a script using Command+Enter (Mac) or Ctrl+Enter (Windows).</p>
@@ -436,15 +500,15 @@ x + y
 <p>When making assignments, R assumes you don’t want to see the result. If you do want to see the result, you’ll have to ask for it. You can also apply <strong>functions</strong> to objects.</p>
 <pre class="r"><code>x = runif(20)
 x
-##  [1] 0.987443967 0.964848252 0.001108994 0.663833007 0.502893280
-##  [6] 0.548521737 0.599404747 0.128309964 0.384468398 0.961757824
-## [11] 0.718664726 0.960134122 0.894340812 0.177401585 0.158392967
-## [16] 0.250131693 0.383045198 0.421805276 0.578428371 0.421821702
+##  [1] 0.22511923 0.52265299 0.18492454 0.19386240 0.30391118 0.62679537
+##  [7] 0.81767022 0.77355825 0.95569483 0.79154421 0.76943318 0.21081032
+## [13] 0.57602754 0.62403561 0.74800652 0.76883666 0.36818531 0.20819556
+## [19] 0.72700254 0.01928457
 
 mean(x)
-## [1] 0.5353378
+## [1] 0.5207776
 var(x)
-## [1] 0.09535297</code></pre>
+## [1] 0.07787769</code></pre>
 <p>We’ve created two variables, <code>x</code> and <code>y</code> – these now exist in the <strong>environment</strong>. You can see everything in the environment using <code>ls()</code> on the command line, or check out the environment pane in RStudio.</p>
 </div>
 <div id="data-frames" class="section level3">
@@ -555,7 +619,7 @@ ggplot(plot_df, aes(x = x, y = y)) + geom_point()</code></pre>
 <p>If you’ve opened your R Project, that should be your working directory. That’s great! Another bit of encouragement to keep your stuff organized. This means that anything you output will be written to this directory:</p>
 <pre class="r"><code>ggplot(plot_df, aes(x = x, y = y)) + geom_point()
 ggsave(&quot;scatter_plot.pdf&quot;, height = 4, width = 6)</code></pre>
-<p>With larger projects, it can be useful to create sub-directories for your project (e.g. <code>data</code> and <code>results</code>) – you don’t need to worry about that for now, but when you do this you should use relative paths to keep everything self-contained.</p>
+<p>With larger projects, it can be useful to create sub-directories for your project (e.g. <code>data</code> and <code>results</code>) – you don’t need to worry about that for now, but when you do this you should use relative paths to keep everything self-contained. That’s also a good time to start getting used to the <a href="https://github.com/jennybc/here_here"><code>here::here</code></a> approach to path construction.</p>
 <p>Note that we exported a figure using a command, rather than clicking the Export in the Plots tab. This is intentional – whatever your script produces, it should do so exclusively from the code you’ve written.</p>
 </div>
 <div id="workflow" class="section level3">
@@ -602,7 +666,7 @@ ggsave(&quot;scatter_plot.pdf&quot;, height = 4, width = 6)</code></pre>
 <footer>
   <img src="images/p8105_stickers.png" alt="stickers" style="width:30%">
   <br>
-  <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+  <p class="copyright text-muted" align="center">Copyright &copy; 2019 Jeff Goldsmith</p>
 </footer>
 
 
@@ -622,6 +686,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
