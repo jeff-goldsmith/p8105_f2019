@@ -8,6 +8,15 @@ output:
 
 In this, we'll provide a basic definition of "data science" and discuss the connotation of the term in several contexts.
 
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+```
+
 ## Some slides
 
 <script async class="speakerdeck-embed" data-id="5d70b1a8ec6344729af32f4821a312c5" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
@@ -15,6 +24,71 @@ In this, we'll provide a basic definition of "data science" and discuss the conn
 
 ## Example
 
+For the purpose of this class, we'll use the following working definition of data science:
+
+>Data science is the use of data to formulate and rigorously answer questions in a process that emphasizes clarity, reproducibility, and collaboration, and that recognizes code as a primary means of communication. 
+
+In coming modules, we'll learn about wrangling data, making visualizations, and conducting analyses. Throughout, we'll focus on modern tools that facilitate best practices for working with data, including organization, reproducibility, and clear coding. Material will be presented in a way that combines didactic content with hands-on coding elements. Below are two examples we'll return to later in the course. 
+
+Before introducing these, I'll load the `tidyverse`.
+
+```{r}
+library(tidyverse)
+```
+
+The next chunk of code loads and tidies an example dataset, which includes daily record of several weather-related variables at each of three weather stations. 
+
+```{r weather_data_create, cache = TRUE, message=FALSE}
+weather_df = 
+  rnoaa::meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
+                      var = c("PRCP", "TMIN", "TMAX"), 
+                      date_min = "2017-01-01",
+                      date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(id, USW00094728 = "CentralPark_NY", 
+                      USC00519397 = "Waikiki_HA",
+                      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+```
+
+As we'll discuss, a major element of working with data is producing visualizations. The plot below shows the maximum temperature at each of the three stations, as well as smooth trends over time to illustrate seasonal effects. This is produced using `ggplot`, a package in the `tidyverse` that we'll talk more about soon. 
+
+```{r, warning=FALSE}
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  geom_smooth(se = FALSE) + 
+  theme(legend.position = "bottom")
+```
+
+The next example uses data on Airbnb rentals in NYC, and is a bit more complex. The code below combines several steps to produce a map showing a sample of 5000 rentals in Brooklyn, Manhattan, and Queens; some important information (average rating, price, number of reviews) can be found by interacting with the map itself. 
+
+```{r, fig.asp = .8, warning=FALSE}
+library(leaflet)
+library(p8105.datasets)
+
+data("nyc_airbnb")
+
+nyc_airbnb = 
+  nyc_airbnb %>% 
+  mutate(stars = review_scores_location / 2) %>% 
+  rename(boro = neighbourhood_group)
+
+pal <- colorNumeric(
+  palette = "viridis",
+  domain = nyc_airbnb$stars)
+
+nyc_airbnb %>% 
+  filter(boro %in% c("Manhattan", "Brooklyn", "Queens")) %>% 
+  na.omit(stars) %>% 
+  sample_n(5000) %>% 
+  mutate(click_label = str_c("<b>$", price, "</b><br>", stars, " stars<br>", number_of_reviews, " reviews")) %>% 
+  leaflet() %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addCircleMarkers(~lat, ~long, radius = .1, color = ~pal(stars), popup = ~click_label)
+```
 
 
 ## Other materials
