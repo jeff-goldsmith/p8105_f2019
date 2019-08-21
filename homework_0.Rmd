@@ -21,7 +21,9 @@ Download and install the latest versions of [R](https://cran.r-project.org) (3.6
 Open RStudio and install several packages (and their dependencies) using the code below:
 
 ```{r eval = FALSE}
-install.packages(c("tidyverse", "knitr", "rmarkdown", "janitor", "broom", "here", "readxl", "haven", "rnoaa", "ggridges", "ggthemes", "viridis", "skimr", "rvest", "httr", "flexdashboard", "devtools", "usethis", "modelr", "mgcv", "tidytext", "shiny"))
+install.packages(c("tidyverse", "knitr", "rmarkdown", "janitor", "broom", "here", "readxl", "haven", "rnoaa", "ggridges", "ggthemes", "leaflet", "viridis", "skimr", "rvest", "httr", "flexdashboard", "devtools", "usethis", "modelr", "mgcv", "tidytext", "shiny"))
+
+devtools::install_github("p8105/p8105.datasets")
 ```
 
 (Note: on a Mac running OSX, you may need to install the [command line tools](http://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/) for these pacakges to install.)
