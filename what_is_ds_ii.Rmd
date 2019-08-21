@@ -74,32 +74,42 @@ ggplot(nyc_airbnb, aes(x = longitude, y = latitude)) +
 ```
 
 ```{r, echo = FALSE, eval = FALSE}
-library(sp)
-library(rgdal)
-library(rgeos)
-library(ggplot2)
-library(ggthemes)
+library(leaflet)
+library(p8105.datasets)
 
-fils <- unzip("~/Desktop/nybb_17c.zip")
+data("nyc_airbnb")
 
-nyc <- readOGR(fils[1], ogrListLayers(fils[1])[1], stringsAsFactors=FALSE)
+nyc_airbnb = 
+  nyc_airbnb %>% 
+  mutate(stars = review_scores_location / 2) %>% 
+  rename(boro = neighbourhood_group)
 
-nyc_map <- fortify(gSimplify(nyc, 0.05))
+pal <- colorNumeric(
+  palette = "viridis",
+  domain = nyc_airbnb$stars)
 
-gg <- ggplot()
-gg <- gg + geom_map(data=nyc_map, map=nyc_map,
-                    aes(x=long, y=lat, map_id=id),
-                    color="black", fill="white", size=0.25)
-gg <- gg + coord_equal() 
-gg <- gg + theme_map()
-gg = gg + geom_point(data = airbnb_data, aes(x = longitude, y = latitude)) 
+nyc_airbnb %>% 
+  filter(boro %in% c("Manhattan", "Brooklyn", "Queens")) %>% 
+  na.omit(stars) %>% 
+  sample_n(5000) %>% 
+  mutate(click_label = str_c("<b>$", price, "</b><br>", stars, " stars<br>", number_of_reviews, " reviews")) %>% 
+  leaflet() %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addCircleMarkers(~lat, ~long, radius = .1, color = ~pal(stars), popup = ~click_label)
 ```
 
 ## Other materials
 
-* Although we're playing with public (scraped) data, you might be interested in [How R Helps Airbnb Make the Most of Its Data](https://peerj.com/preprints/3182/)
+Some additional links on `leaflet`:
+
+* A quick introduction is [here](https://teachdatascience.com/leaflet/)
+* A more thorough overview is [here](https://rstudio.github.io/leaflet/)
+
+Some other reading on thinking like a data scientist:
+
 * If you didn't listen before, now's the time for Chris Volinsky's ["How Industry Views Data Science Education in Statistics Departments"](https://youtu.be/JLs01Z5baSU?t=1063)
 * Jeff Leek's [problem forward](https://simplystatistics.org/2013/05/29/what-statistics-should-do-about-big-data-problem-forward-not-solution-backward/) blog post
 * This (somewhat long) [post](https://simplystatistics.org/2019/01/09/how-data-scientists-think-a-mini-case-study/) has great insights into a data science mindset 
+* Although we're playing with public (scraped) data, you might be interested in [How R Helps Airbnb Make the Most of Its Data](https://peerj.com/preprints/3182/)
 
 The code that I produced working examples in lecture is [here](https://github.com/P8105/case_study).
