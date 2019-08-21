@@ -75,11 +75,11 @@ weather_df %>%
 
 The result is a dataframe that includes the grouping variable and the desired summary. 
 
-In this case, you could use `count()` in place of `group_by()` and `summarize()` if you remember that this function exists.
+In this case, you could use `count()` in place of `group_by()` and `summarize()` if you remember that this function exists. I'll also make use of the `name` argument in count, which defaults to `"n"`. 
 
 ```{r}
 weather_df %>%
-  count(month)
+  count(month, name = "n_days")
 ```
 
 `count()` is a useful tidyverse alternative to Base R's `table` function. Both functions produce summaries of how often values appear, but `table`'s output is of class `table` and is hard to do any additional work with, while `count` produces a dataframe you can use or manipulate directly. For an example, run the code below and try to do something useful with the result.
@@ -98,6 +98,39 @@ weather_df %>%
   summarize(n_obs = n(),
             n_days = n_distinct(date))
 ```
+
+### (2x2 tables)
+
+You might find yourself, someday, wanting to tabulate the frequency of a binary outcome across levels of a binary predictor. In a contrived example, let's say you want to look at the number of cold and not-cold days in Central Park and Waterhole. We can do this with some extra data manipulation steps and `group_by` + `summarize`:
+
+```{r}
+weather_df %>% 
+  mutate(cold = case_when(
+    tmax < 5 ~ "cold",
+    tmax >=5 ~ "not_cold",
+    TRUE     ~ ""
+  )) %>% 
+  filter(name != "Waikiki_HA") %>% 
+  group_by(name, cold) %>% 
+  summarize(count = n())
+```
+
+This is a "tidy" table, and it's also a data frame. You can re-organize into a more standard 2x2 table using tools we'll see later, but instead I suggest using `janitor::tabyl`:
+
+```{r}
+weather_df %>% 
+  mutate(cold = case_when(
+    tmax < 5 ~ "cold",
+    tmax >=5 ~ "not_cold",
+    TRUE     ~ ""
+  )) %>% 
+  filter(name != "Waikiki_HA") %>% 
+  janitor::tabyl(name, cold)
+```
+
+This isn't tidy, but it is still a data frame -- and that's noticeably better than usual output from R's built-in `table` function. `janitor` has a lot of little functions like this that turn out to be useful, so when you have some time you might read through all the things you can do. I don't really love that this is called `tabyl`, but you can't always get what you want in life. 
+
+(Since we're on the subject, I think 2x2 tables are kind of silly. When are you ever going to actually analyze data in that format?? In grad school I thought I'd be computing odds ratios by hand everyday ($OR = AD / BC$!!), but really I do that about as often as I write in cursive -- which is also never. Just do a logistic regression adjusting for confounders -- because there are _always confounders_. And is a 2x2 table really that much better than the "tidy" version? There are **_4 numbers_**. )
 
 
 ### General summaries
