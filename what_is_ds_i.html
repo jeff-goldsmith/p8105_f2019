@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -263,48 +264,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -512,17 +474,12 @@ div.tocify {
 <p>In coming modules, we’ll learn about wrangling data, making visualizations, and conducting analyses. Throughout, we’ll focus on modern tools that facilitate best practices for working with data, including organization, reproducibility, and clear coding. Material will be presented in a way that combines didactic content with hands-on coding elements. Below are two examples we’ll return to later in the course.</p>
 <p>Before introducing these, I’ll load the <code>tidyverse</code>.</p>
 <pre class="r"><code>library(tidyverse)
-## Registered S3 methods overwritten by &#39;ggplot2&#39;:
-##   method         from 
-##   [.quosures     rlang
-##   c.quosures     rlang
-##   print.quosures rlang
-## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
-## ✔ ggplot2 3.1.1     ✔ purrr   0.3.2
-## ✔ tibble  2.1.2     ✔ dplyr   0.8.1
+## ── Attaching packages ───────────────────────────────────────── tidyverse 1.2.1 ──
+## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.1
 ## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0
-## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ──────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>The next chunk of code loads and tidies an example dataset, which includes daily record of several weather-related variables at each of three weather stations.</p>
@@ -578,11 +535,13 @@ nyc_airbnb %&gt;%
 <ul>
 <li>There was a session at JSM 2015 called “The statistics identity crisis: am I really a data scientist?”. All the talks were great; for now, two are especially relevant:
 <ul>
-<li>Alyssa Frazee’s <a href="https://youtu.be/JLs01Z5baSU?t=102">“Am I a Data Scientist”</a></li>
+<li>Alyssa Frazee’s <a href="https://youtu.be/JLs01Z5baSU?t=102">“Am I a Data Scientist?”</a></li>
 <li>Chris Volinsky’s <a href="https://youtu.be/JLs01Z5baSU?t=1063">“How Industry Views Data Science Education in Statistics Departments”</a></li>
 </ul></li>
 <li>Hilary Parker’s <a href="https://www.rstudio.com/resources/videos/opinionated-analysis-development/">“Opinionated Analysis Development”</a> is a strong argument in favor of having opinions. There’s also her <a href="https://peerj.com/preprints/3210/">paper on this topic</a>.</li>
 <li>Angela Bassa talks about <a href="https://www.youtube.com/watch?v=b9ZLXwAuUyw&amp;app=desktop">“Corporate Data Science”</a>, which is useful complement to academic data science</li>
+<li><a href="https://www.nature.com/articles/s41562-019-0629-z.epdf">This paper</a> on reproducibility is great</li>
+<li>The CPG Grey video on <a href="https://www.youtube.com/watch?v=R9OHn5ZF4Uo">How Machines Learn</a> is a really useful primer</li>
 </ul>
 <p>We also touched on useful resources for learning data science. Each class session will have relevant readings; the following are useful in giving an overview about how to learn and find help.</p>
 <ul>
@@ -617,6 +576,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

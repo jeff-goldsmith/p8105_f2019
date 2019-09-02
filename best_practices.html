@@ -469,19 +469,19 @@ div.tocify {
 <p>Launch R Studio and take stock – find the Console, the Environment/History, and the Files/Plots/Packages/Help. This is also a good time to set some preferences – I like to turn off saving the workspace and history, and also turn on a lot of the R code diagnostics.</p>
 <p>Create a new R script using File &gt; New File &gt; R Script. Write a short comment section describing what this is, and follow along with the code below!</p>
 <pre class="r"><code>##################################################################
-# Sept 4, 2018
+# Sept 5, 2019
 # Jeff Goldsmith
 #
 # Script for exploring R!
 ##################################################################</code></pre>
 <p>As part of <a href="homework_0.html">Homework 0</a>, we installed a lot of packages. You don’t need to re-install those each time you need them, but you do need to load packages you want to use with the <code>library</code> function. Although we won’t use it yet, I’m going to load the <code>tidyverse</code> package now.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ──────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ───────────────────────────────────────── tidyverse 1.2.1 ──
 ## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
 ## ✔ tibble  2.1.3     ✔ dplyr   0.8.1
 ## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0
-## ── Conflicts ─────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ──────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>You can do basic computations in R, either on the command line (in the console) or by writing things in the script and executing the code in the console. Note that you can execute commands (e.g. the line with the cursor or highlighted code) in the console from a script using Command+Enter (Mac) or Ctrl+Enter (Windows).</p>
@@ -500,16 +500,17 @@ x + y
 <p>When making assignments, R assumes you don’t want to see the result. If you do want to see the result, you’ll have to ask for it. You can also apply <strong>functions</strong> to objects.</p>
 <pre class="r"><code>x = runif(20)
 x
-##  [1] 0.94507803 0.18751928 0.43622683 0.37297588 0.03122127 0.02950802
-##  [7] 0.97597671 0.54715445 0.77411419 0.34309864 0.23159539 0.42097572
-## [13] 0.92461233 0.05397457 0.60065984 0.79050331 0.94250637 0.61963415
-## [19] 0.11846402 0.13735858
+##  [1] 0.41709516 0.96774001 0.30759110 0.64425654 0.25136303 0.66800412
+##  [7] 0.55450098 0.62321024 0.18267664 0.84773682 0.35816315 0.47007986
+## [13] 0.88202678 0.14050272 0.91300836 0.68271816 0.47588636 0.06858327
+## [19] 0.36575822 0.46846694
 
 mean(x)
-## [1] 0.4741579
+## [1] 0.5144684
 var(x)
-## [1] 0.1111306</code></pre>
+## [1] 0.06920972</code></pre>
 <p>We’ve created two variables, <code>x</code> and <code>y</code> – these now exist in the <strong>environment</strong>. You can see everything in the environment using <code>ls()</code> on the command line, or check out the environment pane in RStudio.</p>
+<p>(If you care about these things, <a href="https://colinfay.me/r-assignment/">people</a> have <a href="https://twitter.com/JennyBryan/status/1162185393518759936">opinions</a> about <a href="https://r4ds.had.co.nz/workflow-basics.html#coding-basics">assignment operators</a>. I don’t have such strong opinions about this, and don’t care much if you use <code>=</code> or <code>&lt;-</code>.)</p>
 </div>
 <div id="data-frames" class="section level3">
 <h3>Data frames</h3>
@@ -550,7 +551,7 @@ ggplot(plot_df, aes(x = x)) + geom_histogram()
 <p>You should <em>always</em> keep the complete code that was used for an analysis or project, no matter how brief. Your code should be self-contained – it should include everything you did to produce what you wanted to produce. The two scripts below repeat content from above.</p>
 <p>First, data frames and variable classes.</p>
 <pre class="r"><code>##################################################################
-# Sept 4, 2018
+# Sept 5, 2019
 # Jeff Goldsmith
 #
 # Script exploring vector classes
@@ -571,7 +572,7 @@ class(example_df$vec_numeric)
 class(example_df$vec_factor)</code></pre>
 <p>Second, simple plots.</p>
 <pre class="r"><code>##################################################################
-# Sept 4, 2018
+# Sept 5, 2019
 # Jeff Goldsmith
 #
 # Script producing basic plots
@@ -596,20 +597,20 @@ ggplot(plot_df, aes(x = x, y = y)) + geom_point()</code></pre>
 <p>The scripts above illustrate some “best practices” that you should adopt:</p>
 <ul>
 <li>There is a brief section at the outset identifying the author, giving the date, and providing a brief description of the content.</li>
-<li>Each script includes comments describing each block or chunk.</li>
+<li>Each script includes comments describing each block or chunk of code.</li>
 <li>The use of a consistent naming convention (<code>snake_case</code>).</li>
 <li>Variable names are reasonable in the context of the script.</li>
 <li>The code iteslf is easy-to-read – adequate spacing within and between lines of code. (Turn on code diagnositics if you haven’t already; this can be found in Preferences &gt; Code &gt; Diagnostics.)</li>
 </ul>
 <p>The organization of code into self-contained scripts is itself part of a bigger picture. Rather than focusing on the variables (or plots, or even complete analyses), focus on the code that produces them. Given whatever inputs you have (none for now, although later there will be data), your code should reliably produce whatever outputs you want.</p>
-<p>To check how “real” your scripts are, clear out your workspace using <code>rm(list = ls())</code> or restart your R Session (Session &gt; Restart R) and re-run everything. If everything works, great; if not, address the issue by editing your script. Do this frequently!</p>
+<p>To check how “real” your scripts are, clear out your workspace using <code>rm(list = ls())</code> or, even better, restart your R Session (Session &gt; Restart R) and re-run everything. If everything works, great; if not, address the issue by editing your script. Do this frequently!</p>
 <p>R will, by default, save everything in your workspace. I strongly suggest you turn this behavior off (Preferences &gt; General &gt; Save Workspace: Never). First, doing so will remove a crutch early on and help you focus on your scripts. Second, saving your workspace automatically and doing so in the background can get you in trouble if (or when) you deal with patient data.</p>
 <p>A final word about scripts – not every line of code you write will (or should) make it to your scripts. It can take a few attempts to get code you like, and you don’t need to save the intermediate stuff. You also don’t need to save every bit of exploratory analysis you do – keep the stuff that improved your understanding, but discard the rest.</p>
 </div>
 <div id="organizing-projects" class="section level3">
 <h3>Organizing projects</h3>
 <p>Your projects will generally consist of several related files – input data, scripts, results. It’s important to keep these organized, so you can find everything you need quickly and easily. R Projects, through RStudio, give you an easy way to do this.</p>
-<p>Create a directory and save the previous two scripts into that directory. Script names, like variable names, should be descriptive (e.g. <code>20180614_data_classes.R</code> and <code>20180614_simple_plots.R</code>). The directory name should be descriptive as well, and it should be in a reasonable place on your computer (e.g. <code>~/Documents/First_Project/</code>). Create an R Project using File &gt; New Project &gt; Existing Directory and specifying the directory you just created.</p>
+<p>Create a directory and save the previous two scripts into that directory. Script names, like variable names, should be descriptive (e.g. <code>20190905_data_classes.R</code> and <code>20190905_simple_plots.R</code>). The directory name should be descriptive as well, and it should be in a reasonable place on your computer (e.g. <code>~/Documents/First_Project/</code>). Create an R Project using File &gt; New Project &gt; Existing Directory and specifying the directory you just created.</p>
 <p>For now, the best part about R Projects is that they force you to think about and organize the elements you need for your analysis or project. Double-clicking the new <code>.Rproj</code> file will launch the R Project; you’ll see a Files tab in the usual Plots / Packages / Help / Viewer pane. Later, we’ll find R Projects useful in other ways.</p>
 </div>
 <div id="paths-and-your-working-directory" class="section level3">
@@ -644,11 +645,9 @@ ggsave(&quot;scatter_plot.pdf&quot;, height = 4, width = 6)</code></pre>
 <li>Not about R specifically, but the <a href="https://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf">RStudio cheatsheet</a> might be handy!</li>
 </ul>
 <p>This content draws on the work of others; there are also useful references for a lot of this online.</p>
+<p>Basically all you need to know about workflows can be found in writing by Jenny Bryan: * Her <a href="https://www.slideshare.net/jenniferbryan5811/cm002-deep-thoughts">deep thoughts</a> on data analytic work is a good starting point * Also, her intro to <a href="http://stat545.com/block002_hello-r-workspace-wd-project.html">workspaces, the working directory, and R Projects</a> * Also also, her slides on <a href="https://speakerdeck.com/jennybc/how-to-name-files">how to name files</a> * Also also also, her discussion on a <a href="https://www.tidyverse.org/articles/2017/12/workflow-vs-script/">project-oriented workflow</a> * A good thing to refer to often is her book <a href="https://whattheyforgot.org/save-source.html">WTF</a> – I read this and learn new things every time.</p>
+<p>Other people have written useful things too:</p>
 <ul>
-<li>Jenny Bryan’s <a href="https://www.slideshare.net/jenniferbryan5811/cm002-deep-thoughts">deep thoughts</a> on data analytic work</li>
-<li>Also, her intro to <a href="http://stat545.com/block002_hello-r-workspace-wd-project.html">workspaces, the working directory, and R Projects</a></li>
-<li>Also also, her slides on <a href="https://speakerdeck.com/jennybc/how-to-name-files">how to name files</a></li>
-<li>Also also also, her discussion on a <a href="https://www.tidyverse.org/articles/2017/12/workflow-vs-script/">project-oriented workflow</a></li>
 <li>The Advanced R <a href="http://adv-r.had.co.nz/Style.html">style guide</a> is a great collection of coding guidelines</li>
 <li>The R for Data Science workflows on <a href="http://r4ds.had.co.nz/workflow-scripts.html">scripts</a> and <a href="http://r4ds.had.co.nz/workflow-projects.html">projects</a></li>
 <li>RStudio’s guide to <a href="https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects">using projects</a></li>

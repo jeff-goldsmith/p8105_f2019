@@ -43,7 +43,7 @@ Create a new R script using File > New File > R Script. Write a short comment se
 
 ```{r}
 ##################################################################
-# Sept 4, 2018
+# Sept 5, 2019
 # Jeff Goldsmith
 #
 # Script for exploring R!
@@ -86,6 +86,8 @@ var(x)
 ```
 
 We've created two variables, `x` and `y` -- these now exist in the **environment**. You can see everything in the environment using `ls()` on the command line, or check out the environment pane in RStudio.
+
+(If you care about these things, [people](https://colinfay.me/r-assignment/) have [opinions](https://twitter.com/JennyBryan/status/1162185393518759936) about [assignment operators](https://r4ds.had.co.nz/workflow-basics.html#coding-basics). I don't have such strong opinions about this, and don't care much if you use `=` or `<-`.)
 
 ### Data frames
 
@@ -135,7 +137,7 @@ First, data frames and variable classes.
 
 ```{r, eval = FALSE}
 ##################################################################
-# Sept 4, 2018
+# Sept 5, 2019
 # Jeff Goldsmith
 #
 # Script exploring vector classes
@@ -160,7 +162,7 @@ Second, simple plots.
 
 ```{r, eval = FALSE}
 ##################################################################
-# Sept 4, 2018
+# Sept 5, 2019
 # Jeff Goldsmith
 #
 # Script producing basic plots
@@ -187,14 +189,14 @@ ggplot(plot_df, aes(x = x, y = y)) + geom_point()
 The scripts above illustrate some "best practices" that you should adopt:
 
 * There is a brief section at the outset identifying the author, giving the date, and providing a brief description of the content.
-* Each script includes comments describing each block or chunk.
+* Each script includes comments describing each block or chunk of code.
 * The use of a consistent naming convention (`snake_case`).
 * Variable names are reasonable in the context of the script.
 * The code iteslf is easy-to-read -- adequate spacing within and between lines of code. (Turn on code diagnositics if you haven't already; this can be found in Preferences > Code > Diagnostics.)
 
 The organization of code into self-contained scripts is itself part of a bigger picture. Rather than focusing on the variables (or plots, or even complete analyses), focus on the code that produces them. Given whatever inputs you have (none for now, although later there will be data), your code should reliably produce whatever outputs you want. 
 
-To check how "real" your scripts are, clear out your workspace using `rm(list = ls())` or restart your R Session (Session > Restart R) and re-run everything. If everything works, great; if not, address the issue by editing your script. Do this frequently!
+To check how "real" your scripts are, clear out your workspace using `rm(list = ls())` or, even better, restart your R Session (Session > Restart R) and re-run everything. If everything works, great; if not, address the issue by editing your script. Do this frequently!
 
 R will, by default, save everything in your workspace. I strongly suggest you turn this behavior off (Preferences > General > Save Workspace: Never). First, doing so will remove a crutch early on and help you focus on your scripts. Second, saving your workspace automatically and doing so in the background can get you in trouble if (or when) you deal with patient data. 
 
@@ -205,7 +207,7 @@ A final word about scripts -- not every line of code you write will (or should) 
 
 Your projects will generally consist of several related files -- input data, scripts, results. It's important to keep these organized, so you can find everything you need quickly and easily. R Projects, through RStudio, give you an easy way to do this. 
 
-Create a directory and save the previous two scripts into that directory. Script names, like variable names, should be descriptive (e.g. `20180614_data_classes.R` and `20180614_simple_plots.R`). The directory name should be descriptive as well, and it should be in a reasonable place on your computer (e.g. `~/Documents/First_Project/`). Create an R Project using File > New Project > Existing Directory and specifying the directory you just created.
+Create a directory and save the previous two scripts into that directory. Script names, like variable names, should be descriptive (e.g. `20190905_data_classes.R` and `20190905_simple_plots.R`). The directory name should be descriptive as well, and it should be in a reasonable place on your computer (e.g. `~/Documents/First_Project/`). Create an R Project using File > New Project > Existing Directory and specifying the directory you just created.
 
 For now, the best part about R Projects is that they force you to think about and organize the elements you need for your analysis or project. Double-clicking the new `.Rproj` file will launch the R Project; you'll see a Files tab in the usual Plots / Packages / Help / Viewer pane. Later, we'll find R Projects useful in other ways. 
 
@@ -252,10 +254,15 @@ R can take a while to learn. Luckily, tons of people have put together resources
 
 This content draws on the work of others; there are also useful references for a lot of this online.
 
-* Jenny Bryan's [deep thoughts](https://www.slideshare.net/jenniferbryan5811/cm002-deep-thoughts) on data analytic work
+Basically all you need to know about workflows can be found in writing by Jenny Bryan:
+* Her [deep thoughts](https://www.slideshare.net/jenniferbryan5811/cm002-deep-thoughts) on data analytic work is a good starting point
 * Also, her intro to [workspaces, the working directory, and R Projects](http://stat545.com/block002_hello-r-workspace-wd-project.html)
 * Also also, her slides on [how to name files](https://speakerdeck.com/jennybc/how-to-name-files)
 * Also also also, her discussion on a [project-oriented workflow](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)
+* A good thing to refer to often is her book  [WTF](https://whattheyforgot.org/save-source.html) -- I read this and learn new things every time.
+
+Other people have written useful things too:
+
 * The Advanced R [style guide](http://adv-r.had.co.nz/Style.html) is a great collection of coding guidelines
 * The R for Data Science workflows on [scripts](http://r4ds.had.co.nz/workflow-scripts.html) and [projects](http://r4ds.had.co.nz/workflow-projects.html)
 * RStudio's guide to [using projects](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects)
