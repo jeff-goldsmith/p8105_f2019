@@ -16,7 +16,7 @@ Due: September 5 at 10:00am.
 
 ### Problem 1
 
-Download and install the latest versions of [R](https://cran.r-project.org) (3.6.1) and [RStudio](https://www.rstudio.com/products/rstudio/download/) (1.1.1335). 
+Download and install the latest versions of [R](https://cran.r-project.org) (3.6.1) and [RStudio](https://www.rstudio.com/products/rstudio/download/) (1.2.1335). 
 
 Open RStudio and install several packages (and their dependencies) using the code below:
 
