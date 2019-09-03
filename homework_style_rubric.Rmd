@@ -14,4 +14,4 @@ A main emphasis in the course is the use of proper style when writing with data.
 
 Whitespace and organization is generally covered by the R Style Guide in the Advanced R Textbook. Occasional typos won't be penalized (a missing space or indent is fine) but consistent or egregious errors will be.
 
-Some of this will be "subjective", but members of the teaching team are sufficiently experienced to make informed decisions. Like all grade-related matters, any concerns about style deductions should be directed to Jeff.
+Some of this will be "subjective", but members of the teaching team are sufficiently experienced to make informed decisions. Like all grade-related matters, any concerns about style deductions should be directed to Jeff or a lead TA.
