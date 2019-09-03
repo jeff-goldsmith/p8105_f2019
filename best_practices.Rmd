@@ -255,6 +255,7 @@ R can take a while to learn. Luckily, tons of people have put together resources
 This content draws on the work of others; there are also useful references for a lot of this online.
 
 Basically all you need to know about workflows can be found in writing by Jenny Bryan:
+
 * Her [deep thoughts](https://www.slideshare.net/jenniferbryan5811/cm002-deep-thoughts) on data analytic work is a good starting point
 * Also, her intro to [workspaces, the working directory, and R Projects](http://stat545.com/block002_hello-r-workspace-wd-project.html)
 * Also also, her slides on [how to name files](https://speakerdeck.com/jennybc/how-to-name-files)
