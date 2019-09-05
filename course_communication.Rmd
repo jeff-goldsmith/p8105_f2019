@@ -16,23 +16,15 @@ Some guidance on how best to ask questions on a discussion board can be found [h
 
 We will use Slack for communication during lecture sessions. Each topic will have a slack channel (i.e. a discussion thread organized around a topic), which will be monitored during class. This is intended to provide real-time answers to questions in class, and will be used to convey solutions to in-class exercises. Slack channels are not intended to replace the discussion board on CourseWorks for more involved questions about content. 
 
-Sign up for the course Slack workspace [here](https://p8105-fall2018.slack.com/join/shared_invite/enQtNDI0MDY2MDQ3MTczLTRkZTQ3MGI5ZmMwMWZhYzE0MzIxYWIzYWFjZDU1NzBiMTQ4MGI1MmQwZmQ0NDRhNGMyMmU1MGZkZTEwYmNhY2M). You can use Slack from a [web browser](https://p8105-fall2017.slack.com/messages/general), or you can download an app to your [Mac](https://slack.com/downloads/osx), [Windows](https://slack.com/downloads/windows), [Linux](https://slack.com/downloads/linux), [Android](https://slack.com/downloads/android), or [iOS](https://slack.com/downloads/ios) device. You can control whether you receive notifications on new posts by going to Preferences, as well as decide which ‘channels’ to subscribe to. You can learn more about Slack features [here](https://get.slack.help/hc/en-us/articles/218080037-Getting-started-for-new-members).
+Sign up for the course Slack workspace [here](https://join.slack.com/t/p8105fall2019/shared_invite/enQtNzUwMjkyNDc5NzYwLWY0MTRiOWUxZjE3ZjE5MDhjZWFhYTY1YWQ3ZjM2OGQ4Njg2NjNlN2YxMzRjYTQ0MjA1OTU3Y2ZlYjg2NDE3Y2M). You can use Slack from a [web browser](https://p8105fall2019.slack.com/messages/general), or you can download an app to your [Mac](https://slack.com/downloads/osx), [Windows](https://slack.com/downloads/windows), [Linux](https://slack.com/downloads/linux), [Android](https://slack.com/downloads/android), or [iOS](https://slack.com/downloads/ios) device. You can control whether you receive notifications on new posts by going to Preferences, as well as decide which ‘channels’ to subscribe to. You can learn more about Slack features [here](https://get.slack.help/hc/en-us/articles/218080037-Getting-started-for-new-members).
 
 ### Office hours
 
-In addition to the resources above, in-person office hours will be held every day in ARB 627:
-
-| Day       | Time        |
-|:--------- |:----------- |
-| Monday    | 11:30-12:50 |
-| Tuesday   | 4:00-5:20   |
-| Wednesday | 11:30-12:50 |
-| Thursday  | 4:00-5:20   |
-| Friday    | 12:00-1:00  |
+In addition to the resources above, in-person office hours will be held every day; office hour times and locations are available on the syllabus and google calendar (on the main course website).
 
 
 ### Email
 
-Email addresses are provided for each member of the teaching team, and we will answer emails promptly. This channel of communication is intended for issues that fall outside of those above, such as questions about course policies or grades. 
+Email addresses are provided for the instructor and lead TAs, and we will try to answer emails promptly. This channel of communication is intended for issues that fall outside of those above, such as questions about course policies or grades. 
 
 

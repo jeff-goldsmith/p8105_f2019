@@ -8,7 +8,7 @@ output:
 
 We'll going to get up-to-speed on the basic tools in R. As part of that, we'll define and establish some good habits.
 
-This is the first module in the [Building Blocks](topic_building_blocks.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCATLJG67).
+This is the first module in the [Building Blocks](topic_building_blocks.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CMPF9U6LA).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(

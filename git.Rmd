@@ -6,7 +6,7 @@ output:
     toc_float: true
 ---
 
-This is the third module in the [Building blocks](topic_building_blocks.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCATLJG67).
+This is the third module in the [Building blocks](topic_building_blocks.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CMPF9U6LA).
 
 ## Some slides
 

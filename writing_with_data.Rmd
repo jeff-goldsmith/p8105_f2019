@@ -8,7 +8,7 @@ output:
 
 You will typically (if not always) need to summarize your work in writing. This page describes how to do so using R Markdown. 
 
-This is the second module in the [Building blocks](topic_building_blocks.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCATLJG67).
+This is the second module in the [Building blocks](topic_building_blocks.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CMPF9U6LA).
 
 ```{r, echo = FALSE}
 inline <- function(x = "") paste0("`` `r ", x, "` ``")
