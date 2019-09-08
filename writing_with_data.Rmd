@@ -114,7 +114,7 @@ cat(readr::read_file("resources/writing_with_data_la2.Rmd"))
 The YAML header controls global features of the document. I generally will include both the `author` and `date` in each document I produce.
 ```yaml
 author: "Jeff Goldsmith"
-date: 2018-09-11
+date: 2019-09-10
 ```
 
 We're mostly concerned with the output format, which is controlled through the `output:` field. 

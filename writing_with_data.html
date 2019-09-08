@@ -595,7 +595,7 @@ Content Cell  | Content Cell</code></pre>
 <h3>YAML and output formats</h3>
 <p>The YAML header controls global features of the document. I generally will include both the <code>author</code> and <code>date</code> in each document I produce.</p>
 <pre class="yaml"><code>author: &quot;Jeff Goldsmith&quot;
-date: 2018-09-11</code></pre>
+date: 2019-09-10</code></pre>
 <p>We’re mostly concerned with the output format, which is controlled through the <code>output:</code> field.</p>
 <p>The snippet below will produce an HTML document. Notice that this has subfields to add a table of contents, and float that table alongside the content. These lines are used throughout the course website.</p>
 <pre class="yaml"><code>output:
@@ -630,7 +630,7 @@ date: 2018-09-11</code></pre>
 <pre><code>---
 title: &quot;Exploring Vector Classes&quot;
 author: &quot;Jeff Goldsmith&quot;
-date: 2018-09-11
+date: 2019-09-10
 output: html_document
 ---
 
@@ -651,12 +651,12 @@ example_df = tibble(
 )
 ```
 
-The variable `vec_numeric` has class `r class(example_df$vec_numeric)`, and the variable `vec_factor` has class `r class(example_df$vec_factor)`.</code></pre>
+The variable `vec_numeric` has class `r class(pull(example_df, vec_numeric))`, and the variable `vec_factor` has class `r class(pull(example_df, vec_factor))`.</code></pre>
 <p>And here’s one for basic plots:</p>
 <pre><code>---
 title: &quot;Basic Plots&quot;
 author: &quot;Jeff Goldsmith&quot;
-date: 2018-09-11
+date: 2019-09-10
 output: html_document
 ---
 

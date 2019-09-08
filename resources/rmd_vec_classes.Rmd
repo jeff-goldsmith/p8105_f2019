@@ -1,7 +1,7 @@
 ---
 title: "Exploring Vector Classes"
 author: "Jeff Goldsmith"
-date: 2018-09-11
+date: 2019-09-10
 output: html_document
 ---
 
@@ -22,4 +22,4 @@ example_df = tibble(
 )
 ```
 
-The variable `vec_numeric` has class `r class(example_df$vec_numeric)`, and the variable `vec_factor` has class `r class(example_df$vec_factor)`.
+The variable `vec_numeric` has class `r class(pull(example_df, vec_numeric))`, and the variable `vec_factor` has class `r class(pull(example_df, vec_factor))`.
