@@ -73,7 +73,7 @@ You can also cache the results of a code chunk, but we will largely avoid this. 
 
 Inserting brief code snippets inline is often helpful; I frequently use these to give the sample size or summary statistics in text. You can insert code inline using `r inline()`, often in conjunction with the `format()` function to clean up your output. 
 
-**_Learning assessment:_** Write a named code chunk that creates a variable containing a sample of size 500 from a random normal variable, computes the absolute value of each element, and produces a histogram of the result. Add an inline summary giving the median value rounded to two decimal places. What happens if you set `eval = FALSE` to the code chunk? What about `echo = FALSE`? 
+**_Learning assessment:_** Write a named code chunk that creates a dataframe comprised of: a numeric variable containing a random sample of size 500 from a normal variable with mean 1; a logical vector indicating whether each sampled value is greater than zero; and a numeric vector containing the absolute value of each element. Then, produce a histogram of the absolute value variable just created. Add an inline summary giving the median value rounded to two decimal places. What happens if you set `eval = FALSE` to the code chunk? What about `echo = FALSE`? 
 
 <details>
 <summary> Solution </summary>

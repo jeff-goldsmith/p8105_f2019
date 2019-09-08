@@ -101,8 +101,8 @@ example_df = tibble(
   vec_factor = factor(c("male", "male", "female", "female"))
 )
 
-class(example_df$vec_numeric)
-class(example_df$vec_factor)
+class(pull(example_df, vec_numeric))
+class(pull(example_df, vec_factor))
 ```
 
 We're going to spend a lot of time talking about data frames over the course of the semester, starting in [Data Wrangling I](topic_data_wrangling_i.html). For now, just think of it as a rectangle that holds data you care about. 
@@ -154,8 +154,8 @@ example_df = tibble(
 )
 
 ## examine classes
-class(example_df$vec_numeric)
-class(example_df$vec_factor)
+class(pull(example_df, vec_numeric))
+class(pull(example_df, vec_factor))
 ```
 
 Second, simple plots. 
