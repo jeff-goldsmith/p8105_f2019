@@ -7,7 +7,6 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -254,9 +253,48 @@ $(document).ready(function () {
 }
 </style>
 
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
 <!-- code folding -->
 
 
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <style type="text/css">
 
@@ -305,6 +343,8 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -501,11 +541,11 @@ z_scores(iris)
 ## Warning in Ops.factor(left, right): &#39;-&#39; not meaningful for factors
 ## Error in is.data.frame(x): (list) object cannot be coerced to type &#39;double&#39;
 z_scores(sample(c(TRUE, FALSE), 25, replace = TRUE))
-##  [1]  0.6721344 -1.4282857  0.6721344  0.6721344  0.6721344  0.6721344
-##  [7]  0.6721344 -1.4282857 -1.4282857  0.6721344 -1.4282857  0.6721344
-## [13]  0.6721344  0.6721344 -1.4282857  0.6721344  0.6721344 -1.4282857
-## [19]  0.6721344 -1.4282857  0.6721344 -1.4282857  0.6721344  0.6721344
-## [25]  0.6721344</code></pre>
+##  [1] -0.7348469  1.3063945 -0.7348469 -0.7348469  1.3063945  1.3063945
+##  [7] -0.7348469 -0.7348469 -0.7348469  1.3063945  1.3063945 -0.7348469
+## [13] -0.7348469 -0.7348469 -0.7348469 -0.7348469 -0.7348469  1.3063945
+## [19] -0.7348469 -0.7348469 -0.7348469 -0.7348469  1.3063945  1.3063945
+## [25]  1.3063945</code></pre>
 <p>These all did something I didn’t want, but only two returned errors. To avoid behavior you don’t want (i.e. to <a href="http://www.faqs.org/docs/artu/ch01s06.html">“fail noisily and as soon as possible”</a>) we’ll add some checks on the argument values using conditional statements.</p>
 <pre class="r"><code>z_scores = function(x) {
   
@@ -655,13 +695,13 @@ dynamite_reviews = bind_rows(
 
 dynamite_reviews
 ## # A tibble: 50 x 3
-##   title                                 stars text                         
-##   &lt;chr&gt;                                 &lt;dbl&gt; &lt;chr&gt;                        
-## 1 &quot;Eat your food tina\n            &quot;        5 Format: Prime VideoVerified …
-## 2 &quot;Dumb funny\n            &quot;                5 Format: DVDVerified Purchase 
-## 3 &quot;Annoying! Not in a good way.\n     …     1 Format: Prime VideoVerified …
-## 4 &quot;Fun\n            &quot;                       5 Format: DVDVerified Purchase 
-## 5 &quot;such a great movie\n            &quot;        5 Format: UMD for PSPVerified …
+##   title                                  stars text                        
+##   &lt;chr&gt;                                  &lt;dbl&gt; &lt;chr&gt;                       
+## 1 &quot;👍\n            &quot;                         5 Format: Prime VideoVerified…
+## 2 &quot;A classic!\n            &quot;                 5 Format: DVDVerified Purchase
+## 3 &quot;A must own\n            &quot;                 5 Format: Prime VideoVerified…
+## 4 &quot;If you like 80s ...you must watch\n …     5 Format: Prime VideoVerified…
+## 5 &quot;🤘\n            &quot;                         5 Format: Prime VideoVerified…
 ## # … with 45 more rows</code></pre>
 </div>
 <div id="loading-lotr-data" class="section level4">
@@ -775,49 +815,6 @@ $(document).ready(function () {
 });
 
 
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
-<!-- code folding -->
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

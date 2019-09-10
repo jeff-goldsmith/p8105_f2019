@@ -60,6 +60,7 @@ data("nyc_airbnb")
 nyc_airbnb = 
   nyc_airbnb %>% 
   mutate(rating = review_scores_location / 2) %>%
+  rename(latitude = lat, longitude = long) %>%
   select(boro = neighbourhood_group, neighbourhood, rating, price, room_type,
          latitude, longitude) %>%
   filter(!is.na(rating))
