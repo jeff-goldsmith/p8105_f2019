@@ -10,6 +10,6 @@ The topic is made up of the following components:
 * [Writing with data](writing_with_data.html)
 * [Git and Github](git.html)
 
-The slack channel for this topic is [here](https://p8105-fall2018.slack.com/messages/CCATLJG67).
+The slack channel for this topic is [here](https://p8105fall2019.slack.com/messages/CMPF9U6LA).
 
 The code that I produced working examples in class is [here](https://github.com/p8105/building_blocks).
