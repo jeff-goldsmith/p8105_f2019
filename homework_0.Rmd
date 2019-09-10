@@ -36,7 +36,7 @@ Upload a screenshot of RStudio that shows your R version, and that you can succe
 
 Install Git on the machine you'll use for work in this course. There are several installation approaches; I suggest you follow [this guide](http://happygitwithr.com/install-git.html).
 
-Upload a screenshot of RStudio's terminal pane that shows a successful execution of `which git`. Here's an example "solution":
+Upload a screenshot of RStudio's terminal pane that shows a successful execution of `which git` or `git --version`. Here's an example "solution":
 
 <img src="images/homework_0_git.png" style="width:90%">
 
