@@ -66,7 +66,13 @@ Now I'll start actually doing stuff. As I noted above, I'm going to repeat some 
 
 <img src="images/git_second_commit.png" style="width:80%">
 
-Next I'll add an R Markdown file looking at [basic plots](resources/rmd_basic_plots.Rmd) and commit.
+Next I'll add an R Markdown file looking at (shown below) to my repository / directory.
+
+```{r, echo = FALSE, comment = ""}
+cat(htmltools::includeText("resources/rmd_basic_plots.Rmd"))
+```
+
+Now I'll commit.
 
 <img src="images/git_third_commit.png" style="width:80%">
 
@@ -102,6 +108,8 @@ Markdown files (not *R* Markdown, just .md files) are rendered in an HTML-like w
 
 Our use of R Markdown to write reproducible reports makes the treatment of .md files on GH especially nice. Recall that we used `knitr::knit` to render a .Rmd file to a .md file, which in turn was rendered to another format (.html, .pdf, .docx). By using the `github_document` output format, we can instead produce .md files (there are, of course, other ways to achieve the same end). This is great, because the report -- including text, code results, and figures -- can be produced in a way that is easily viewable on GitHub!
 
+**_Learning Assessment:_** Change one (or both) of your .Rmd files to output `github_document`s. Re-knit, commit, and push -- and then view the results on GitHub. 
+
 
 ### Collaborating via GitHub
 
@@ -112,11 +120,11 @@ Sharing repositories via GitHub makes it possible to collaborate in a clear, rig
 
 This is great if you're working in a team, or if you are considering future-you as a collaborator.
 
-For the repository holding this example, I'll add Erin as a collaborator. Once she's been added, she's going to add a histogram of `y` to our basic plot RMD. She'll commit and push; I'll relax until she's done, then pull her changes from the remote repository to my local repository. Those changes will appear in my local repository, and a summary of the changes are in my git history. 
+For the repository holding this example, I'll add Angel as a collaborator. Once she's been added, she's going to add a histogram of `y` to our basic plot RMD. He'll commit and push; I'll relax until he's done, then pull her changes from the remote repository to my local repository. Those changes will appear in my local repository, and a summary of the changes are in my git history. 
 
 <img src="images/git_collab_commit.png" style="width:80%">
 
-Of course, team members may want to work in parallel. As an example, I'll edit the README a bit and Erin will add the RMD file for vector classes. Once I've written my code, I'm going to commit; pull to see if there are any changes in the remote repository; and then push everything.
+Of course, team members may want to work in parallel. As an example, I'll edit the README a bit and Angel will add the RMD file for vector classes. Once I've written my code, I'm going to commit; pull to see if there are any changes in the remote repository; and then push everything.
 
 <img src="images/git_parallel_code.png" style="width:80%">
 
@@ -125,19 +133,19 @@ This process (commit > pull > push) can help keep you out of trouble, although o
 
 ### Conflicts
 
-When we're working in parallel on non-overlapping elements, everything is pretty smooth. I can edit and commit, and so can Erin; as we cycle through the commit > pull > push cycle, git knows we're not editing the same stuff and keeps track of the changes. 
+When we're working in parallel on non-overlapping elements, everything is pretty smooth. I can edit and commit, and so can Angel; as we cycle through the commit > pull > push cycle, git knows we're not editing the same stuff and keeps track of the changes. 
 
-We can run into issues when we both edit the same thing -- suppose, for example, we both try to update the line describing the purpose of `basic_plots.Rmd`. If she commits and pushes before I do, when I commit and pull I'll see the following:
+We can run into issues when we both edit the same thing -- suppose, for example, we both try to update the line describing the purpose of `basic_plots.Rmd`. If he commits and pushes before I do, when I commit and pull I'll see the following:
 
 <img src="images/git_conflict_notice.png" style="width:80%">
 
-We've both written text in the same place, and have to make a decision about which to keep. We can do this with the help of a merge tool, which will show where differences are and allow us to make a choice about which to keep. 
+We've both written text in the same place, and have to make a decision about which to keep. You have a couple of options: one is to open the file in question, go through each conflict (which will be indicated in text), fix the text to your liking and remove all the markers that indicate the conflicts. We can also do this with the help of a merge tool, which will show where differences are and allow us to make a choice about which to keep. 
 
 <img src="images/git_conflict_tool.png" style="width:80%">
 
-After resolving conflicts, we should commit the changes and push the new unified version to the remote repository.
+After resolving conflicts, should commit the changes and push the new unified version to the remote repository.
 
-Merge conflicts are a fact of life in collaborative work, and your probably run into them more often than you'd like to admit (e.g. "Jeff's Conflicted Copy" in Dropbox, or parallel versions of Word documents). Git can seem like it makes this worse, but that's mostly because it forces you to address them as they arise in a structured way rather than ignoring issues / managing them in an ad-hoc way. 
+Merge conflicts are a fact of life in collaborative work, and you probably run into them more often than you'd like to admit (e.g. "Jeff's Conflicted Copy" in Dropbox, or parallel versions of Word documents). Git can seem like it makes this worse, but that's mostly because it's new and scary, and it forces you to address conflicts as they arise in a structured way rather than ignoring issues / managing them in an ad-hoc way. 
 
 That said, try to coordinate with teammates so it's clear who is working on what and when they're doing it. 
 
