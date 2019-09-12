@@ -13,14 +13,14 @@ In addition to grading for content, we reserve the right to deduct points for st
 
 |               | Available  | Due               | Assignment                                                | Solution                                                                   |
 |:------------- |:---------- |:----------------- | :--------------------------------------------------------:| :-------------------------------------------------------------------------:|
-| Homework 0    | Sept 4     | Sept 5 by 10:00am | [<i class="far fa-file-code fa-lg"></i>](homework_0.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
-| Homework 1    | Sept 13    | Sept 21 by 4:00pm | [<i class="far fa-file-code fa-lg"></i>](homework_1.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
-| Homework 2    | Sept 25    | Oct 5 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](homework_2.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
-| Homework 3    | Oct 4      | Oct 15 by 4:00pm  | [<i class="far fa-file-code fa-lg"></i>](homework_3.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
-| Homework 4    | Oct 23     | Nov 2 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](homework_4.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
-| Homework 5    | Nov 1      | Nov 9 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](homework_5.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
-| Homework 6    | Nov 15     | Nov 27 by 11:00pm | [<i class="far fa-file-code fa-lg"></i>](homework_6.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
-| Homework 7    | Nov 29     | Dec 7 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](link)            | [<i class="fas fa-check fa-lg"></i>](link)                                 |
+| Homework 0    | Sept 3     | Sept 4 by 10:00am | [<i class="far fa-file-code fa-lg"></i>](homework_0.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
+| Homework 1    | Sept 12    | Sept 20 by 4:00pm | [<i class="far fa-file-code fa-lg"></i>](homework_1.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
+| Homework 2    | Sept 24    | Oct 4 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](homework_2.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
+| Homework 3    | Oct 3      | Oct 14 by 4:00pm  | [<i class="far fa-file-code fa-lg"></i>](homework_3.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
+| Homework 4    | Oct 22     | Nov 1 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](homework_4.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
+| Homework 5    | Oct 31     | Nov 8 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](homework_5.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
+| Homework 6    | Nov 14     | Nov 27 by 4:00pm  | [<i class="far fa-file-code fa-lg"></i>](homework_6.html) | [<i class="fas fa-check fa-lg"></i>](link)                                 |
+| Homework 7    | Nov 28     | Dec 6 by 4:00pm   | [<i class="far fa-file-code fa-lg"></i>](link)            | [<i class="fas fa-check fa-lg"></i>](link)                                 |
 
 ### Midterm
 
