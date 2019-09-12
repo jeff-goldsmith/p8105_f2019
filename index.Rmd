@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "P8105"
 ---
 
 <br><br><img src="images/p8105_logo.jpg" alt="logo" style="width:85%; border:10px solid"><br>
@@ -7,7 +7,7 @@ title: ""
 
 Contemporary biostatistics and data analysis depends on the mastery of tools for computation, exploratory analysis, visualization, dissemination, and reproducibility, in addition to proficiency in traditional statistical techniques. The goal of this course is to provide training in the elements of a complete pipeline for data analysis. We will develop skills in data wrangling, reproducible research, software development, collaboration, and effective communication; all programming will be done in R. Although there are no formal prerequisites for this course, some familiarity with statistics and basic programming knowledge will be helpful.
 
-This course is being offered in the Fall of 2018 through the Biostatistics Department at the Columbia School of Public Health; the syllabus is available  [here](resources/P8105_Syllabus.pdf).
+This course is being offered in the Fall of 2018 through the Biostatistics Department at the Columbia School of Public Health; the syllabus is available here [[pdf](resources/P8105_Syllabus.pdf) | [docx](resources/P8105_Syllabus.docx)].
 
 ### People
 
