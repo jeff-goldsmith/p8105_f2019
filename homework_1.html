@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -496,6 +456,101 @@ div.tocify {
 <p>Please submit (via courseworks) the web address of the GitHub repo containing your work for this assignment; git commits after the due date will cause the assignment to be considered late.</p>
 <p>R Markdown documents included as part of your solutions must not install packages, and should only load the packages necessary for your submission to knit.</p>
 </div>
+<div id="points" class="section level3">
+<h3>Points</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Problem</th>
+<th align="left">Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Problem 0.1</td>
+<td align="left">25</td>
+</tr>
+<tr class="even">
+<td align="left">Problem 0.2</td>
+<td align="left">25</td>
+</tr>
+<tr class="odd">
+<td align="left">Problem 1</td>
+<td align="left">25</td>
+</tr>
+<tr class="even">
+<td align="left">Problem 2</td>
+<td align="left">25</td>
+</tr>
+<tr class="odd">
+<td align="left">Optional survey</td>
+<td align="left">No points</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="problem-0.1" class="section level3">
+<h3>Problem 0.1</h3>
+<p>This “problem” focuses on the use of R Markdown to write reproducible reports, GitHub for version control, and R Projects to organize your work.</p>
+<p>To that end:</p>
+<ul>
+<li>create a public GitHub repo + local R Project; we suggest naming this repo / directory <code>p8105_hw1_YOURUNI</code> (e.g. <code>p8105_hw1_ajg2202</code> for Jeff), but that’s not required</li>
+<li>create a single .Rmd file named <code>p8105_hw1_YOURUNI.Rmd</code> that renders to <code>github_document</code></li>
+<li>submit a link to your repo via Courseworks</li>
+</ul>
+<p>Your solutions to Problems 1 and 2 should be implemented in your .Rmd file, and your git commit history should reflect the process you used to solve these Problems.</p>
+<p>For this Problem, we will assess adherence to the instructions above regarding repo structure, git commit history, and whether we are able to knit your .Rmd to ensure that your work is reproducible.</p>
+</div>
+<div id="problem-0.2" class="section level3">
+<h3>Problem 0.2</h3>
+<p>This “problem” focuses on correct styling for your solutions to Problems 1 and 2. We will look for:</p>
+<ul>
+<li>meaningful variable / object names</li>
+<li>readable code (one command per line; adequate whitespace and indentation; etc)</li>
+<li>clearly-written text to explain code and results</li>
+<li>a lack of superfluous code (no unused variables are defined; no extra <code>library</code> calls; ect)</li>
+</ul>
+</div>
+<div id="problem-1" class="section level3">
+<h3>Problem 1</h3>
+<p>This problem is intended to emphasize variable types and introduce coercion; some awareness of how R treats numeric, character, and factor variables is necessary for working with these data types in practice.</p>
+<p>Create a data frame comprised of:</p>
+<ul>
+<li>a random sample of size 8 from a standard Normal distribution</li>
+<li>a logical vector indicating whether elements of the sample are greater than 0</li>
+<li>a character vector of length 8</li>
+<li>a factor vector of length 8, with 3 different factor “levels”</li>
+</ul>
+<p>Try to take the mean of each variable in your dataframe. What works and what doesn’t?</p>
+<p>In some cases, you can explicitly convert variables from one type to another. Write a code chunk that applies the <code>as.numeric</code> function to the logical, character, and factor variables (please show this chunk but not the output). What happens, and why? Does this help explain what happens when you try to take the mean?</p>
+<p>In a second code chunk:</p>
+<ul>
+<li>convert the logical vector to numeric, and multiply the random sample by the result</li>
+<li>convert the logical vector to a factor, and multiply the random sample by the result</li>
+<li>convert the logical vector to a factor and then convert the result to numeric, and multiply the random sample by the result</li>
+</ul>
+</div>
+<div id="problem-2" class="section level3">
+<h3>Problem 2</h3>
+<p>This problem focuses the use of inline R code, plotting, and the behavior of <code>ggplot</code> for variables of different types.</p>
+<ul>
+<li>Create a data frame comprised of:
+<ul>
+<li><code>x</code>: a random sample of size 500 from a standard Normal distribution</li>
+<li><code>y</code>: a random sample of size 500 from a standard Normal distribution</li>
+<li>A logical vector indicating whether <code>x + y &gt; 1</code></li>
+<li>A numeric vector created by coercing the above logical vector</li>
+<li>A factor vector created by coercing the above logical vector</li>
+</ul></li>
+</ul>
+<p>Write a short description of your vector using inline R code, including: * the size of the dataset (using <code>nrow</code> and <code>ncol</code>) * the mean, median, and standard deviation of <code>x</code> * the proportion of cases for which <code>x + y &gt; 1</code></p>
+<p>Make a scatterplot of <code>y</code> vs <code>x</code>; color points using the logical variable (adding <code>color = ...</code> inside of <code>aes</code> in your <code>ggplot</code> code should help). Make a second and third scatterplot that color points using the numeric and factor variables, respectively, and comment on the color scales.</p>
+<p>Export your first scatterplot to your project directory using <code>ggsave</code>.</p>
+</div>
+<div id="optional-post-assignment-survey" class="section level3">
+<h3>Optional post-assignment survey</h3>
+<p>If you’d like, a you can complete <a href="https://docs.google.com/forms/d/e/1FAIpQLSd-Gbt30RuKq3-FzzXSRKLaYqU3kqS1KVnfO7lH_6EkhcVB-A/viewform?usp=sf_link">this short survey</a> after you’ve finished the assignment.</p>
+</div>
 
 <br><br>
 <footer>
@@ -521,6 +576,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
