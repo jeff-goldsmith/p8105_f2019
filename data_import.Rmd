@@ -121,7 +121,7 @@ If I move the directory holding this example, the relatitve path works and the a
 
 ### Looking at data
 
-The first thing to do after importing the data (unless `read_csv` gives warnings) is to look at it. If there are unexpected results during data import, you'll catch a lot of them here. In addition to printing the data, I often use `View`, `str`, `head`, and `tail`:
+The first thing to do after importing the data (unless `read_csv` gives warnings) is to look at it. If there are unexpected results during data import, you'll catch a lot of them here. In addition to printing the data, I often use `View` / `view`, `str`, `head`, and `tail`:
 
 ```{r}
 litters_data
@@ -162,7 +162,7 @@ litters_data = read_csv(file = "./data/FAS_litters.csv",
     Group = col_character(),
     `Litter Number` = col_character(),
     `GD0 weight` = col_double(),
-    `GD12 weight` = col_double(),
+    `GD18 weight` = col_double(),
     `GD of Birth` = col_integer(),
     `Pups born alive` = col_integer(),
     `Pups dead @ birth` = col_integer(),
@@ -201,7 +201,7 @@ If I move the directory holding this example, the relatitve path works and the a
 
 Non-csv plain text files (e.g. tab delimited files) can be handled using `read_table`. This is very similar to `read_csv`, but you have to specify a delimiter.
 
-CSV format is great, but you'll encounter a lot of Excel files too. Although you can export these to a csv, don't -- use the `readxl` package instead! This is part of the tidyverse but you'll have to download and install it separately. The `read_excel` function in this package has many of the same arguments as `read_csv`, including `col_names`, `na`, `skip`, and `col_types`, and can be used in basically the same way. There is also a `sheet` option (useful when there are multiple sheets in the Excel file) and the `range` option (when you want to read in a specific data rectangle). Lastly, in RStudio you can use File > Import Dataset > From Excel for a GUI interface. The code below illustrates `read_excel`.
+CSV format is great, but you'll encounter a lot of Excel files too. Although you can export these to a csv, don't -- use the `readxl` package instead! This is tidyverse-adjacent but you'll have to download and install it separately. The `read_excel` function in this package has many of the same arguments as `read_csv`, including `col_names`, `na`, `skip`, and `col_types`, and can be used in basically the same way. There is also a `sheet` option (useful when there are multiple sheets in the Excel file) and the `range` option (when you want to read in a specific data rectangle). Lastly, in RStudio you can use File > Import Dataset > From Excel for a GUI interface. The code below illustrates `read_excel`.
 
 ```{r}
 library(readxl)
