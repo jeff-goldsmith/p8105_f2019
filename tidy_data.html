@@ -343,8 +343,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -487,7 +485,7 @@ div.tocify {
 
 
 <p>The overarching goal of data wrangling is to have a tidy, easy-to-use dataset.</p>
-<p>This is the third module in the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCAEZLU49">here</a>.</p>
+<p>This is the third module in the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; the relevant slack channel is <a href="https://p8105fall2019.slack.com/messages/CN898UWNB">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="77a37cf3dcb945a9abd2e09439158d07" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
@@ -500,6 +498,14 @@ div.tocify {
 <h2>Example</h2>
 <p>I’ll keep using the same repo / project as in <a href="data_import.html">data import</a> and <a href="data_manipulation.html">data manipulation</a>, but create a new .Rmd for tidying. I’m also going to load some relevant packages, and limit the number of lines printed in a tibble.</p>
 <pre class="r"><code>library(tidyverse)
+## ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.2
+## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0
+## ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
 
 options(tibble.print_min = 5)</code></pre>
 <div id="gather" class="section level3">

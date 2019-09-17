@@ -14,6 +14,6 @@ The topic is made up of the following components:
 
 It has been argued that [data carpentry](http://www.mimno.org/articles/carpentry/) is a better term than data wrangling. I only sorta like that, although it's a useful analogy to consider.
 
-The slack channel for this topic is [here](https://p8105-fall2018.slack.com/messages/CCAEZLU49).
+The slack channel for this topic is [here](https://p8105fall2019.slack.com/messages/CN898UWNB).
 
 The code that I produced working examples in lecture is [here](https://github.com/P8105/data_wrangling_i).

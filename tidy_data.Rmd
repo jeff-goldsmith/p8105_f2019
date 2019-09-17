@@ -8,7 +8,7 @@ output:
 
 The overarching goal of data wrangling is to have a tidy, easy-to-use dataset. 
 
-This is the third module in the [Data Wrangling I](topic_data_wrangling_i.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAEZLU49).
+This is the third module in the [Data Wrangling I](topic_data_wrangling_i.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN898UWNB).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
