@@ -47,7 +47,7 @@ Absolute paths are often conceptually easier, because you don't really have to _
 An absolute path example is below:
 
 ```
-"/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/Fall_2018/p8105.github.io/data/FAS_litters.csv"
+"/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/fall_2019/p8105.github.io/data/FAS_litters.csv"
 ```
 
 Relative paths, meanwhile, navigate from your current working directory. Relative paths are portable, in that if you move your directory or share it with someone else, the **relative** path to files in the directory will stay the same and your code will work. For both of these reasons, relative paths are preferred in almost every setting. 
@@ -121,18 +121,25 @@ If I move the directory holding this example, the relatitve path works and the a
 
 ### Looking at data
 
-The first thing to do after importing the data (unless `read_csv` gives warnings) is to look at it. If there are unexpected results during data import, you'll catch a lot of them here. In addition to printing the data, I often use `View` / `view`, `str`, `head`, and `tail`:
+The first thing to do after importing the data (unless `read_csv` gives warnings) is to look at it. If there are unexpected results during data import, you'll catch a lot of them here. In addition to printing the data (which is my first step), I often use `View` / `view`, `str`, `head`, and `tail`:
 
 ```{r}
 litters_data
 tail(litters_data, 5)
 ```
 
-Another tool that I use often is ``skimr::skim`. The output is too wide to render well here, but is pretty slick! 
+Another tool that I use sometimes is `skimr::skim`. The output is too wide to render well here, but is pretty slick! 
 
 ```{r}
 skimr::skim(litters_data)
 ```
+
+I'm not going to show the output of the line below, because `View` / `view` don't work well inside of .Rmd files. Instead, call these functions from the console, and be sure to remove them from any code chunks in your .Rmd.
+
+```{r, eval = FALSE}
+view(litters_data)
+```
+
 
 ### Arguments to `read_*`
 
