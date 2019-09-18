@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -499,12 +461,12 @@ div.tocify {
 <p>For this example, I’ll start a new R Markdown file to the repo / project I started for the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; this will make it easy to load example data sets using the code I wrote in <a href="data_import.html">data import</a>.</p>
 <p>Once again we’re going to be using the <code>tidyverse</code>, so we’ll load that at the outset. We’re going to be looking at a lot of output, so I’ll print only three lines of each tibble by default. Lastly, we’ll focus on the data in <code>FAS_litters.csv</code> and <code>FAS_pups.csv</code>, so we’ll load those data and clean up the column names using what we learned in <a href="data_import.html">data import</a>.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ──────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ─────────────────────────────────────────────── tidyverse 1.2.1 ──
 ## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
-## ✔ tibble  2.1.3     ✔ dplyr   0.8.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
 ## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0
-## ── Conflicts ─────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -604,7 +566,11 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 <li><code>!(pups_survive == 4)</code></li>
 <li><code>group %in% c(&quot;Con7&quot;, &quot;Con8&quot;)</code></li>
 <li><code>group == &quot;Con7&quot; &amp; gd_of_birth == 20</code></li>
-<li><code>!is.na(wt_increase)</code></li>
+</ul>
+<p>A very common filtering step requires you to omit missing observations. You <em>can</em> do this with <code>filter</code>, but I recommend using <code>drop_na</code> from the <code>tidyr</code> package:</p>
+<ul>
+<li><code>drop_na(litters_data)</code> will remove any row with a missing value</li>
+<li><code>drop_na(litters_data, wt_increase)</code> will remove rows for which <code>wt_increase</code> is missing.</li>
 </ul>
 <p>Filtering can be helpful for limiting a dataset to only those observations needed for an analysis. However, I recommend against the creation of many data subsets (e.g. one for each group). This can clutter up your workspace, and we’ll see good tools for the analysis of subsets before long.</p>
 <p><strong><em>Learning Assessment:</em></strong> In the pups data:</p>
@@ -714,38 +680,46 @@ mutate(pups_data, pd_sum = pd_ears + pd_eyes + pd_pivot + pd_walk)
   col_types = &quot;ccddiiii&quot;)
 litters_data_clean_names = janitor::clean_names(litters_data_raw)
 litters_data_selected_cols = select(litters_data_clean_names, -pups_survive)
-litters_data_with_vars = mutate(litters_data_selected_cols, 
-  wt_gain = gd18_weight - gd0_weight,
-  group = str_to_lower(group))
-litters_data_with_vars
-## # A tibble: 49 x 8
+litters_data_with_vars = 
+  mutate(
+    litters_data_selected_cols, 
+    wt_gain = gd18_weight - gd0_weight,
+    group = str_to_lower(group))
+litters_data_with_vars_without_missing = 
+  drop_na(litters_data_with_vars, wt_gain)
+litters_data_with_vars_without_missing
+## # A tibble: 31 x 8
 ##   group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
 ##   &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;int&gt;           &lt;int&gt;
 ## 1 con7  #85                 19.7        34.7          20               3
 ## 2 con7  #1/2/95/2           27          42            19               8
 ## 3 con7  #5/5/3/83/3-3       26          41.4          19               6
-## # … with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
+## # … with 28 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
 ## #   wt_gain &lt;dbl&gt;</code></pre>
 <p>Below, we try the second option:</p>
 <pre class="r"><code>litters_data_clean = 
-  mutate(
-    select(
-      janitor::clean_names(
-        read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;)
-        ), 
-    -pups_survive
+  drop_na(
+    mutate(
+      select(
+        janitor::clean_names(
+          read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;)
+          ), 
+      -pups_survive
+      ),
+    wt_gain = gd18_weight - gd0_weight,
+    group = str_to_lower(group)
     ),
-  wt_gain = gd18_weight - gd0_weight,
-  group = str_to_lower(group)
+  wt_gain
   )
+
 litters_data_clean
-## # A tibble: 49 x 8
+## # A tibble: 31 x 8
 ##   group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
 ##   &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;int&gt;           &lt;int&gt;
 ## 1 con7  #85                 19.7        34.7          20               3
 ## 2 con7  #1/2/95/2           27          42            19               8
 ## 3 con7  #5/5/3/83/3-3       26          41.4          19               6
-## # … with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
+## # … with 28 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
 ## #   wt_gain &lt;dbl&gt;</code></pre>
 <p>These are both confusing and bad: the first gets confusing and clutters our workspace, and the second has to be read inside out.</p>
 <p>Piping solves this problem. It allows you to turn the nested approach into a sequential chain by passing the result of one function call as an argument to the next function call:</p>
@@ -755,16 +729,17 @@ litters_data_clean
   select(-pups_survive) %&gt;%
   mutate(
     wt_gain = gd18_weight - gd0_weight,
-    group = str_to_lower(group))
+    group = str_to_lower(group)) %&gt;% 
+  drop_na(wt_gain)
 
 litters_data
-## # A tibble: 49 x 8
+## # A tibble: 31 x 8
 ##   group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
 ##   &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;int&gt;           &lt;int&gt;
 ## 1 con7  #85                 19.7        34.7          20               3
 ## 2 con7  #1/2/95/2           27          42            19               8
 ## 3 con7  #5/5/3/83/3-3       26          41.4          19               6
-## # … with 46 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
+## # … with 28 more rows, and 2 more variables: pups_dead_birth &lt;int&gt;,
 ## #   wt_gain &lt;dbl&gt;</code></pre>
 <p>All three approaches result in the same dataset, but the piped commands are by far the most straightforward. The easiest way to read <code>%&gt;%</code> is “then”; the keyboard shortcuts are Ctrl + Shift + M (Windows) and Cmd + Shift + M (Mac).</p>
 <p>The functions in <code>dplyr</code> (and much of the <code>tidyverse</code>) are designed to work smoothly with the pipe operator. By default, the pipe will take the result of one function call and use that as the first argument of the next function call; by design, functions in <code>dplyr</code> will take a tibble as an input and return a tibble as a result. As a consequence, functions in <code>dplyr</code> are easy to connect in a data cleaning chain. You can make this more explicit by using <code>.</code> as a placeholder for the result of the preceding call:</p>
@@ -774,8 +749,9 @@ litters_data
   select(.data = ., -pups_survive) %&gt;%
   mutate(.data = .,
     wt_gain = gd18_weight - gd0_weight,
-    group = str_to_lower(group))</code></pre>
-<p>In this example, the dataset argument is called <code>dat</code> in <code>janitor::clean_names</code> and <code>.data</code> in the <code>dplyr</code> functions (which can be confusing). In the majority of cases (and everywhere in the tidyverse) you’ll elide the first argument and be happy with life, but there are some cases where the placeholder is necessary. For example, to regress <code>wt_gain</code> on <code>pups_born_alive</code>, you might use:</p>
+    group = str_to_lower(group)) %&gt;% 
+  drop_na(data = ., wt_gain)</code></pre>
+<p>In this example, the dataset argument is called <code>dat</code> in <code>janitor::clean_names</code>, <code>.data</code> in the <code>dplyr</code> functions, and <code>data</code> in <code>drop_na</code> – which is definitely confusing. In the majority of cases (and everywhere in the tidyverse) you’ll elide the first argument and be happy with life, but there are some cases where the placeholder is necessary. For example, to regress <code>wt_gain</code> on <code>pups_born_alive</code>, you might use:</p>
 <pre class="r"><code>litters_data %&gt;%
   lm(wt_gain ~ pups_born_alive, data = .) %&gt;%
   broom::tidy()
@@ -847,6 +823,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
