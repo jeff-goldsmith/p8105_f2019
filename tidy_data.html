@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -498,12 +460,12 @@ div.tocify {
 <h2>Example</h2>
 <p>I’ll keep using the same repo / project as in <a href="data_import.html">data import</a> and <a href="data_manipulation.html">data manipulation</a>, but create a new .Rmd for tidying. I’m also going to load some relevant packages, and limit the number of lines printed in a tibble.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ────────────────────────────────────────────── tidyverse 1.2.1 ──
 ## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
-## ✔ tibble  2.1.3     ✔ dplyr   0.8.2
-## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0
-## ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ───────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -523,68 +485,58 @@ pulse_data
 ## 4 10026  72.7 male            20             6            18            16
 ## 5 10035  60.4 male             4             0             1             2
 ## # … with 1,082 more rows</code></pre>
-<p>With our new understanding of tidy data, we quickly recognize a problem: the BDI score is spread across four columns, which correspond to four observation times. We can fix this problem using <code>gather</code>:</p>
-<pre class="r"><code>pulse_tidy_data = gather(pulse_data, key = visit, value = bdi, bdi_score_bl:bdi_score_12m)
-## Warning: attributes are not identical across measure variables;
-## they will be dropped
+<p>With our new understanding of tidy data, we quickly recognize a problem: the BDI score is spread across four columns, which correspond to four observation times. We can fix this problem using <code>pivot_longer</code>:</p>
+<pre class="r"><code>pulse_tidy_data = 
+  pivot_longer(
+    pulse_data, 
+    bdi_score_bl:bdi_score_12m,
+    names_to = &quot;visit&quot;, 
+    values_to = &quot;bdi&quot;)
+
 pulse_tidy_data
 ## # A tibble: 4,348 x 5
-##      id   age sex   visit          bdi
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;        &lt;dbl&gt;
-## 1 10003  48.0 male  bdi_score_bl     7
-## 2 10015  72.5 male  bdi_score_bl     6
-## 3 10022  58.5 male  bdi_score_bl    14
-## 4 10026  72.7 male  bdi_score_bl    20
-## 5 10035  60.4 male  bdi_score_bl     4
+##      id   age sex   visit           bdi
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;
+## 1 10003  48.0 male  bdi_score_bl      7
+## 2 10003  48.0 male  bdi_score_01m     1
+## 3 10003  48.0 male  bdi_score_06m     2
+## 4 10003  48.0 male  bdi_score_12m     0
+## 5 10015  72.5 male  bdi_score_bl      6
 ## # … with 4,343 more rows</code></pre>
-<p>This looks much better! However, you should notice that this produced a warning. The warning seemed pretty specific but I didn’t understand it, so I googled “tidyr gather attributes are not identical across measure variables; they will be dropped” and found <a href="https://stackoverflow.com/questions/28972386/retain-attributes-when-using-gather-from-tidyr-attributes-are-not-identical">this</a>. After some reading (and maybe a bit more googling), it started to sound like the columns containing BDI scores had different attributes, and indeed they do:</p>
-<pre class="r"><code>str(pulse_data)
-## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    1087 obs. of  7 variables:
-##  $ id           : num  10003 10015 10022 10026 10035 ...
-##  $ age          : num  48 72.5 58.5 72.7 60.4 ...
-##   ..- attr(*, &quot;label&quot;)= chr &quot;Age at baseline&quot;
-##   ..- attr(*, &quot;format.sas&quot;)= chr &quot;AGEA&quot;
-##  $ sex          : chr  &quot;male&quot; &quot;male&quot; &quot;male&quot; &quot;male&quot; ...
-##  $ bdi_score_bl : num  7 6 14 20 4 2 4 5 0 10 ...
-##   ..- attr(*, &quot;label&quot;)= chr &quot;BDI, BL IMPUTED SCORE&quot;
-##   ..- attr(*, &quot;format.sas&quot;)= chr &quot;F&quot;
-##  $ bdi_score_01m: num  1 NA 3 6 0 10 0 NA 3 2 ...
-##   ..- attr(*, &quot;label&quot;)= chr &quot;BDI, 1 MONTH IMPUTED SCORE&quot;
-##   ..- attr(*, &quot;format.sas&quot;)= chr &quot;F&quot;
-##  $ bdi_score_06m: num  2 NA 8 18 1 12 NA 0 4 11 ...
-##   ..- attr(*, &quot;label&quot;)= chr &quot;BDI, 6 MONTH IMPUTED SCORE&quot;
-##   ..- attr(*, &quot;format.sas&quot;)= chr &quot;F&quot;
-##  $ bdi_score_12m: num  0 NA NA 16 2 8 NA 2 0 6 ...
-##   ..- attr(*, &quot;label&quot;)= chr &quot;BDI, 12 MONTH IMPUTED SCORE&quot;
-##   ..- attr(*, &quot;format.sas&quot;)= chr &quot;F&quot;</code></pre>
-<p>Each BDI score column has a specific label in the SAS dataset; these don’t match, so <code>gather</code> dropped them when creating the <code>bdi</code> column. Not a problem here, but dropping attributes could be an issue if you wanted to preserve dates, factors, or some other feature.</p>
-</div>
-<div id="separate" class="section level3">
-<h3><code>separate</code></h3>
-<p>The other issue with the PULSE data, now, is <code>visit</code>. The original column names were informative but are not necessarily the format we would need for analysis. I’m going to split <code>visit</code> into two columns using <code>separate</code>:</p>
-<pre class="r"><code>separate(pulse_tidy_data, visit, into = c(&quot;remove_1&quot;, &quot;remove_2&quot;, &quot;visit&quot;), sep = &quot;_&quot;)
-## # A tibble: 4,348 x 7
-##      id   age sex   remove_1 remove_2 visit   bdi
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;
-## 1 10003  48.0 male  bdi      score    bl        7
-## 2 10015  72.5 male  bdi      score    bl        6
-## 3 10022  58.5 male  bdi      score    bl       14
-## 4 10026  72.7 male  bdi      score    bl       20
-## 5 10035  60.4 male  bdi      score    bl        4
+<p>This looks much better! However, now <code>visit</code> is an issue. The original column names were informative but we probably don’t need to keep the <code>bdi_score_</code> prefix in each case. I’ll use an additional option in <code>pivot_longer</code> to address this:</p>
+<pre class="r"><code>pulse_tidy_data = 
+  pivot_longer(
+    pulse_data, 
+    bdi_score_bl:bdi_score_12m,
+    names_to = &quot;visit&quot;, 
+    names_prefix = &quot;bdi_score_&quot;,
+    values_to = &quot;bdi&quot;)
+
+pulse_tidy_data
+## # A tibble: 4,348 x 5
+##      id   age sex   visit   bdi
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;
+## 1 10003  48.0 male  bl        7
+## 2 10003  48.0 male  01m       1
+## 3 10003  48.0 male  06m       2
+## 4 10003  48.0 male  12m       0
+## 5 10015  72.5 male  bl        6
 ## # … with 4,343 more rows</code></pre>
-<p>This isn’t really the optimal way to isolate “visit” because I now need an additional <code>select</code> step to remove the unnecessary character variables <code>remove_1</code> and <code>remove_2</code>. However, it does illustrate the <code>separate</code> function, and we haven’t yet learned about <code>str_replace</code> and other functions from the <code>stringr</code> package that are better suited to this problem, so …</p>
 <p>In the preceding I’ve saved intermediate datasets to make each step clear. While this can be a helpful crutch as you’re trying out code, it is generally bad practice. There are also some additional transformations needed to wrap up the data wrangling process, like changing <code>bl</code> to <code>00m</code> for consistency across visits and converting <code>visit</code> to a factor variable. (It’s possible that you would want <code>visit</code> to be a numeric variable instead, which could be done with a different call to <code>mutate</code>.) Lastly, it’s nice to organize the data into a reasonable order.</p>
 <p>Altogether, then, the code below will import, tidy, and transform the PULSE dataset into a usable format:</p>
-<pre class="r"><code>pulse_data = haven::read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;) %&gt;%
+<pre class="r"><code>pulse_data = 
+  haven::read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;) %&gt;%
   janitor::clean_names() %&gt;%
-  gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %&gt;%
-  separate(visit, into = c(&quot;remove_1&quot;, &quot;remove_2&quot;, &quot;visit&quot;), sep = &quot;_&quot;) %&gt;%
-  select(id, visit, everything(), -starts_with(&quot;remove&quot;)) %&gt;%
-  mutate(visit = replace(visit, visit == &quot;bl&quot;, &quot;00m&quot;),
-         visit = factor(visit, levels = str_c(c(&quot;00&quot;, &quot;01&quot;, &quot;06&quot;, &quot;12&quot;), &quot;m&quot;))) %&gt;%
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = &quot;visit&quot;, 
+    names_prefix = &quot;bdi_score_&quot;,
+    values_to = &quot;bdi&quot;) %&gt;%
+  select(id, visit, everything()) %&gt;%
+  mutate(
+    visit = replace(visit, visit == &quot;bl&quot;, &quot;00m&quot;),
+    visit = factor(visit, levels = str_c(c(&quot;00&quot;, &quot;01&quot;, &quot;06&quot;, &quot;12&quot;), &quot;m&quot;))) %&gt;%
   arrange(id, visit)
-## Warning: attributes are not identical across measure variables;
-## they will be dropped
 
 print(pulse_data, n = 12)
 ## # A tibble: 4,348 x 5
@@ -621,8 +573,9 @@ print(pulse_data, n = 12)
   read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;% 
   janitor::clean_names() %&gt;%
   separate(group, into = c(&quot;dose&quot;, &quot;day_of_tx&quot;), sep = 3) %&gt;%
-  mutate(dose = str_to_lower(dose),
-         wt_gain = gd18_weight - gd0_weight) %&gt;%
+  mutate(
+    dose = str_to_lower(dose),
+    wt_gain = gd18_weight - gd0_weight) %&gt;%
   arrange(litter_number)
 
 litters_data
@@ -643,22 +596,25 @@ litters_data
 <p>The code below shows one approach to this data cleaning process:</p>
 <pre class="r"><code>litters_data %&gt;% 
   select(litter_number, ends_with(&quot;weight&quot;)) %&gt;% 
-  gather(key = gd, value = weight, gd0_weight:gd18_weight) %&gt;% 
+  pivot_longer(
+    gd0_weight:gd18_weight,
+    names_to = &quot;gd&quot;, 
+    values_to = &quot;weight&quot;) %&gt;% 
   mutate(gd = recode(gd, &quot;gd0_weight&quot; = 0, &quot;gd18_weight&quot; = 18))
 ## # A tibble: 98 x 3
 ##   litter_number      gd weight
 ##   &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 #1/2/95/2           0     27
-## 2 #1/5/3/83/3-3/2     0     NA
-## 3 #1/6/2/2/95-2       0     NA
-## 4 #1/82/3-2           0     NA
-## 5 #100                0     20
+## 2 #1/2/95/2          18     42
+## 3 #1/5/3/83/3-3/2     0     NA
+## 4 #1/5/3/83/3-3/2    18     NA
+## 5 #1/6/2/2/95-2       0     NA
 ## # … with 93 more rows</code></pre>
 <p>In one sense, this is “tidy” because I have a variable for day and a variable for weight rather that using values in my variable names. However, it’s less useful if I’m interested in computing or analyzing weight gain during pregnancy.</p>
 </details>
 </div>
-<div id="spread" class="section level3">
-<h3><code>spread</code></h3>
+<div id="pivot_wider" class="section level3">
+<h3><code>pivot_wider</code></h3>
 <p>We’ve been exclusively interested in tidying data, but we’ve admitted that sometimes untidy is better for human consumption. For that reason we’re going to take a short digression into untidying your tidy data.</p>
 <p>The code below creates a tidy dataset that could result from an analysis. This is the correct format for additional analysis or visualization, but doesn’t facilitate quick comparisons for human readers.</p>
 <pre class="r"><code>analysis_result = tibble(
@@ -675,32 +631,42 @@ analysis_result
 ## 2 treatment post    8  
 ## 3 placebo   pre     3.5
 ## 4 placebo   post    4</code></pre>
-<p>An alternative presentation of the same data might have groups in rows, times in columns, and mean values in table cells. This is decidedly non-tidy; to get there from here we’ll need to use <code>spread</code>, which is the inverse of <code>gather</code>:</p>
-<pre class="r"><code>spread(analysis_result, key = time, value = mean)
+<p>An alternative presentation of the same data might have groups in rows, times in columns, and mean values in table cells. This is decidedly non-tidy; to get there from here we’ll need to use <code>pivot_wider</code>, which is the inverse of <code>pivot_longer</code>:</p>
+<pre class="r"><code>pivot_wider(
+  analysis_result, 
+  names_from = &quot;time&quot;, 
+  values_from = &quot;mean&quot;)
 ## # A tibble: 2 x 3
-##   group      post   pre
+##   group       pre  post
 ##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 placebo       4   3.5
-## 2 treatment     8   4</code></pre>
-<p>We’re pretty much there now, although you could use <code>select</code> to reorder columns, and (depending on your goal) use <code>knitr::kable()</code> to produce a nicer table for reading.</p>
+## 1 treatment   4       8
+## 2 placebo     3.5     4</code></pre>
+<p>We’re pretty much there now – in some cases you migth use <code>select</code> to reorder columns, and (depending on your goal) use <code>knitr::kable()</code> to produce a nicer table for reading.</p>
 </div>
 <div id="binding-rows" class="section level3">
 <h3>Binding rows</h3>
 <p>We’ve looked at single-table non-tidy data, but non-tidiness often stems from relevant data spread across multiple tables. In the simplest case, these tables are basically the same and can be stacked to produce a tidy dataset. That’s the setting in <code>LotR_words.xlsx</code>, where the word counts for different races and sexes in each movie in the trilogy are spread across distinct data rectangles (these data are based on <a href="https://github.com/jennybc/lotr-tidy/blob/master/01-intro.md">this example</a>).</p>
 <p>To produce the desired tidy dataset, we first need to read each table and do some cleaning.</p>
-<pre class="r"><code>fellowship_ring = readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;B3:D6&quot;) %&gt;%
+<pre class="r"><code>fellowship_ring = 
+  readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;B3:D6&quot;) %&gt;%
   mutate(movie = &quot;fellowship_ring&quot;)
 
-two_towers = readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;F3:H6&quot;) %&gt;%
+two_towers = 
+  readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;F3:H6&quot;) %&gt;%
   mutate(movie = &quot;two_towers&quot;)
 
-return_king = readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;J3:L6&quot;) %&gt;%
+return_king = 
+  readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;J3:L6&quot;) %&gt;%
   mutate(movie = &quot;return_king&quot;)</code></pre>
 <p>Here it was necessary to add a variable to each dataframe indicating the movie; that information had stored elsewhere in the original spreadsheet. As an aside, the three code snippets above are all basically the same except for the range and the movie name – later we’ll see a better way to handle cases like this by <a href="writing_functions.html">writing our own functions</a>, but this works for now.</p>
 <p>Once each table is ready to go, we can stack them up using <code>bind_rows</code> and tidy the result:</p>
-<pre class="r"><code>lotr_tidy = bind_rows(fellowship_ring, two_towers, return_king) %&gt;%
+<pre class="r"><code>lotr_tidy = 
+  bind_rows(fellowship_ring, two_towers, return_king) %&gt;%
   janitor::clean_names() %&gt;%
-  gather(key = sex, value = words, female:male) %&gt;%
+  pivot_longer(
+    female:male,
+    names_to = &quot;sex&quot;, 
+    values_to = &quot;words&quot;) %&gt;%
   mutate(race = str_to_lower(race)) %&gt;% 
   select(movie, everything()) 
 
@@ -709,22 +675,22 @@ lotr_tidy
 ##    movie           race   sex    words
 ##    &lt;chr&gt;           &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;
 ##  1 fellowship_ring elf    female  1229
-##  2 fellowship_ring hobbit female    14
-##  3 fellowship_ring man    female     0
-##  4 two_towers      elf    female   331
-##  5 two_towers      hobbit female     0
-##  6 two_towers      man    female   401
-##  7 return_king     elf    female   183
-##  8 return_king     hobbit female     2
-##  9 return_king     man    female   268
-## 10 fellowship_ring elf    male     971
-## 11 fellowship_ring hobbit male    3644
-## 12 fellowship_ring man    male    1995
-## 13 two_towers      elf    male     513
-## 14 two_towers      hobbit male    2463
-## 15 two_towers      man    male    3589
-## 16 return_king     elf    male     510
-## 17 return_king     hobbit male    2673
+##  2 fellowship_ring elf    male     971
+##  3 fellowship_ring hobbit female    14
+##  4 fellowship_ring hobbit male    3644
+##  5 fellowship_ring man    female     0
+##  6 fellowship_ring man    male    1995
+##  7 two_towers      elf    female   331
+##  8 two_towers      elf    male     513
+##  9 two_towers      hobbit female     0
+## 10 two_towers      hobbit male    2463
+## 11 two_towers      man    female   401
+## 12 two_towers      man    male    3589
+## 13 return_king     elf    female   183
+## 14 return_king     elf    male     510
+## 15 return_king     hobbit female     2
+## 16 return_king     hobbit male    2673
+## 17 return_king     man    female   268
 ## 18 return_king     man    male    2459</code></pre>
 <p>Having the data in this form will make it easier to make comparisons across movies, aggregate within races across the trilogy, and perform other analyses.</p>
 </div>
@@ -740,18 +706,21 @@ lotr_tidy
 </ul>
 <p>Left joins are the most common, because they add data from a smaller table <code>y</code> into a larger table <code>x</code> without removing anything from <code>x</code>.</p>
 <p>As an example, consider the data tables in <code>FAS_pups.csv</code> and <code>FAS_litters.csv</code>, which are related through the <code>Litter Number</code> variable. The former contains data unique to each pup, and the latter contains data unique to each litter. We can combine these using a left join of litter data into pup data; doing so retains data on each pup and adds data in new columns.</p>
-<pre class="r"><code>pup_data = read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;) %&gt;%
+<pre class="r"><code>pup_data = 
+  read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   mutate(sex = recode(sex, `1` = &quot;male&quot;, `2` = &quot;female&quot;)) 
 
-litter_data = read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;%
+litter_data = 
+  read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   select(-pups_survive) %&gt;%
   mutate(
     wt_gain = gd18_weight - gd0_weight,
     group = str_to_lower(group))
 
-fas_data = left_join(pup_data, litter_data, by = &quot;litter_number&quot;)
+fas_data = 
+  left_join(pup_data, litter_data, by = &quot;litter_number&quot;)
 fas_data
 ## # A tibble: 313 x 13
 ##   litter_number sex   pd_ears pd_eyes pd_pivot pd_walk group gd0_weight
@@ -767,7 +736,7 @@ fas_data
 <p>We made the key explicit in the join. By default, the <code>*_join</code> functions in <code>dplyr</code> will try to determine the key(s) based on variable names in the datasets you want to join. This is often but not always sufficient, and an extra step to make the key clear will help you and others reading your code.</p>
 <p>Note that joining is not particularly amenable to the <code>%&gt;%</code> operator because it is fundamentally non-linear: two separate datasets are coming together, rather than a single dataset being processed in a step-by-step fashion.</p>
 <p>As a final point, the <code>*_join</code> functions are very much related to SQL syntax, but emphasize operations common to data analysis.</p>
-<p><strong><em>Learning Assessment:</em></strong> The datasets in <a href="data/survey_results.zip">this zip file</a> contain de-identified responses to surveys included in Homeworks 0 and 1. Both contain a unique student identifier; the first has reponses to a question about operating systems, and the second has responses to questions about degree program and git experience. Write a code chunk that imports and cleans both datasets, and then joins them.</p>
+<p><strong><em>Learning Assessment:</em></strong> The datasets in <a href="data/survey_results.zip">this zip file</a> contain de-identified responses to surveys included in past years of this course. Both contain a unique student identifier; the first has reponses to a question about operating systems, and the second has responses to questions about degree program and git experience. Write a code chunk that imports and cleans both datasets, and then joins them.</p>
 <details>
 <p><summary> Solution </summary></p>
 <p>I put both datasets in the <code>data</code> directory in my repo / project. The code below imports both datasets, cleans up variable names, and joins the datasets using <code>left_join</code>, <code>inner_join</code>, and <code>anti_join</code>.</p>
@@ -777,9 +746,10 @@ fas_data
 
 surv_pr_git = read_csv(&quot;data/surv_program_git.csv&quot;) %&gt;% 
   janitor::clean_names() %&gt;% 
-  rename(id = what_is_your_uni, 
-         prog = what_is_your_degree_program,
-         git_exp = which_most_accurately_describes_your_experience_with_git)
+  rename(
+    id = what_is_your_uni, 
+    prog = what_is_your_degree_program,
+    git_exp = which_most_accurately_describes_your_experience_with_git)
 
 left_join(surv_os, surv_pr_git)
 inner_join(surv_os, surv_pr_git)
@@ -789,7 +759,7 @@ anti_join(surv_pr_git, surv_os)</code></pre>
 </div>
 <div id="a-quick-note-on-names" class="section level3">
 <h3>A quick note on names</h3>
-<p><code>gather</code> and <code>spread</code> aren’t really intuitive names for what the functions do. As a result, <code>tidyr</code> <a href="https://tidyr.tidyverse.org/dev/articles/pivot.html">is being updated</a> to include <code>pivot_longer</code> and <code>pivot_wider</code> – names that are at least more in keeping with how this kind of tidying is described elsewhere. <code>gather</code> and <code>spread</code> will still exist, but they’re going to be less common over time.</p>
+<p>Up until very recently, folks were using <code>gather</code> and <code>spread</code> instead of <code>pivot_longer</code> and <code>pivot_wider</code>. The new functions were updated <a href="https://tidyr.tidyverse.org/dev/articles/pivot.html">for good reasons</a>; <code>gather</code> and <code>spread</code> will still exist, but they’re going to be less common over time.</p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
@@ -827,6 +797,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

@@ -45,43 +45,50 @@ pulse_data = haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
 pulse_data
 ```
 
-With our new understanding of tidy data, we quickly recognize a problem: the BDI score is spread across four columns, which correspond to four observation times. We can fix this problem using `gather`:
+With our new understanding of tidy data, we quickly recognize a problem: the BDI score is spread across four columns, which correspond to four observation times. We can fix this problem using `pivot_longer`:
 
 ```{r}
-pulse_tidy_data = gather(pulse_data, key = visit, value = bdi, bdi_score_bl:bdi_score_12m)
+pulse_tidy_data = 
+  pivot_longer(
+    pulse_data, 
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit", 
+    values_to = "bdi")
+
 pulse_tidy_data
 ```
 
-This looks much better! However, you should notice that this produced a warning. The warning seemed pretty specific but I didn't understand it, so I googled "tidyr gather attributes are not identical across measure variables; they will be dropped" and found [this](https://stackoverflow.com/questions/28972386/retain-attributes-when-using-gather-from-tidyr-attributes-are-not-identical). After some reading (and maybe a bit more googling), it started to sound like the columns containing BDI scores had different attributes, and indeed they do:
+This looks much better! However, now `visit` is an issue. The original column names were informative but we probably don't need to keep the `bdi_score_` prefix in each case. I'll use an additional option in `pivot_longer` to address this:
 
 ```{r}
-str(pulse_data)
+pulse_tidy_data = 
+  pivot_longer(
+    pulse_data, 
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit", 
+    names_prefix = "bdi_score_",
+    values_to = "bdi")
+
+pulse_tidy_data
 ```
-
-Each BDI score column has a specific label in the SAS dataset; these don't match, so `gather` dropped them when creating the `bdi` column. Not a problem here, but dropping attributes could be an issue if you wanted to preserve dates, factors, or some other feature. 
-
-### `separate`
-
-The other issue with the PULSE data, now, is `visit`. The original column names were informative but are not necessarily the format we would need for analysis. I'm going to split `visit` into two columns using `separate`:
-
-```{r}
-separate(pulse_tidy_data, visit, into = c("remove_1", "remove_2", "visit"), sep = "_")
-```
-
-This isn't really the optimal way to isolate "visit" because I now need an additional `select` step to remove the unnecessary character variables `remove_1` and `remove_2`. However, it does illustrate the `separate` function, and we haven't yet learned about `str_replace` and other functions from the `stringr` package that are better suited to this problem, so ...
 
 In the preceding I've saved intermediate datasets to make each step clear. While this can be a helpful crutch as you're trying out code, it is generally bad practice. There are also some additional transformations needed to wrap up the data wrangling process, like changing `bl` to `00m` for consistency across visits and converting `visit` to a factor variable. (It's possible that you would want `visit` to be a numeric variable instead, which could be done with a different call to `mutate`.) Lastly, it's nice to organize the data into a reasonable order.
 
 Altogether, then, the code below will import, tidy, and transform the PULSE dataset into a usable format:
 
 ```{r}
-pulse_data = haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
+pulse_data = 
+  haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
   janitor::clean_names() %>%
-  gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %>%
-  separate(visit, into = c("remove_1", "remove_2", "visit"), sep = "_") %>%
-  select(id, visit, everything(), -starts_with("remove")) %>%
-  mutate(visit = replace(visit, visit == "bl", "00m"),
-         visit = factor(visit, levels = str_c(c("00", "01", "06", "12"), "m"))) %>%
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit", 
+    names_prefix = "bdi_score_",
+    values_to = "bdi") %>%
+  select(id, visit, everything()) %>%
+  mutate(
+    visit = replace(visit, visit == "bl", "00m"),
+    visit = factor(visit, levels = str_c(c("00", "01", "06", "12"), "m"))) %>%
   arrange(id, visit)
 
 print(pulse_data, n = 12)
@@ -102,8 +109,9 @@ litters_data =
   read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>% 
   janitor::clean_names() %>%
   separate(group, into = c("dose", "day_of_tx"), sep = 3) %>%
-  mutate(dose = str_to_lower(dose),
-         wt_gain = gd18_weight - gd0_weight) %>%
+  mutate(
+    dose = str_to_lower(dose),
+    wt_gain = gd18_weight - gd0_weight) %>%
   arrange(litter_number)
 
 litters_data
@@ -121,7 +129,10 @@ The code below shows one approach to this data cleaning process:
 ```{r}
 litters_data %>% 
   select(litter_number, ends_with("weight")) %>% 
-  gather(key = gd, value = weight, gd0_weight:gd18_weight) %>% 
+  pivot_longer(
+    gd0_weight:gd18_weight,
+    names_to = "gd", 
+    values_to = "weight") %>% 
   mutate(gd = recode(gd, "gd0_weight" = 0, "gd18_weight" = 18))
 ```
 
@@ -130,7 +141,7 @@ In one sense, this is "tidy" because I have a variable for day and a variable fo
 </details>
 
 
-### `spread`
+### `pivot_wider`
 
 We've been exclusively interested in tidying data, but we've admitted that sometimes untidy is better for human consumption. For that reason we're going to take a short digression into untidying your tidy data.
 
@@ -146,13 +157,16 @@ analysis_result = tibble(
 analysis_result
 ```
 
-An alternative presentation of the same data might have groups in rows, times in columns, and mean values in table cells. This is decidedly non-tidy; to get there from here we'll need to use `spread`, which is the inverse of `gather`:
+An alternative presentation of the same data might have groups in rows, times in columns, and mean values in table cells. This is decidedly non-tidy; to get there from here we'll need to use `pivot_wider`, which is the inverse of `pivot_longer`:
 
 ```{r}
-spread(analysis_result, key = time, value = mean)
+pivot_wider(
+  analysis_result, 
+  names_from = "time", 
+  values_from = "mean")
 ```
 
-We're pretty much there now, although you could use `select` to reorder columns, and (depending on your goal) use `knitr::kable()` to produce a nicer table for reading.
+We're pretty much there now -- in some cases you migth use `select` to reorder columns, and (depending on your goal) use `knitr::kable()` to produce a nicer table for reading.
 
 
 ### Binding rows
@@ -162,13 +176,16 @@ We've looked at single-table non-tidy data, but non-tidiness often stems from re
 To produce the desired tidy dataset, we first need to read each table and do some cleaning.
 
 ```{r}
-fellowship_ring = readxl::read_excel("./data/LotR_Words.xlsx", range = "B3:D6") %>%
+fellowship_ring = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "B3:D6") %>%
   mutate(movie = "fellowship_ring")
 
-two_towers = readxl::read_excel("./data/LotR_Words.xlsx", range = "F3:H6") %>%
+two_towers = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "F3:H6") %>%
   mutate(movie = "two_towers")
 
-return_king = readxl::read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>%
+return_king = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>%
   mutate(movie = "return_king")
 ```
 
@@ -177,9 +194,13 @@ Here it was necessary to add a variable to each dataframe indicating the movie; 
 Once each table is ready to go, we can stack them up using `bind_rows` and tidy the result:
 
 ```{r}
-lotr_tidy = bind_rows(fellowship_ring, two_towers, return_king) %>%
+lotr_tidy = 
+  bind_rows(fellowship_ring, two_towers, return_king) %>%
   janitor::clean_names() %>%
-  gather(key = sex, value = words, female:male) %>%
+  pivot_longer(
+    female:male,
+    names_to = "sex", 
+    values_to = "words") %>%
   mutate(race = str_to_lower(race)) %>% 
   select(movie, everything()) 
 
@@ -205,18 +226,21 @@ Left joins are the most common, because they add data from a smaller table `y` i
 As an example, consider the data tables in `FAS_pups.csv` and `FAS_litters.csv`, which are related through the `Litter Number` variable. The former contains data unique to each pup, and the latter contains data unique to each litter. We can combine these using a left join of litter data into pup data; doing so retains data on each pup and adds data in new columns.
 
 ```{r}
-pup_data = read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
+pup_data = 
+  read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
   janitor::clean_names() %>%
   mutate(sex = recode(sex, `1` = "male", `2` = "female")) 
 
-litter_data = read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
+litter_data = 
+  read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
   janitor::clean_names() %>%
   select(-pups_survive) %>%
   mutate(
     wt_gain = gd18_weight - gd0_weight,
     group = str_to_lower(group))
 
-fas_data = left_join(pup_data, litter_data, by = "litter_number")
+fas_data = 
+  left_join(pup_data, litter_data, by = "litter_number")
 fas_data
 ```
 
@@ -226,7 +250,7 @@ Note that joining is not particularly amenable to the `%>%` operator because it 
 
 As a final point, the `*_join` functions are very much related to SQL syntax, but emphasize operations common to data analysis. 
 
-**_Learning Assessment:_** The datasets in [this zip file](data/survey_results.zip) contain de-identified responses to surveys included in Homeworks 0 and 1. Both contain a unique student identifier; the first has reponses to a question about operating systems, and the second has responses to questions about degree program and git experience. Write a code chunk that imports and cleans both datasets, and then joins them. 
+**_Learning Assessment:_** The datasets in [this zip file](data/survey_results.zip) contain de-identified responses to surveys included in past years of this course. Both contain a unique student identifier; the first has reponses to a question about operating systems, and the second has responses to questions about degree program and git experience. Write a code chunk that imports and cleans both datasets, and then joins them. 
 
 <details>
 <summary> Solution </summary>
@@ -240,9 +264,10 @@ surv_os = read_csv("data/surv_os.csv") %>%
 
 surv_pr_git = read_csv("data/surv_program_git.csv") %>% 
   janitor::clean_names() %>% 
-  rename(id = what_is_your_uni, 
-         prog = what_is_your_degree_program,
-         git_exp = which_most_accurately_describes_your_experience_with_git)
+  rename(
+    id = what_is_your_uni, 
+    prog = what_is_your_degree_program,
+    git_exp = which_most_accurately_describes_your_experience_with_git)
 
 left_join(surv_os, surv_pr_git)
 inner_join(surv_os, surv_pr_git)
@@ -255,7 +280,7 @@ anti_join(surv_pr_git, surv_os)
 
 ### A quick note on names
 
-`gather` and `spread` aren't really intuitive names for what the functions do. As a result, `tidyr` [is being updated](https://tidyr.tidyverse.org/dev/articles/pivot.html) to include `pivot_longer` and `pivot_wider` -- names that are at least more in keeping with how this kind of tidying is described elsewhere. `gather` and `spread` will still exist, but they're going to be less common over time. 
+Up until very recently, folks were using `gather` and `spread` instead of `pivot_longer` and `pivot_wider`. The new functions were updated [for good reasons](https://tidyr.tidyverse.org/dev/articles/pivot.html); `gather` and `spread` will still exist, but they're going to be less common over time. 
 
 ## Other materials
 
