@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -486,9 +446,8 @@ div.tocify {
 </div>
 
 
-<p>The version of the Mr. Trash Wheel data we’ll use for this class is available <a href="./data/HealthyHarborWaterWheelTotals2017-3.xlsx">here</a>.</p>
-<p><strong>UPDATE:</strong> a more recent dataset is <a href="./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx">here</a>.</p>
-<p><strong>UPDATED UPDATE (FALL 2018):</strong> an even-more recent dataset is <a href="./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx">here</a>.</p>
+<p>The version of the Mr. Trash Wheel data we’ll use for this class is available <a href="./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx">here</a>.</p>
+<!-- **UPDATE (FALL 2019):** an even-more recent dataset is [here](./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx). -->
 <div id="context" class="section level2">
 <h2>Context</h2>
 <p><a href="http://baltimorewaterfront.com/healthy-harbor/water-wheel/">Mr. Trash Wheel</a> is “a <a href="https://en.wikipedia.org/wiki/Mr._Trash_Wheel">water-wheel vessel</a> that removes trash from the Inner Harbor in Baltimore, Maryland.” It (or he) sits at an intake into the Inner Harbor and intercepts litter and debris carried by the Jones Falls River toward the harbor. It has removed over a million pounds of litter since May 2014!</p>
@@ -506,7 +465,7 @@ div.tocify {
 </div>
 <div id="data-description" class="section level2">
 <h2>Data description</h2>
-<p>Data collected by Mr. Trash Wheel is publicly available as a .xlsx document. The version used linked to above was accessed in June 2017.</p>
+<p>Data collected by Mr. Trash Wheel is publicly available as a .xlsx document. The version used linked to above was accessed in August 2018.</p>
 <p>The Mr. Trash Wheel spreadsheet is largely self-explanatory, and includes information on the dumpter number, date of collection, amount of total litter and litter type. Additional spreadsheets for Professor Trash wheel and for precipitation amounts are also included in the document.</p>
 </div>
 
@@ -534,6 +493,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

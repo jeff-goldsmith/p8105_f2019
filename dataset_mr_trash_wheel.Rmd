@@ -6,11 +6,9 @@ output:
     toc_float: true
 ---
 
-The version of the Mr. Trash Wheel data we'll use for this class is available [here](./data/HealthyHarborWaterWheelTotals2017-3.xlsx). 
+The version of the Mr. Trash Wheel data we'll use for this class is available [here](./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx). 
 
-**UPDATE:** a more recent dataset is [here](./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx).
-
-**UPDATED UPDATE (FALL 2018):** an even-more recent dataset is [here](./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx).
+<!-- **UPDATE (FALL 2019):** an even-more recent dataset is [here](./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx). -->
 
 
 ## Context
@@ -29,7 +27,7 @@ Mr. Trash Wheel is on [twitter](https://twitter.com/mrtrashwheel/).
 
 ## Data description
 
-Data collected by Mr. Trash Wheel is publicly available as a .xlsx document. The version used linked to above was accessed in June 2017. 
+Data collected by Mr. Trash Wheel is publicly available as a .xlsx document. The version used linked to above was accessed in August 2018. 
 
 The Mr. Trash Wheel spreadsheet is largely self-explanatory, and includes information on the dumpter number, date of collection, amount of total litter and litter type. Additional spreadsheets for Professor Trash wheel and for precipitation amounts are also included in the document. 
 
