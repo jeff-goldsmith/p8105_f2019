@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -92,7 +93,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -253,48 +253,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +304,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -496,6 +455,62 @@ div.tocify {
 <p>Please submit (via courseworks) the web address of the GitHub repo containing your work for this assignment; git commits after the due date will cause the assignment to be considered late.</p>
 <p>R Markdown documents included as part of your solutions must not install packages, and should only load the packages necessary for your submission to knit.</p>
 </div>
+<div id="points" class="section level3">
+<h3>Points</h3>
+<ul>
+<li>Problem 0: 25 points</li>
+<li>Problem 1: 25 points</li>
+<li>Problem 2: 25 points</li>
+<li>Problem 3: 25 points</li>
+</ul>
+</div>
+<div id="problem-0" class="section level3">
+<h3>Problem 0</h3>
+<p>This “problem” focuses on structure of your submission, especially the use git and GitHub for reproducibility, R Projects to organize your work, R Markdown to write reproducible reports, relative paths to load data from local files, and reasonable naming structures for your files.</p>
+<p>To that end:</p>
+<ul>
+<li>create a public GitHub repo + local R Project; we suggest naming this repo / directory <code>p8105_hw2_YOURUNI</code> (e.g. <code>p8105_hw2_ajg2202</code> for Jeff), but that’s not required</li>
+<li>create a single .Rmd file named <code>p8105_hw2_YOURUNI.Rmd</code> that renders to <code>github_document</code></li>
+<li>create a subdirectory to store the local data files used in Problems 1 and 2, and use relative paths to access these data files</li>
+<li>submit a link to your repo via Courseworks</li>
+</ul>
+<p>Your solutions to Problems 1, 2, and 3 should be implemented in your .Rmd file, and your git commit history should reflect the process you used to solve these Problems.</p>
+<p>For this Problem, we will assess adherence to the instructions above regarding repo structure, git commit history, and whether we are able to knit your .Rmd to ensure that your work is reproducible. Adherence to appropriate styling and clarity of code will be assessed in Problems 1+.</p>
+</div>
+<div id="problem-1" class="section level3">
+<h3>Problem 1</h3>
+<p>This problem uses the <a href="./dataset_mr_trash_wheel.html">Mr. Trash Wheel</a> dataset, available as an Excel file on the course website.</p>
+<p>Read and clean the Mr. Trash Wheel sheet:</p>
+<ul>
+<li>specify the sheet in the Excel file and to omit non-data entries (rows with notes / figures; columns containing notes) using arguments in <code>read_excel</code></li>
+<li>use reasonable variable names</li>
+<li>omit rows that do not include dumpster-specific data</li>
+<li>round the number of sports balls to the nearest integer and converts the result to an integer variable (using <code>as.integer</code>)</li>
+</ul>
+<p>Read and clean precipitation data for 2017 and 2018. For each, omit rows without precipitation data and add a variable year. Next, combine precipitation datasets and convert month to a character variable (the variable <code>month.name</code> is built into R and should be useful).</p>
+<p>Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in both resulting datasets, and give examples of key variables. For available data, what was the total precipitation in 2018? What was the median number of sports balls in a dumpster in 2017?</p>
+</div>
+<div id="problem-2" class="section level3">
+<h3>Problem 2</h3>
+<p>This problem uses the <a href="dataset_fivethirtyeight.html">FiveThirtyEight</a> data; these data were gathered to create the interactive graphic on <a href="https://fivethirtyeight.com/features/science-isnt-broken/#part1">this page</a>. In particular, we’ll use the data in pols-month.csv, unemployment.csv, and snp.csv. Our goal is to merge these into a single data frame using year and month as keys across datasets.</p>
+<p>First, clean the data in pols-month.csv. Use <code>separate()</code> to break up the variable <code>mon</code> into integer variables <code>year</code>, <code>month</code>, and <code>day</code>; replace month number with month name; create a <code>president</code> variable taking values <code>gop</code> and <code>dem</code>, and remove <code>prez_dem</code> and <code>prez_gop</code>; and remove the day variable.</p>
+<p>Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that <code>year</code> and <code>month</code> are the leading columns.</p>
+<p>Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.</p>
+<p>Join the datasets by merging <code>snp</code> into <code>pols</code>, and merging <code>unemployment</code> into the result.</p>
+<p>Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).</p>
+<p><em>Note: we could have used a <code>date</code> variable as a key instead of creating <code>year</code> and <code>month</code> keys; doing so would help with some kinds of plotting, and be a more accurate representation of the data. Date formats are tricky, though. For more information check out the <code>lubridate</code> package in the <code>tidyverse</code>.</em></p>
+</div>
+<div id="problem-3" class="section level3">
+<h3>Problem 3</h3>
+<p>This problem uses data from NYC Open data on the <a href="https://data.cityofnewyork.us/Health/Popular-Baby-Names/25th-nujf">popularity of baby names</a>, and can be downloaded <a href=".data/Popular_Baby_Names.csv">here</a>.</p>
+<p>Load and tidy the data. Note that, although these data may seem fairly well formatted initially, the names of a categorical predictor and the case structure of string variables changed over time; you’ll need to address this in your data cleaning. Also, some rows seem duplicated, and these will need to be removed (<em>hint</em>: google something like “dplyr remove duplicate rows” to get started).</p>
+<p>Produce a well-structured, reader-friendly table showing the rank in popularity of the name “Olivia” as a female baby name over time; this should have rows for ethnicities and columns for year. Produce a similar table showing the most popular name among male children over time.</p>
+<p>Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis).</p>
+</div>
+<div id="optional-post-assignment-survey" class="section level3">
+<h3>Optional post-assignment survey</h3>
+<p>If you’d like, a you can complete <a href="">this short survey</a> after you’ve finished the assignment.</p>
+</div>
 
 <br><br>
 <footer>
@@ -521,6 +536,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

@@ -18,3 +18,73 @@ Please submit (via courseworks) the web address of the GitHub repo containing yo
 
 R Markdown documents included as part of your solutions must not install packages, and should only load the packages necessary for your submission to knit. 
 
+### Points
+
+* Problem 0: 25 points
+* Problem 1: 25 points
+* Problem 2: 25 points
+* Problem 3: 25 points
+
+### Problem 0
+
+This "problem" focuses on structure of your submission, especially the use git and GitHub for reproducibility, R Projects to organize your work, R Markdown to write reproducible reports, relative paths to load data from local files, and reasonable naming structures for your files. 
+
+To that end: 
+
+* create a public GitHub repo + local R Project; we suggest naming this repo / directory `p8105_hw2_YOURUNI` (e.g. `p8105_hw2_ajg2202` for Jeff), but that's not required
+* create a single .Rmd file named `p8105_hw2_YOURUNI.Rmd` that renders to `github_document`
+* create a subdirectory to store the local data files used in Problems 1 and 2, and use relative paths to access these data files
+* submit a link to your repo via Courseworks
+
+Your solutions to Problems 1, 2, and 3 should be implemented in your .Rmd file, and your git commit history should reflect the process you used to solve these Problems. 
+
+For this Problem, we will assess adherence to the instructions above regarding repo structure, git commit history, and whether we are able to knit your .Rmd to ensure that your work is reproducible. Adherence to appropriate styling and clarity of code will be assessed in Problems 1+.
+
+
+### Problem 1
+
+This problem uses the [Mr. Trash Wheel](./dataset_mr_trash_wheel.html) dataset, available as an Excel file on the course website.
+
+Read and clean the Mr. Trash Wheel sheet:
+
+* specify the sheet in the Excel file and to omit non-data entries (rows with notes / figures; columns containing notes) using arguments in `read_excel`
+* use reasonable variable names 
+* omit rows that do not include dumpster-specific data
+* round the number of sports balls to the nearest integer and converts the result to an integer variable (using `as.integer`)
+
+Read and clean precipitation data for 2017 and 2018. For each, omit rows without precipitation data and add a variable year. Next, combine precipitation datasets and convert month to a character variable (the variable `month.name` is built into R and should be useful).
+
+Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in both resulting datasets, and give examples of key variables. For available data, what was the total precipitation in 2018? What was the median number of sports balls in a dumpster in 2017?
+
+### Problem 2
+
+This problem uses the [FiveThirtyEight](dataset_fivethirtyeight.html) data; these data were gathered to create the interactive graphic on [this page](https://fivethirtyeight.com/features/science-isnt-broken/#part1). In particular, we'll use the data in pols-month.csv, unemployment.csv, and snp.csv. Our goal is to merge these into a single data frame using year and month as keys across datasets. 
+
+First, clean the data in pols-month.csv. Use `separate()` to break up the variable `mon` into integer variables `year`, `month`, and `day`; replace month number with month name; create a `president` variable taking values `gop` and `dem`, and remove `prez_dem` and `prez_gop`; and remove the day variable. 
+
+Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that `year` and `month` are the leading columns. 
+
+Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from "wide" to "long" format; ensuring that key variables have the same name; and ensuring that key variables take the same values. 
+
+Join the datasets by merging `snp` into `pols`, and merging `unemployment` into the result. 
+
+Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables). 
+
+*Note: we could have used a `date` variable as a key instead of creating `year` and `month` keys; doing so would help with some kinds of plotting, and be a more accurate representation of the data. Date formats are tricky, though. For more information check out the `lubridate` package in the `tidyverse`.*
+
+
+
+### Problem 3
+
+This problem uses data from NYC Open data on the [popularity of baby names](https://data.cityofnewyork.us/Health/Popular-Baby-Names/25th-nujf), and can be downloaded [here](.data/Popular_Baby_Names.csv).
+
+Load and tidy the data. Note that, although these data may seem fairly well formatted initially, the names of a categorical predictor and the case structure of string variables changed over time; you'll need to address this in your data cleaning. Also, some rows seem duplicated, and these will need to be removed (*hint*: google something like "dplyr remove duplicate rows" to get started).
+
+Produce a well-structured, reader-friendly table showing the rank in popularity of the name "Olivia" as a female baby name over time; this should have rows for ethnicities and columns for year. Produce a similar table showing the most popular name among male children over time. 
+
+Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis). 
+
+
+### Optional post-assignment survey
+
+If you'd like, a you can complete [this short survey]() after you've finished the assignment.
