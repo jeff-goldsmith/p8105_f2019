@@ -470,8 +470,8 @@ div.tocify {
 ## ✖ dplyr::lag()    masks stats::lag()
 
 options(tibble.print_min = 5)</code></pre>
-<div id="gather" class="section level3">
-<h3><code>gather</code></h3>
+<div id="pivot_longer" class="section level3">
+<h3><code>pivot_longer</code></h3>
 <p>In <a href="data_import.html">data import</a>, we used the <code>haven</code> package to load the PULSE biomarkers dataset from a .sas7bdat. Let’s reload those data and take a closer look:</p>
 <pre class="r"><code>pulse_data = haven::read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;) %&gt;%
   janitor::clean_names()

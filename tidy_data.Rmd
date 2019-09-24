@@ -35,7 +35,7 @@ library(tidyverse)
 options(tibble.print_min = 5)
 ```
 
-### `gather`
+### `pivot_longer`
 
 In [data import](data_import.html), we used the `haven` package to load the PULSE biomarkers dataset from a .sas7bdat. Let's reload those data and take a closer look:
 
