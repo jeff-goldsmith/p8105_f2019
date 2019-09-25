@@ -20,10 +20,14 @@ R Markdown documents included as part of your solutions must not install package
 
 ### Points
 
-* Problem 0: 25 points
-* Problem 1: 25 points
-* Problem 2: 25 points
-* Problem 3: 25 points
+| Problem         | Points    |
+|:--------------- |:--------- |
+| Problem 0       | 25        |
+| Problem 1       | 25        |
+| Problem 2       | 25        |
+| Problem 3       | 25        |
+| Optional survey | No points |
+
 
 ### Problem 0
 
@@ -76,7 +80,7 @@ Write a short paragraph about these datasets. Explain briefly what each dataset 
 
 ### Problem 3
 
-This problem uses data from NYC Open data on the [popularity of baby names](https://data.cityofnewyork.us/Health/Popular-Baby-Names/25th-nujf), and can be downloaded [here](.data/Popular_Baby_Names.csv).
+This problem uses data from NYC Open data on the [popularity of baby names](https://data.cityofnewyork.us/Health/Popular-Baby-Names/25th-nujf), and can be downloaded [here](./data/Popular_Baby_Names.csv).
 
 Load and tidy the data. Note that, although these data may seem fairly well formatted initially, the names of a categorical predictor and the case structure of string variables changed over time; you'll need to address this in your data cleaning. Also, some rows seem duplicated, and these will need to be removed (*hint*: google something like "dplyr remove duplicate rows" to get started).
 

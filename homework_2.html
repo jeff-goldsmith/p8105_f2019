@@ -93,6 +93,7 @@ code {
 }
 img {
   max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -457,12 +458,36 @@ div.tocify {
 </div>
 <div id="points" class="section level3">
 <h3>Points</h3>
-<ul>
-<li>Problem 0: 25 points</li>
-<li>Problem 1: 25 points</li>
-<li>Problem 2: 25 points</li>
-<li>Problem 3: 25 points</li>
-</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Problem</th>
+<th align="left">Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Problem 0</td>
+<td align="left">25</td>
+</tr>
+<tr class="even">
+<td align="left">Problem 1</td>
+<td align="left">25</td>
+</tr>
+<tr class="odd">
+<td align="left">Problem 2</td>
+<td align="left">25</td>
+</tr>
+<tr class="even">
+<td align="left">Problem 3</td>
+<td align="left">25</td>
+</tr>
+<tr class="odd">
+<td align="left">Optional survey</td>
+<td align="left">No points</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="problem-0" class="section level3">
 <h3>Problem 0</h3>
@@ -502,7 +527,7 @@ div.tocify {
 </div>
 <div id="problem-3" class="section level3">
 <h3>Problem 3</h3>
-<p>This problem uses data from NYC Open data on the <a href="https://data.cityofnewyork.us/Health/Popular-Baby-Names/25th-nujf">popularity of baby names</a>, and can be downloaded <a href=".data/Popular_Baby_Names.csv">here</a>.</p>
+<p>This problem uses data from NYC Open data on the <a href="https://data.cityofnewyork.us/Health/Popular-Baby-Names/25th-nujf">popularity of baby names</a>, and can be downloaded <a href="./data/Popular_Baby_Names.csv">here</a>.</p>
 <p>Load and tidy the data. Note that, although these data may seem fairly well formatted initially, the names of a categorical predictor and the case structure of string variables changed over time; you’ll need to address this in your data cleaning. Also, some rows seem duplicated, and these will need to be removed (<em>hint</em>: google something like “dplyr remove duplicate rows” to get started).</p>
 <p>Produce a well-structured, reader-friendly table showing the rank in popularity of the name “Olivia” as a female baby name over time; this should have rows for ethnicities and columns for year. Produce a similar table showing the most popular name among male children over time.</p>
 <p>Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis).</p>
