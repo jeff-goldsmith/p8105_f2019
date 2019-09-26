@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -250,18 +251,6 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
@@ -394,7 +383,7 @@ $(document).ready(function () {
 <li><a href="visualization_pt2.html">Visualization with <code>ggplot2</code> Pt. 2</a></li>
 <li><a href="exploratory_analysis.html">Exploratory analysis using <code>group_by</code></a></li>
 </ul>
-<p>The slack channel for this topic is <a href="https://p8105-fall2018.slack.com/messages/CCCBZPUVC">here</a>.</p>
+<p>The slack channel for this topic is <a href="https://p8105fall2019.slack.com/messages/CN01ALHR7">here</a>.</p>
 <p>The code that I produced working examples in lecture is <a href="">here</a>.</p>
 
 <br><br>
@@ -420,6 +409,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

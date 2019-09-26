@@ -8,7 +8,7 @@ output:
 
 Data sets can frequently be partitioned into meaningful groups based on the variables they contain. Making this grouping explicit allows the computation of numeric summaries within groups, which in turn facilitates quantitative comparisons. 
 
-This is the second module in the [Visualization and EDA](topic_visualization_and_eda.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCCBZPUVC).
+This is the second module in the [Visualization and EDA](topic_visualization_and_eda.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN01ALHR7).
 
 ```{r, echo = FALSE}
 library(tidyverse)
@@ -320,4 +320,4 @@ These results may suggest that pups in the control group are able to pivot earli
 * R for Data Science has sub-chapters on [grouped summaries](http://r4ds.had.co.nz/transform.html#grouped-summaries-with-summarise) and [exploratory data analysis](http://r4ds.had.co.nz/exploratory-data-analysis.html)
 * A more in-depth overview of window functions is [here](https://cran.r-project.org/web/packages/dplyr/vignettes/window-functions.html)
 
-The code that I produced working examples in lecture is [here](https://github.com/P8105/viz_and_edap).
+The code that I produced working examples in lecture is [here](https://github.com/P8105/viz_and_eda).

@@ -9,7 +9,7 @@ output:
 
 Good visualization is a critical step in data analysis. 
 
-This is the second module in the [Visualization and EDA](topic_visualization_and_eda.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCCBZPUVC). Note that the slides and Other Materials / Extra Reading is the same as in [Visualization Pt 1](visualization_pt1.html).
+This is the second module in the [Visualization and EDA](topic_visualization_and_eda.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN01ALHR7). Note that the slides and Other Materials / Extra Reading is the same as in [Visualization Pt 1](visualization_pt1.html).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(

@@ -10,6 +10,6 @@ The topic is made up of the following components:
 * [Visualization with `ggplot2` Pt. 2](visualization_pt2.html)
 * [Exploratory analysis using `group_by`](exploratory_analysis.html)
 
-The slack channel for this topic is [here](https://p8105-fall2018.slack.com/messages/CCCBZPUVC).
+The slack channel for this topic is [here](https://p8105fall2019.slack.com/messages/CN01ALHR7).
 
 The code that I produced working examples in lecture is [here]().

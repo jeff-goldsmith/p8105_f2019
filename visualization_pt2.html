@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -488,7 +448,7 @@ div.tocify {
 
 
 <p>Good visualization is a critical step in data analysis.</p>
-<p>This is the second module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCCBZPUVC">here</a>. Note that the slides and Other Materials / Extra Reading is the same as in <a href="visualization_pt1.html">Visualization Pt 1</a>.</p>
+<p>This is the second module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105fall2019.slack.com/messages/CN01ALHR7">here</a>. Note that the slides and Other Materials / Extra Reading is the same as in <a href="visualization_pt1.html">Visualization Pt 1</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="7272d2325e0d4f27a6bca25afbf149ce" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
@@ -503,7 +463,20 @@ div.tocify {
 <pre class="r"><code>devtools::install_github(&quot;thomasp85/patchwork&quot;)</code></pre>
 <p>Next I’ll load the relevant packages for this example.</p>
 <pre class="r"><code>library(tidyverse)
+## ── Attaching packages ────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0
+## ── Conflicts ───────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
 library(ggridges)
+## 
+## Attaching package: &#39;ggridges&#39;
+## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     scale_discrete_manual
 library(patchwork)</code></pre>
 <p>We’ll still work with NOAA weather data, which is loaded using the same code as in <a href="visualization_pt1.html">Visualization Pt 1</a>.</p>
 <pre class="r"><code>weather_df = 
@@ -894,6 +867,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
