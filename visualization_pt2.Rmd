@@ -34,7 +34,7 @@ I'll create a new .Rmd for this example, and include it in the Git repo / direct
 devtools::install_github("thomasp85/patchwork")
 ```
 
-Next I'll load the relevant packages for this example. 
+Next I'll load the relevant packages for this page. 
 
 ```{r}
 library(tidyverse)
@@ -46,10 +46,11 @@ We'll still work with NOAA weather data, which is loaded using the same code as 
 
 ```{r weather_data_create, cache = TRUE}
 weather_df = 
-  rnoaa::meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
-                      var = c("PRCP", "TMIN", "TMAX"), 
-                      date_min = "2017-01-01",
-                      date_max = "2017-12-31") %>%
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
   mutate(
     name = recode(id, USW00094728 = "CentralPark_NY", 
                       USC00519397 = "Waikiki_HA",
@@ -57,13 +58,15 @@ weather_df =
     tmin = tmin / 10,
     tmax = tmax / 10) %>%
   select(name, id, everything())
+
 weather_df
 ```
 
 As a starting point, let's revisit the scatterplot of `tmax` against `tmin` made in [Visualization Pt 1](visualization_pt1.html). 
 
 ```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5)
 ```
 
@@ -73,7 +76,8 @@ ggplot(weather_df, aes(x = tmin, y = tmax)) +
 There are a variety of useful ways to change the appearance of your plot, especially if your graphic is intended to be viewed by others. One of the most important things you can do is provide informative axis labels, plot titles, and captions, all of which can be controlled using `labs()`.
 
 ```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
     title = "Temperature plot",
@@ -86,34 +90,37 @@ ggplot(weather_df, aes(x = tmin, y = tmax)) +
 You'll occasionally want finer control over the location and specification of tick marks on the X or Y axis. These can be manipulated in `scale_x_*` and `scale_y_*` where `*` depends on the type of variable mapped to the `x` and `y` aesthetics. 
 
 ```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
     title = "Temperature plot",
     x = "Minimum daily temperature (C)",
     y = "Maxiumum daily temperature (C)",
-    caption = "Data from the rnoaa package"
-  ) + 
-  scale_x_continuous(breaks = c(-15, 0, 15), 
-                     labels = c("-15º C", "0", "15"))
+    caption = "Data from the rnoaa package") + 
+  scale_x_continuous(
+    breaks = c(-15, 0, 15), 
+    labels = c("-15º C", "0", "15"))
 ```
 
 There are a variety of other `scale_x` and `scale_y` options -- it can be helpful to know how and where these are controlled, although I usually would have to google how to do what I want. 
 
 ```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
     title = "Temperature plot",
     x = "Minimum daily temperature (C)",
     y = "Maxiumum daily temperature (C)",
-    caption = "Data from the rnoaa package"
-  ) + 
-  scale_x_continuous(breaks = c(-15, 0, 15), 
-                     labels = c("-15ºC", "0", "15"),
-                     limits = c(-20, 30)) + 
-  scale_y_continuous(trans = "sqrt", 
-                     position = "right")
+    caption = "Data from the rnoaa package") + 
+  scale_x_continuous(
+    breaks = c(-15, 0, 15), 
+    labels = c("-15ºC", "0", "15"),
+    limits = c(-20, 30)) + 
+  scale_y_continuous(
+    trans = "sqrt", 
+    position = "right")
 ```
 
 For many graph options there are several ways to produce the desired result, and you should feel free to use whichever is most convenient. For instance, `scale_y_sqrt()` can be added to a `ggplot` object to transform the Y scale, and `xlim()` can be used to control the plot limits in the X axis. 
@@ -124,22 +131,23 @@ For many graph options there are several ways to produce the desired result, and
 Analogously to `scale_x_*` and `scale_y_*`, there are `scale`s corresponding to many other aestheics. Some of the most common are used to control the `color` aesthetic. For example, arguments to `scale_color_hue()` control the color scale and the name in the plot legend. 
 
 ```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
     title = "Temperature plot",
     x = "Minimum daily temperature (C)",
     y = "Maxiumum daily temperature (C)",
-    caption = "Data from the rnoaa package"
-  ) + 
-  scale_color_hue(name = "Location", 
-                  h = c(100, 300))
+    caption = "Data from the rnoaa package") + 
+  scale_color_hue(name = "Location", h = c(100, 300))
 ```
 
 Trying to create your own color scheme usually doesn't go well; I encourage you to use the [`viridis`](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html) package instead. There are several options, but the default color scheme works nicely!
 
 ```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+ggp_temp_plot = 
+  weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
     title = "Temperature plot",
@@ -151,25 +159,16 @@ ggplot(weather_df, aes(x = tmin, y = tmax)) +
     name = "Location", 
     discrete = TRUE
   )
+
+ggp_temp_plot
 ```
 
-We used `discrete = TRUE` because the `color` aesthetic is mapped to a discrete variable. In other cases (for example, when color mapped to `prcp`) you can omit this argument to get a continuous color gradient. The `viridis::scale_fill_viridis()` function is appropriate for the `fill` aesthetic used in histograms, density plots. and elsewhere.
+We used `discrete = TRUE` because the `color` aesthetic is mapped to a discrete variable. In other cases (for example, when color mapped to `prcp`) you can omit this argument to get a continuous color gradient. The `viridis::scale_fill_viridis()` function is appropriate for the `fill` aesthetic used in histograms, density plots, and elsewhere.
 
 Another plot aspect that I frequently change is the legend position. By default this is on the right of the graphic, but I often shift it to the bottom to ensure the graphic takes up the available left-to-right space. 
 
 ```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
-  geom_point(aes(color = name), alpha = .5) + 
-  labs(
-    title = "Temperature plot",
-    x = "Minimum daily temperature (C)",
-    y = "Maxiumum daily temperature (C)",
-    caption = "Data from the rnoaa package"
-  ) + 
-  viridis::scale_color_viridis(
-    name = "Location", 
-    discrete = TRUE
-  ) + 
+ggp_temp_plot + 
   theme(legend.position = "bottom")
 ```
 
@@ -178,18 +177,7 @@ Quick tip: `legend.position = "none"` will remove the legend. This is helpful wh
 While we're on the subject of `theme`, you can change the default theme (which is `theme_gray`) to something else. Here's `theme_bw()`:
 
 ```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
-  geom_point(aes(color = name), alpha = .5) + 
-  labs(
-    title = "Temperature plot",
-    x = "Minimum daily temperature (C)",
-    y = "Maxiumum daily temperature (C)",
-    caption = "Data from the rnoaa package"
-  ) + 
-  viridis::scale_color_viridis(
-    name = "Location", 
-    discrete = TRUE
-  ) + 
+ggp_temp_plot + 
   theme_bw() + 
   theme(legend.position = "bottom")
 ```
@@ -197,18 +185,7 @@ ggplot(weather_df, aes(x = tmin, y = tmax)) +
 ... and here's `theme_classic()`:
 
 ```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
-  geom_point(aes(color = name), alpha = .5) + 
-  labs(
-    title = "Temperature plot",
-    x = "Minimum daily temperature (C)",
-    y = "Maxiumum daily temperature (C)",
-    caption = "Data from the rnoaa package"
-  ) + 
-  viridis::scale_color_viridis(
-    name = "Location", 
-    discrete = TRUE
-  ) + 
+ggp_temp_plot + 
   theme_classic() + 
   theme(legend.position = "bottom")
 ```
@@ -216,18 +193,7 @@ ggplot(weather_df, aes(x = tmin, y = tmax)) +
 ... and, for some reason, here's the Excel 2003 theme from [`ggthemes`](https://jrnold.github.io/ggthemes/):
 
 ```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
-  geom_point(aes(color = name), alpha = .5) + 
-  labs(
-    title = "Temperature plot",
-    x = "Minimum daily temperature (C)",
-    y = "Maxiumum daily temperature (C)",
-    caption = "Data from the rnoaa package"
-  ) + 
-  viridis::scale_color_viridis(
-    name = "Location", 
-    discrete = TRUE
-  ) + 
+ggp_temp_plot + 
   ggthemes::theme_excel() + 
   theme(legend.position = "bottom")
 ```
@@ -278,7 +244,7 @@ knitr::opts_chunk$set(
 theme_set(theme_bw() + theme(legend.position = "bottom"))
 ```
 
-There are ways to set color preferences globally as well, although they're a bit more complex and we probably won't cover them. 
+There are ways to set color preferences globally as well (for example, to use `viridis` color palettes everywhere), although they're a bit more involved. 
 
 
 ### Data argument in `geom_*`
@@ -296,7 +262,7 @@ waikiki =
   weather_df %>% 
   filter(name == "Waikiki_HA")
 
-ggplot(waikiki, aes(x = date, y = tmax, color = name)) + 
+ggplot(data = waikiki, aes(x = date, y = tmax, color = name)) + 
   geom_point() + 
   geom_line(data = central_park)
 ```
@@ -309,17 +275,22 @@ More realistically, it's sometimes necessary to overlay data summaries on a plot
 We've seen facetting as an approach to create the "same plot" for several levels of a categorical variable, and this can get you pretty far. Sometimes, though, you want to show two or three fundamentally different plots in the same graphic: you may want to juxtapose a scatterplot and a boxplot, or show scatterplots illustrating relationships between different variables. In this case, a solution is to create each of the panels you want separately and combine panels using tools in the [`patchwork`](https://github.com/thomasp85/patchwork) package:
 
 ```{r, fig.asp = 1}
-tmax_tmin_p = ggplot(weather_df, aes(x = tmax, y = tmin, color = name)) + 
+tmax_tmin_p = 
+  weather_df %>% 
+  ggplot(aes(x = tmax, y = tmin, color = name)) + 
   geom_point(alpha = .5) +
   theme(legend.position = "none")
 
-prcp_dens_p = weather_df %>% 
+prcp_dens_p = 
+  weather_df %>% 
   filter(prcp > 0) %>% 
   ggplot(aes(x = prcp, fill = name)) + 
   geom_density(alpha = .5) + 
   theme(legend.position = "none")
 
-tmax_date_p = ggplot(weather_df, aes(x = date, y = tmax, color = name)) + 
+tmax_date_p = 
+  weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) + 
   geom_point(alpha = .5) +
   geom_smooth(se = FALSE) + 
   theme(legend.position = "bottom")
@@ -327,7 +298,7 @@ tmax_date_p = ggplot(weather_df, aes(x = date, y = tmax, color = name)) +
 (tmax_tmin_p + prcp_dens_p) / tmax_date_p
 ```
 
-The package is already very helpful but is under active development -- some features may change or be added over time -- so check back periodically to stay up-to-date. This does require some amount of work for each panel, and you should keep in mind that this is intended to help combine panels into a plot that couldn't be created better using data tidying steps. 
+The package is already very helpful but is under active development -- some features may change or be added over time -- so check the package webstie periodically to stay up-to-date. This does require some amount of work for each panel, and you should keep in mind that this is intended to help combine panels into a plot that couldn't be created better using data tidying steps. 
 
 ### Data Manipulation
 
@@ -364,22 +335,29 @@ One solution would recognize that `tmax` and `tmin` are separate observation typ
 ```{r}
 weather_df %>%
   select(name, tmax, tmin) %>% 
-  gather(key = observation, value = temp, tmax:tmin) %>% 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation", 
+    values_to = "temp") %>% 
   ggplot(aes(x = temp, fill = observation)) +
   geom_density(alpha = .5) + 
   facet_grid(~name) + 
   viridis::scale_fill_viridis(discrete = TRUE)
 ```
 
-Our emphasis on data tidiness in previous examples is helpful in visualization. The code below imports and tidies the PULSE data, and creates a plot showing BDI score across visits. Some steps that are helpful in retrospect are using `gather` to organize the BDI score and visit time variables, and organizing the visit time variable into a factor with an informative ordering.
+Our emphasis on data tidiness in previous examples is helpful in visualization. The code below imports and tidies the PULSE data, and creates a plot showing BDI score across visits. Some steps that are helpful in retrospect are using `pivot_longer` to organize the BDI score and visit time variables, and organizing the visit time variable into a factor with an informative ordering.
 
 ```{r}
-pulse_data = haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
+pulse_data = 
+  haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
   janitor::clean_names() %>%
-  gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %>%
-  separate(visit, into = c("remove_1", "remove_2", "visit"), sep = "_") %>%
-  select(id, visit, everything(), -starts_with("remove")) %>%
-  mutate(visit = replace(visit, visit == "bl", "00m"),
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit", 
+    names_prefix = "bdi_score_",
+    values_to = "bdi") %>%
+  select(id, visit, everything()) %>%
+  mutate(visit = recode(visit, "bl" = "00m"),
          visit = factor(visit, levels = str_c(c("00", "01", "06", "12"), "m"))) %>%
   arrange(id, visit)
 
@@ -390,11 +368,13 @@ ggplot(pulse_data, aes(x = visit, y = bdi)) +
 As a final example, we'll revisit the FAS data. We've seen code for data import and organization and for joining the litters and pups data. Here we add some data tidying steps to view pup-level outcomes (post-natal day on which ears "work", on which the pup can walk, etc) across values of dose category and treatment day.
 
 ```{r}
-pup_data = read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
+pup_data = 
+  read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
   janitor::clean_names() %>%
   mutate(sex = recode(sex, `1` = "male", `2` = "female")) 
 
-litter_data = read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
+litter_data = 
+  read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
   janitor::clean_names() %>%
   select(-pups_survive) %>%
   separate(group, into = c("dose", "day_of_tx"), sep = 3) %>%
@@ -405,8 +385,11 @@ fas_data = left_join(pup_data, litter_data, by = "litter_number")
 
 fas_data %>% 
   select(sex, dose, day_of_tx, pd_ears:pd_walk) %>% 
-  gather(key = outcome, value = pn_day, pd_ears:pd_walk) %>% 
-  na.omit() %>% 
+  pivot_longer(
+    pd_ears:pd_walk,
+    names_to = "outcome", 
+    values_to = "pn_day") %>% 
+  drop_na() %>% 
   mutate(outcome = forcats::fct_reorder(outcome, day_of_tx, median)) %>% 
   ggplot(aes(x = dose, y = pn_day)) + 
   geom_violin() + 
