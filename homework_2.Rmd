@@ -91,4 +91,4 @@ Finally, for male, white non-hispanic children born in 2016, produce a scatter p
 
 ### Optional post-assignment survey
 
-If you'd like, a you can complete [this short survey]() after you've finished the assignment.
+If you'd like, a you can complete [this short survey](https://forms.gle/yo3heFu6H7PVrP8EA) after you've finished the assignment.
