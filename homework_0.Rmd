@@ -23,6 +23,7 @@ Open RStudio and install several packages (and their dependencies) using the cod
 ```{r eval = FALSE}
 install.packages(c("tidyverse", "knitr", "rmarkdown", "janitor", "broom", "here", "readxl", "haven", "rnoaa", "ggridges", "ggthemes", "leaflet", "viridis", "skimr", "rvest", "httr", "flexdashboard", "devtools", "usethis", "modelr", "mgcv", "tidytext", "shiny"))
 
+devtools::install_github("thomasp85/patchwork")
 devtools::install_github("p8105/p8105.datasets")
 ```
 

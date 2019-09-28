@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -500,6 +460,7 @@ div.tocify {
 <p>Open RStudio and install several packages (and their dependencies) using the code below:</p>
 <pre class="r"><code>install.packages(c(&quot;tidyverse&quot;, &quot;knitr&quot;, &quot;rmarkdown&quot;, &quot;janitor&quot;, &quot;broom&quot;, &quot;here&quot;, &quot;readxl&quot;, &quot;haven&quot;, &quot;rnoaa&quot;, &quot;ggridges&quot;, &quot;ggthemes&quot;, &quot;leaflet&quot;, &quot;viridis&quot;, &quot;skimr&quot;, &quot;rvest&quot;, &quot;httr&quot;, &quot;flexdashboard&quot;, &quot;devtools&quot;, &quot;usethis&quot;, &quot;modelr&quot;, &quot;mgcv&quot;, &quot;tidytext&quot;, &quot;shiny&quot;))
 
+devtools::install_github(&quot;thomasp85/patchwork&quot;)
 devtools::install_github(&quot;p8105/p8105.datasets&quot;)</code></pre>
 <p>(Note: on a Mac running OSX, you may need to install the <a href="http://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/">command line tools</a> for these pacakges to install.)</p>
 <p>Upload a screenshot of RStudio that shows your R version, and that you can successfully load the packages <code>tidyverse</code> and <code>knitr</code>; include your UNI on the command line. Here’s an example “solution”:</p>
@@ -541,6 +502,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
