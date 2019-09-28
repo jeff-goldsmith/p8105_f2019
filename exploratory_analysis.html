@@ -448,12 +448,12 @@ div.tocify {
 
 <p>Data sets can frequently be partitioned into meaningful groups based on the variables they contain. Making this grouping explicit allows the computation of numeric summaries within groups, which in turn facilitates quantitative comparisons.</p>
 <p>This is the second module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105fall2019.slack.com/messages/CN01ALHR7">here</a>.</p>
-<pre><code>## ── Attaching packages ────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
 ## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
 ## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
@@ -539,15 +539,16 @@ div.tocify {
 ## 10 2016-10-01     93
 ## 11 2016-11-01     90
 ## 12 2016-12-01     93</code></pre>
-<p><code>count()</code> is a useful tidyverse alternative to Base R’s <code>table</code> function. Both functions produce summaries of how often values appear, but <code>table</code>’s output is of class <code>table</code> and is hard to do any additional work with, while <code>count</code> produces a dataframe you can use or manipulate directly. For an example, run the code below and try to do something useful with the result.</p>
+<p><code>count()</code> is a useful tidyverse alternative to Base R’s <code>table</code> function. Both functions produce summaries of how often values appear, but <code>table</code>’s output is of class <code>table</code> and is hard to do any additional work with, while <code>count</code> produces a dataframe you can use or manipulate directly. For an example, run the code below and try to do something useful with the result…</p>
 <pre class="r"><code>weather_df %&gt;%
   pull(month) %&gt;% 
   table</code></pre>
 <p>You can use <code>summarize()</code> to compute multiple summaries within each group. As an example, we count the number of observations in each month and the number of distinct values of <code>date</code> in each month.</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(month) %&gt;%
-  summarize(n_obs = n(),
-            n_days = n_distinct(date))
+  summarize(
+    n_obs = n(),
+    n_days = n_distinct(date))
 ## # A tibble: 12 x 3
 ##    month      n_obs n_days
 ##    &lt;date&gt;     &lt;int&gt;  &lt;int&gt;
@@ -568,10 +569,11 @@ div.tocify {
 <h3>(2x2 tables)</h3>
 <p>You might find yourself, someday, wanting to tabulate the frequency of a binary outcome across levels of a binary predictor. In a contrived example, let’s say you want to look at the number of cold and not-cold days in Central Park and Waterhole. We can do this with some extra data manipulation steps and <code>group_by</code> + <code>summarize</code>:</p>
 <pre class="r"><code>weather_df %&gt;% 
-  mutate(cold = case_when(
-    tmax &lt; 5 ~ &quot;cold&quot;,
-    tmax &gt;=5 ~ &quot;not_cold&quot;,
-    TRUE     ~ &quot;&quot;
+  mutate(
+    cold = case_when(
+      tmax &lt; 5 ~ &quot;cold&quot;,
+      tmax &gt;=5 ~ &quot;not_cold&quot;,
+      TRUE     ~ &quot;&quot;
   )) %&gt;% 
   filter(name != &quot;Waikiki_HA&quot;) %&gt;% 
   group_by(name, cold) %&gt;% 
@@ -584,7 +586,7 @@ div.tocify {
 ## 2 CentralPark_NY not_cold   324
 ## 3 Waterhole_WA   cold       150
 ## 4 Waterhole_WA   not_cold   216</code></pre>
-<p>This is a “tidy” table, and it’s also a data frame. You can re-organize into a more standard 2x2 table using tools we’ll see later, but instead I suggest using <code>janitor::tabyl</code>:</p>
+<p>This is a “tidy” table, and it’s also a data frame. You could re-organize into a more standard (non-tidy) 2x2 table using <code>pivot_wider</code>, or you could use <code>janitor::tabyl</code>:</p>
 <pre class="r"><code>weather_df %&gt;% 
   mutate(cold = case_when(
     tmax &lt; 5 ~ &quot;cold&quot;,
@@ -597,17 +599,18 @@ div.tocify {
 ##  CentralPark_NY   42      324
 ##    Waterhole_WA  150      216</code></pre>
 <p>This isn’t tidy, but it is still a data frame – and that’s noticeably better than usual output from R’s built-in <code>table</code> function. <code>janitor</code> has a lot of little functions like this that turn out to be useful, so when you have some time you might read through all the things you can do. I don’t really love that this is called <code>tabyl</code>, but you can’t always get what you want in life.</p>
-<p>(Since we’re on the subject, I think 2x2 tables are kind of silly. When are you ever going to actually analyze data in that format?? In grad school I thought I’d be computing odds ratios by hand everyday (<span class="math inline">\(OR = AD / BC\)</span>!!), but really I do that about as often as I write in cursive – which is also never. Just do a logistic regression adjusting for confounders – because there are <em>always confounders</em>. And is a 2x2 table really that much better than the “tidy” version? There are <strong><em>4 numbers</em></strong>. )</p>
+<p>(Since we’re on the subject, I think 2x2 tables are kind of silly. When are you ever going to actually analyze data in that format?? In grad school I thought I’d be computing odds ratios by hand everyday (<span class="math inline">\(OR = AD / BC\)</span>, right?!), but really I do that as often as I write in cursive – which is never. Just do a logistic regression adjusting for confounders – because there are <em>always confounders</em>. And is a 2x2 table really that much better than the “tidy” version? There are <strong><em>4 numbers</em></strong>. )</p>
 </div>
 <div id="general-summaries" class="section level3">
 <h3>General summaries</h3>
 <p>Standard statistical summaries are regularly computed in <code>summarize()</code> using functions like <code>mean()</code>, <code>median()</code>, <code>var()</code>, <code>sd()</code>, <code>mad()</code>, <code>IQR()</code>, <code>min()</code>, and <code>max()</code>. To use these, you indicate the variable to which they apply and include any additional arguments as necessary.</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(month) %&gt;%
-  summarize(mean_tmax = mean(tmax),
-            mean_prec = mean(prcp, na.rm = TRUE),
-            median_tmax = median(tmax),
-            sd_tmax = sd(tmax))
+  summarize(
+    mean_tmax = mean(tmax),
+    mean_prec = mean(prcp, na.rm = TRUE),
+    median_tmax = median(tmax),
+    sd_tmax = sd(tmax))
 ## # A tibble: 12 x 5
 ##    month      mean_tmax mean_prec median_tmax sd_tmax
 ##    &lt;date&gt;         &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;
@@ -626,8 +629,9 @@ div.tocify {
 <p>You can group by more than one variable.</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month) %&gt;%
-  summarize(mean_tmax = mean(tmax),
-            median_tmax = median(tmax))
+  summarize(
+    mean_tmax = mean(tmax),
+    median_tmax = median(tmax))
 ## # A tibble: 36 x 4
 ## # Groups:   name [3]
 ##   name           month      mean_tmax median_tmax
@@ -651,70 +655,90 @@ div.tocify {
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month) %&gt;%
   summarize(mean_tmax = mean(tmax)) %&gt;% 
-  spread(key = month, value = mean_tmax) %&gt;% 
+  pivot_wider(
+    names_from = name,
+    values_from = mean_tmax) %&gt;% 
   knitr::kable(digits = 1)</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th align="left">name</th>
-<th align="right">2016-01-01</th>
-<th align="right">2016-02-01</th>
-<th align="right">2016-03-01</th>
-<th align="right">2016-04-01</th>
-<th align="right">2016-05-01</th>
-<th align="right">2016-06-01</th>
-<th align="right">2016-07-01</th>
-<th align="right">2016-08-01</th>
-<th align="right">2016-09-01</th>
-<th align="right">2016-10-01</th>
-<th align="right">2016-11-01</th>
-<th align="right">2016-12-01</th>
+<th align="left">month</th>
+<th align="right">CentralPark_NY</th>
+<th align="right">Waikiki_HA</th>
+<th align="right">Waterhole_WA</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">CentralPark_NY</td>
+<td align="left">2016-01-01</td>
 <td align="right">4.9</td>
-<td align="right">7.1</td>
-<td align="right">14.1</td>
-<td align="right">16.8</td>
-<td align="right">21.5</td>
-<td align="right">27.2</td>
-<td align="right">30.1</td>
-<td align="right">30.3</td>
-<td align="right">26.1</td>
-<td align="right">18.8</td>
-<td align="right">13.7</td>
-<td align="right">6.6</td>
+<td align="right">28.4</td>
+<td align="right">1.4</td>
 </tr>
 <tr class="even">
-<td align="left">Waikiki_HA</td>
-<td align="right">28.4</td>
+<td align="left">2016-02-01</td>
+<td align="right">7.1</td>
 <td align="right">28.9</td>
-<td align="right">28.7</td>
-<td align="right">29.6</td>
-<td align="right">30.2</td>
-<td align="right">30.3</td>
-<td align="right">30.8</td>
-<td align="right">30.9</td>
-<td align="right">30.5</td>
-<td align="right">30.1</td>
-<td align="right">28.7</td>
-<td align="right">27.5</td>
+<td align="right">3.6</td>
 </tr>
 <tr class="odd">
-<td align="left">Waterhole_WA</td>
-<td align="right">1.4</td>
-<td align="right">3.6</td>
+<td align="left">2016-03-01</td>
+<td align="right">14.1</td>
+<td align="right">28.7</td>
 <td align="right">3.2</td>
-<td align="right">9.4</td>
-<td align="right">11.1</td>
-<td align="right">12.6</td>
-<td align="right">14.4</td>
+</tr>
+<tr class="even">
+<td align="left">2016-04-01</td>
 <td align="right">16.8</td>
+<td align="right">29.6</td>
+<td align="right">9.4</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-05-01</td>
+<td align="right">21.5</td>
+<td align="right">30.2</td>
+<td align="right">11.1</td>
+</tr>
+<tr class="even">
+<td align="left">2016-06-01</td>
+<td align="right">27.2</td>
+<td align="right">30.3</td>
+<td align="right">12.6</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-01</td>
+<td align="right">30.1</td>
+<td align="right">30.8</td>
+<td align="right">14.4</td>
+</tr>
+<tr class="even">
+<td align="left">2016-08-01</td>
+<td align="right">30.3</td>
+<td align="right">30.9</td>
+<td align="right">16.8</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-09-01</td>
+<td align="right">26.1</td>
+<td align="right">30.5</td>
 <td align="right">11.6</td>
+</tr>
+<tr class="even">
+<td align="left">2016-10-01</td>
+<td align="right">18.8</td>
+<td align="right">30.1</td>
 <td align="right">5.5</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-11-01</td>
+<td align="right">13.7</td>
+<td align="right">28.7</td>
 <td align="right">3.8</td>
+</tr>
+<tr class="even">
+<td align="left">2016-12-01</td>
+<td align="right">6.6</td>
+<td align="right">27.5</td>
 <td align="right">-2.8</td>
 </tr>
 </tbody>
@@ -820,31 +844,39 @@ div.tocify {
 <details>
 <p><summary> Solution </summary></p>
 <p>The code chunk below imports and tidies the PUSLE data, produces the desired information, and exports it using <code>knitr::kable</code>.</p>
-<pre class="r"><code>pulse_data = haven::read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;) %&gt;%
+<pre class="r"><code>pulse_data = 
+  haven::read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;) %&gt;%
   janitor::clean_names() %&gt;%
-  gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %&gt;%
-  separate(visit, into = c(&quot;remove_1&quot;, &quot;remove_2&quot;, &quot;visit&quot;), sep = &quot;_&quot;) %&gt;%
-  select(id, visit, everything(), -starts_with(&quot;remove&quot;)) %&gt;%
-  mutate(visit = replace(visit, visit == &quot;bl&quot;, &quot;00m&quot;),
-         visit = factor(visit, levels = str_c(c(&quot;00&quot;, &quot;01&quot;, &quot;06&quot;, &quot;12&quot;), &quot;m&quot;))) %&gt;%
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = &quot;visit&quot;, 
+    names_prefix = &quot;bdi_score_&quot;,
+    values_to = &quot;bdi&quot;) %&gt;%
+  select(id, visit, everything()) %&gt;%
+  mutate(
+    visit = replace(visit, visit == &quot;bl&quot;, &quot;00m&quot;),
+    visit = factor(visit, levels = str_c(c(&quot;00&quot;, &quot;01&quot;, &quot;06&quot;, &quot;12&quot;), &quot;m&quot;))) %&gt;%
   arrange(id, visit)
 
 pulse_data %&gt;% 
   group_by(visit) %&gt;% 
-  summarize(mean_bdi = mean(bdi, na.rm = TRUE),
-            median_bdi = median(bdi, na.rm = TRUE)) %&gt;% 
+  summarize(
+    mean_bdi = mean(bdi, na.rm = TRUE),
+    median_bdi = median(bdi, na.rm = TRUE)) %&gt;% 
   knitr::kable(digits = 3)</code></pre>
 This quick summary suggests a relatively large drop in the typical BDI score from baseline to 1 month, with small or no changes thereafter.
 </details>
-<p><strong><em>Learning Assessment:</em></strong> In the FAS data, there are several outcomes of interest; for now, focus on post-natal day on which a pup is able to pivot. Two predictors of interest are the dose level and the day of treatment. Produce a reader-friendly table</p>
+<p><strong><em>Learning Assessment:</em></strong> In the FAS data, there are several outcomes of interest; for now, focus on post-natal day on which a pup is able to pivot. Two predictors of interest are the dose level and the day of treatment. Produce a reader-friendly table that quantifies the possible associations between dose, day of treatment, and the ability to pivot.</p>
 <details>
 <p><summary> Solution </summary></p>
 <p>The code chunk below imports the litters and pups data, joins them, produces the desired information, un-tidies the result, and exports a table using <code>knitr::kable</code>.</p>
-<pre class="r"><code>pup_data = read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;) %&gt;%
+<pre class="r"><code>pup_data = 
+  read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   mutate(sex = recode(sex, `1` = &quot;male&quot;, `2` = &quot;female&quot;)) 
 
-litter_data = read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;%
+litter_data = 
+  read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   select(-pups_survive) %&gt;%
   separate(group, into = c(&quot;dose&quot;, &quot;day_of_tx&quot;), sep = 3) %&gt;%

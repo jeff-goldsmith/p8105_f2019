@@ -82,7 +82,7 @@ weather_df %>%
   count(month, name = "n_days")
 ```
 
-`count()` is a useful tidyverse alternative to Base R's `table` function. Both functions produce summaries of how often values appear, but `table`'s output is of class `table` and is hard to do any additional work with, while `count` produces a dataframe you can use or manipulate directly. For an example, run the code below and try to do something useful with the result.
+`count()` is a useful tidyverse alternative to Base R's `table` function. Both functions produce summaries of how often values appear, but `table`'s output is of class `table` and is hard to do any additional work with, while `count` produces a dataframe you can use or manipulate directly. For an example, run the code below and try to do something useful with the result...
 
 ```{r, eval = FALSE}
 weather_df %>%
@@ -95,8 +95,9 @@ You can use `summarize()` to compute multiple summaries within each group. As an
 ```{r}
 weather_df %>%
   group_by(month) %>%
-  summarize(n_obs = n(),
-            n_days = n_distinct(date))
+  summarize(
+    n_obs = n(),
+    n_days = n_distinct(date))
 ```
 
 ### (2x2 tables)
@@ -105,17 +106,18 @@ You might find yourself, someday, wanting to tabulate the frequency of a binary 
 
 ```{r}
 weather_df %>% 
-  mutate(cold = case_when(
-    tmax < 5 ~ "cold",
-    tmax >=5 ~ "not_cold",
-    TRUE     ~ ""
+  mutate(
+    cold = case_when(
+      tmax < 5 ~ "cold",
+      tmax >=5 ~ "not_cold",
+      TRUE     ~ ""
   )) %>% 
   filter(name != "Waikiki_HA") %>% 
   group_by(name, cold) %>% 
   summarize(count = n())
 ```
 
-This is a "tidy" table, and it's also a data frame. You can re-organize into a more standard 2x2 table using tools we'll see later, but instead I suggest using `janitor::tabyl`:
+This is a "tidy" table, and it's also a data frame. You could re-organize into a more standard (non-tidy) 2x2 table using `pivot_wider`, or you could use `janitor::tabyl`:
 
 ```{r}
 weather_df %>% 
@@ -130,7 +132,7 @@ weather_df %>%
 
 This isn't tidy, but it is still a data frame -- and that's noticeably better than usual output from R's built-in `table` function. `janitor` has a lot of little functions like this that turn out to be useful, so when you have some time you might read through all the things you can do. I don't really love that this is called `tabyl`, but you can't always get what you want in life. 
 
-(Since we're on the subject, I think 2x2 tables are kind of silly. When are you ever going to actually analyze data in that format?? In grad school I thought I'd be computing odds ratios by hand everyday ($OR = AD / BC$!!), but really I do that about as often as I write in cursive -- which is also never. Just do a logistic regression adjusting for confounders -- because there are _always confounders_. And is a 2x2 table really that much better than the "tidy" version? There are **_4 numbers_**. )
+(Since we're on the subject, I think 2x2 tables are kind of silly. When are you ever going to actually analyze data in that format?? In grad school I thought I'd be computing odds ratios by hand everyday ($OR = AD / BC$, right?!), but really I do that as often as I write in cursive -- which is never. Just do a logistic regression adjusting for confounders -- because there are _always confounders_. And is a 2x2 table really that much better than the "tidy" version? There are **_4 numbers_**. )
 
 
 ### General summaries
@@ -140,10 +142,11 @@ Standard statistical summaries are regularly computed in `summarize()` using fun
 ```{r}
 weather_df %>%
   group_by(month) %>%
-  summarize(mean_tmax = mean(tmax),
-            mean_prec = mean(prcp, na.rm = TRUE),
-            median_tmax = median(tmax),
-            sd_tmax = sd(tmax))
+  summarize(
+    mean_tmax = mean(tmax),
+    mean_prec = mean(prcp, na.rm = TRUE),
+    median_tmax = median(tmax),
+    sd_tmax = sd(tmax))
 ```
 
 You can group by more than one variable. 
@@ -151,8 +154,9 @@ You can group by more than one variable.
 ```{r}
 weather_df %>%
   group_by(name, month) %>%
-  summarize(mean_tmax = mean(tmax),
-            median_tmax = median(tmax))
+  summarize(
+    mean_tmax = mean(tmax),
+    median_tmax = median(tmax))
 ```
 
 The fact that `summarize()` produces a dataframe is important (and consistent with other functions in the `tidyverse`). You can incorporate grouping and summarizing within broader analysis pipelines. For example, we can take create a plot based on the monthly summary: 
@@ -172,7 +176,9 @@ The results of `group_by()` and `summarize()` are generally tidy, but presenting
 weather_df %>%
   group_by(name, month) %>%
   summarize(mean_tmax = mean(tmax)) %>% 
-  spread(key = month, value = mean_tmax) %>% 
+  pivot_wider(
+    names_from = name,
+    values_from = mean_tmax) %>% 
   knitr::kable(digits = 1)
 ```
 
@@ -199,6 +205,7 @@ The previous example used `mean()` to compute the mean within each group, which 
 Window functions, in contrast, take `n` inputs and return `n` outputs, and the outputs depend on all the inputs. There are several categories of window functions; you're most likely to need ranking functions and offsets, which we illustrate below.
 
 First, we can find the max temperature ranking within month.
+
 ```{r}
 weather_df %>%
   group_by(name, month) %>%
@@ -213,6 +220,7 @@ weather_df %>%
 ```
 
 We could also keep the three days with the highest max temperature:
+
 ```{r}
 weather_df %>%
   group_by(name, month) %>%
@@ -258,19 +266,25 @@ We've seen the PULSE and FAS datasets on several occasions, and we'll briefly re
 The code chunk below imports and tidies the PUSLE data, produces the desired information, and exports it using `knitr::kable`. 
 
 ```{r, eval = FALSE}
-pulse_data = haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
+pulse_data = 
+  haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
   janitor::clean_names() %>%
-  gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %>%
-  separate(visit, into = c("remove_1", "remove_2", "visit"), sep = "_") %>%
-  select(id, visit, everything(), -starts_with("remove")) %>%
-  mutate(visit = replace(visit, visit == "bl", "00m"),
-         visit = factor(visit, levels = str_c(c("00", "01", "06", "12"), "m"))) %>%
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit", 
+    names_prefix = "bdi_score_",
+    values_to = "bdi") %>%
+  select(id, visit, everything()) %>%
+  mutate(
+    visit = replace(visit, visit == "bl", "00m"),
+    visit = factor(visit, levels = str_c(c("00", "01", "06", "12"), "m"))) %>%
   arrange(id, visit)
 
 pulse_data %>% 
   group_by(visit) %>% 
-  summarize(mean_bdi = mean(bdi, na.rm = TRUE),
-            median_bdi = median(bdi, na.rm = TRUE)) %>% 
+  summarize(
+    mean_bdi = mean(bdi, na.rm = TRUE),
+    median_bdi = median(bdi, na.rm = TRUE)) %>% 
   knitr::kable(digits = 3)
 ```
 
@@ -278,7 +292,7 @@ This quick summary suggests a relatively large drop in the typical BDI score fro
 </details>
 
 
-**_Learning Assessment:_** In the FAS data, there are several outcomes of interest; for now, focus on post-natal day on which a pup is able to pivot. Two predictors of interest are the dose level and the day of treatment. Produce a reader-friendly table 
+**_Learning Assessment:_** In the FAS data, there are several outcomes of interest; for now, focus on post-natal day on which a pup is able to pivot. Two predictors of interest are the dose level and the day of treatment. Produce a reader-friendly table that quantifies the possible associations between dose, day of treatment, and the ability to pivot. 
 
 <details>
 <summary> Solution </summary>
@@ -286,11 +300,13 @@ This quick summary suggests a relatively large drop in the typical BDI score fro
 The code chunk below imports the litters and pups data, joins them, produces the desired information, un-tidies the result, and exports a table using `knitr::kable`. 
 
 ```{r, eval = FALSE}
-pup_data = read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
+pup_data = 
+  read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
   janitor::clean_names() %>%
   mutate(sex = recode(sex, `1` = "male", `2` = "female")) 
 
-litter_data = read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
+litter_data = 
+  read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
   janitor::clean_names() %>%
   select(-pups_survive) %>%
   separate(group, into = c("dose", "day_of_tx"), sep = 3) %>%
