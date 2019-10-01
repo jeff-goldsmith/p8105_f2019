@@ -8,7 +8,7 @@ output:
 
 The version of the Mr. Trash Wheel data we'll use for this class is available [here](./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx). 
 
-<!-- **UPDATE (FALL 2019):** an even-more recent dataset is [here](./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx). -->
+**UPDATE (FALL 2019):** an even-more recent dataset is [here](./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx).
 
 
 ## Context
