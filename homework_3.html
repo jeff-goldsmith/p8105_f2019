@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -92,7 +93,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -253,48 +253,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +304,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -496,6 +455,97 @@ div.tocify {
 <p>Please submit (via courseworks) the web address of the GitHub repo containing your work for this assignment; git commits after the due date will cause the assignment to be considered late.</p>
 <p>R Markdown documents included as part of your solutions must not install packages, and should only load the packages necessary for your submission to knit.</p>
 </div>
+<div id="points" class="section level3">
+<h3>Points</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Problem</th>
+<th align="left">Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Problem 0</td>
+<td align="left">25</td>
+</tr>
+<tr class="even">
+<td align="left">Problem 1</td>
+<td align="left">25</td>
+</tr>
+<tr class="odd">
+<td align="left">Problem 2</td>
+<td align="left">25</td>
+</tr>
+<tr class="even">
+<td align="left">Problem 3</td>
+<td align="left">25</td>
+</tr>
+<tr class="odd">
+<td align="left">Optional survey</td>
+<td align="left">No points</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="problem-0" class="section level3">
+<h3>Problem 0</h3>
+<p>This “problem” focuses on structure of your submission, especially the use git and GitHub for reproducibility, R Projects to organize your work, R Markdown to write reproducible reports, relative paths to load data from local files, and reasonable naming structures for your files.</p>
+<p>To that end:</p>
+<ul>
+<li>create a public GitHub repo + local R Project; we suggest naming this repo / directory <code>p8105_hw2_YOURUNI</code> (e.g. <code>p8105_hw2_ajg2202</code> for Jeff), but that’s not required</li>
+<li>create a single .Rmd file named <code>p8105_hw2_YOURUNI.Rmd</code> that renders to <code>github_document</code></li>
+<li>create a subdirectory to store the local data files used in Problems 1 and 2, and use relative paths to access these data files</li>
+<li>submit a link to your repo via Courseworks</li>
+</ul>
+<p>Your solutions to Problems 1, 2, and 3 should be implemented in your .Rmd file, and your git commit history should reflect the process you used to solve these Problems.</p>
+<p>For this Problem, we will assess adherence to the instructions above regarding repo structure, git commit history, and whether we are able to knit your .Rmd to ensure that your work is reproducible. Adherence to appropriate styling and clarity of code will be assessed in Problems 1+ using the <a href="homework_style_rubric.html">style rubric</a>.</p>
+<p><strong>This homework includes figures; the readability of your embedded plots (e.g. font sizes, axis labels, titles) will be assessed in Problems 1+.</strong></p>
+</div>
+<div id="problem-1" class="section level3">
+<h3>Problem 1</h3>
+<p>This problem uses the <a href="dataset_instacart.html">Instacart</a> data. DO NOT include this dataset in your local data directory; instead, load the data from the <a href="https://github.com/P8105/p8105.datasets"><code>p8105.datasets</code></a> using:</p>
+<pre class="r"><code>library(p8105.datasets)
+data(&quot;instacart&quot;)</code></pre>
+<p>The goal is to do some exploration of this dataset. To that end, write a short description of the dataset, noting the size and structure of the data, describing some key variables, and giving illstrative examples of observations. Then, do or answer the following (commenting on the results of each):</p>
+<ul>
+<li>How many aisles are there, and which aisles are the most items ordered from?</li>
+<li>Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.</li>
+<li>Make a table showing the three most popular items <strong>in each of the aisles</strong> “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.</li>
+<li>Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).</li>
+</ul>
+</div>
+<div id="problem-2" class="section level3">
+<h3>Problem 2</h3>
+<p>This problem uses the <a href="dataset_brfss.html">BRFSS</a> data. DO NOT include this dataset in your local data directory; instead, load the data from the <a href="https://github.com/P8105/p8105.datasets"><code>p8105.datasets</code></a> package.</p>
+<p>First, do some data cleaning:</p>
+<ul>
+<li>format the data to use appropriate variable names;</li>
+<li>focus on the “Overall Health” topic</li>
+<li>include only responses from “Excellent” to “Poor”</li>
+<li>organize responses as a factor taking levels <strong>ordered</strong> from “Poor” to “Excellent”</li>
+</ul>
+<p>Using this dataset, do or answer the following (commenting on the results of each):</p>
+<ul>
+<li>In 2002, which states were observed at 7 or more locations? What about in 2010?</li>
+<li>Construct a dataset that is limited to <code>Excellent</code> responses, and contains, year, state, and a variable that averages the <code>data_value</code> across locations within a state. Make a “spaghetti” plot of this average value over time within a state (that is, make a plot showing a line for each state across years – the <code>geom_line</code> geometry and <code>group</code> aesthetic will help).</li>
+<li>Make a two-panel plot showing, for the years 2006, and 2010, distribution of <code>data_value</code> for responses (“Poor” to “Excellent”) among locations in NY State.</li>
+</ul>
+</div>
+<div id="problem-3" class="section level3">
+<h3>Problem 3</h3>
+<p>Accelerometers have become an appealing alternative to self-report techniques for studying physical activity in observational studies and clinical trials, largely because of their relative objectivity. During observation periods, the devices measure “activity counts” in a short period; one-minute intervals are common. Because accelerometers can be worn comfortably and unobtrusively, they produce around-the-clock observations.</p>
+<p>This problem uses five weeks of accelerometer data collected on a 63 year-old male with BMI 25, who was admitted to the Advanced Cardiac Care Center of Columbia University Medical Center and diagnosed with congestive heart failure (CHF). The data can be downloaded <a href="./data/accel_data.csv">here</a>. <strong>In this spreadsheet, variables <code>activity.*</code> are the activity counts for each minute of a 24-hour day starting at midnight.</strong></p>
+<ul>
+<li>Load, tidy, and otherwise wrangle the data. Your final dataset should include all originally observed variables and values; have useful variable names; include a weekday vs weekend variable; and encode data with reasonable variable classes. Describe the resulting dataset (e.g. what variables exist, how many observations, etc).</li>
+<li>Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate accross minutes to create a total activity variable for each day, and create a table showing these totals. Are any trends apparent?</li>
+<li>Accelerometer data allows the inspection activity over the course of the day. Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. Describe in words any patterns or conclusions you can make based on this graph.</li>
+</ul>
+</div>
+<div id="optional-post-assignment-survey" class="section level3">
+<h3>Optional post-assignment survey</h3>
+<p>If you’d like, a you can complete <a href="https://forms.gle/3BVcBA1ix91oc4Mk9">this short survey</a> after you’ve finished the assignment.</p>
+</div>
 
 <br><br>
 <footer>
@@ -521,6 +571,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
