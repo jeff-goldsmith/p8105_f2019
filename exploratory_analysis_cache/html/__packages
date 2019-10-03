@@ -1,4 +1,10 @@
 base
+methods
+datasets
+utils
+grDevices
+graphics
+stats
 tidyverse
 ggplot2
 tibble
@@ -6,7 +12,5 @@ tidyr
 readr
 purrr
 dplyr
-rnoaa
-bindrcpp
 stringr
 forcats

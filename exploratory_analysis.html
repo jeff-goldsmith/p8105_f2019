@@ -93,7 +93,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -448,12 +447,12 @@ div.tocify {
 
 <p>Data sets can frequently be partitioned into meaningful groups based on the variables they contain. Making this grouping explicit allows the computation of numeric summaries within groups, which in turn facilitates quantitative comparisons.</p>
 <p>This is the second module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105fall2019.slack.com/messages/CN01ALHR7">here</a>.</p>
-<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
+<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
 ## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
 ## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
@@ -470,8 +469,8 @@ div.tocify {
 <pre class="r"><code>weather_df = 
   rnoaa::meteo_pull_monitors(c(&quot;USW00094728&quot;, &quot;USC00519397&quot;, &quot;USS0023B17S&quot;),
                       var = c(&quot;PRCP&quot;, &quot;TMIN&quot;, &quot;TMAX&quot;), 
-                      date_min = &quot;2016-01-01&quot;,
-                      date_max = &quot;2016-12-31&quot;) %&gt;%
+                      date_min = &quot;2017-01-01&quot;,
+                      date_max = &quot;2017-12-31&quot;) %&gt;%
   mutate(
     name = recode(id, USW00094728 = &quot;CentralPark_NY&quot;, 
                       USC00519397 = &quot;Waikiki_HA&quot;,
@@ -479,23 +478,38 @@ div.tocify {
     tmin = tmin / 10,
     tmax = tmax / 10,
     month = lubridate::floor_date(date, unit = &quot;month&quot;)) %&gt;%
-  select(name, id, date, month, everything())</code></pre>
+  select(name, id, date, month, everything())
+## Registered S3 method overwritten by &#39;crul&#39;:
+##   method                 from
+##   as.character.form_file httr
+## Registered S3 method overwritten by &#39;hoardr&#39;:
+##   method           from
+##   print.cache_info httr
+## file path:          /Users/jeffgoldsmith/Library/Caches/rnoaa/ghcnd/USW00094728.dly
+## file last updated:  2018-09-27 09:31:54
+## file min/max dates: 1869-01-01 / 2018-09-30
+## file path:          /Users/jeffgoldsmith/Library/Caches/rnoaa/ghcnd/USC00519397.dly
+## file last updated:  2018-09-27 09:32:03
+## file min/max dates: 1965-01-01 / 2018-09-30
+## file path:          /Users/jeffgoldsmith/Library/Caches/rnoaa/ghcnd/USS0023B17S.dly
+## file last updated:  2018-09-27 09:32:07
+## file min/max dates: 1999-09-01 / 2018-09-30</code></pre>
 <div id="group_by" class="section level3">
 <h3><code>group_by</code></h3>
 <p>Datasets are often comprised of groups defined by one or more (categorical) variable; <code>group_by()</code> makes these groupings explicit so that they can be included in subsequent operations. For example, we might group <code>weather_df</code> by <code>name</code> and <code>month</code>:</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month)
-## # A tibble: 1,098 x 7
+## # A tibble: 1,095 x 7
 ## # Groups:   name, month [36]
 ##   name           id          date       month       prcp  tmax  tmin
 ##   &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 CentralPark_NY USW00094728 2016-01-01 2016-01-01     0   5.6   1.1
-## 2 CentralPark_NY USW00094728 2016-01-02 2016-01-01     0   4.4   0  
-## 3 CentralPark_NY USW00094728 2016-01-03 2016-01-01     0   7.2   1.7
-## 4 CentralPark_NY USW00094728 2016-01-04 2016-01-01     0   2.2  -9.9
-## 5 CentralPark_NY USW00094728 2016-01-05 2016-01-01     0  -1.6 -11.6
-## 6 CentralPark_NY USW00094728 2016-01-06 2016-01-01     0   5    -3.8
-## # … with 1,092 more rows</code></pre>
+## 1 CentralPark_NY USW00094728 2017-01-01 2017-01-01     0   8.9   4.4
+## 2 CentralPark_NY USW00094728 2017-01-02 2017-01-01    53   5     2.8
+## 3 CentralPark_NY USW00094728 2017-01-03 2017-01-01   147   6.1   3.9
+## 4 CentralPark_NY USW00094728 2017-01-04 2017-01-01     0  11.1   1.1
+## 5 CentralPark_NY USW00094728 2017-01-05 2017-01-01     0   1.1  -2.7
+## 6 CentralPark_NY USW00094728 2017-01-06 2017-01-01    13   0.6  -3.8
+## # … with 1,089 more rows</code></pre>
 <p>Several important functions respect grouping structures. You will frequently use <code>summarize</code> to create one-number summaries within each group, or use <code>mutate</code> to define variables within groups. The rest of this example shows these functions in action.</p>
 <p>Because these (and other) functions will use grouping information if it exists, it is sometimes necessary to remove groups using <code>ungroup()</code>.</p>
 </div>
@@ -508,18 +522,18 @@ div.tocify {
 ## # A tibble: 12 x 2
 ##    month          n
 ##    &lt;date&gt;     &lt;int&gt;
-##  1 2016-01-01    93
-##  2 2016-02-01    87
-##  3 2016-03-01    93
-##  4 2016-04-01    90
-##  5 2016-05-01    93
-##  6 2016-06-01    90
-##  7 2016-07-01    93
-##  8 2016-08-01    93
-##  9 2016-09-01    90
-## 10 2016-10-01    93
-## 11 2016-11-01    90
-## 12 2016-12-01    93</code></pre>
+##  1 2017-01-01    93
+##  2 2017-02-01    84
+##  3 2017-03-01    93
+##  4 2017-04-01    90
+##  5 2017-05-01    93
+##  6 2017-06-01    90
+##  7 2017-07-01    93
+##  8 2017-08-01    93
+##  9 2017-09-01    90
+## 10 2017-10-01    93
+## 11 2017-11-01    90
+## 12 2017-12-01    93</code></pre>
 <p>The result is a dataframe that includes the grouping variable and the desired summary.</p>
 <p>In this case, you could use <code>count()</code> in place of <code>group_by()</code> and <code>summarize()</code> if you remember that this function exists. I’ll also make use of the <code>name</code> argument in count, which defaults to <code>&quot;n&quot;</code>.</p>
 <pre class="r"><code>weather_df %&gt;%
@@ -527,18 +541,18 @@ div.tocify {
 ## # A tibble: 12 x 2
 ##    month      n_days
 ##    &lt;date&gt;      &lt;int&gt;
-##  1 2016-01-01     93
-##  2 2016-02-01     87
-##  3 2016-03-01     93
-##  4 2016-04-01     90
-##  5 2016-05-01     93
-##  6 2016-06-01     90
-##  7 2016-07-01     93
-##  8 2016-08-01     93
-##  9 2016-09-01     90
-## 10 2016-10-01     93
-## 11 2016-11-01     90
-## 12 2016-12-01     93</code></pre>
+##  1 2017-01-01     93
+##  2 2017-02-01     84
+##  3 2017-03-01     93
+##  4 2017-04-01     90
+##  5 2017-05-01     93
+##  6 2017-06-01     90
+##  7 2017-07-01     93
+##  8 2017-08-01     93
+##  9 2017-09-01     90
+## 10 2017-10-01     93
+## 11 2017-11-01     90
+## 12 2017-12-01     93</code></pre>
 <p><code>count()</code> is a useful tidyverse alternative to Base R’s <code>table</code> function. Both functions produce summaries of how often values appear, but <code>table</code>’s output is of class <code>table</code> and is hard to do any additional work with, while <code>count</code> produces a dataframe you can use or manipulate directly. For an example, run the code below and try to do something useful with the result…</p>
 <pre class="r"><code>weather_df %&gt;%
   pull(month) %&gt;% 
@@ -552,18 +566,18 @@ div.tocify {
 ## # A tibble: 12 x 3
 ##    month      n_obs n_days
 ##    &lt;date&gt;     &lt;int&gt;  &lt;int&gt;
-##  1 2016-01-01    93     31
-##  2 2016-02-01    87     29
-##  3 2016-03-01    93     31
-##  4 2016-04-01    90     30
-##  5 2016-05-01    93     31
-##  6 2016-06-01    90     30
-##  7 2016-07-01    93     31
-##  8 2016-08-01    93     31
-##  9 2016-09-01    90     30
-## 10 2016-10-01    93     31
-## 11 2016-11-01    90     30
-## 12 2016-12-01    93     31</code></pre>
+##  1 2017-01-01    93     31
+##  2 2017-02-01    84     28
+##  3 2017-03-01    93     31
+##  4 2017-04-01    90     30
+##  5 2017-05-01    93     31
+##  6 2017-06-01    90     30
+##  7 2017-07-01    93     31
+##  8 2017-08-01    93     31
+##  9 2017-09-01    90     30
+## 10 2017-10-01    93     31
+## 11 2017-11-01    90     30
+## 12 2017-12-01    93     31</code></pre>
 </div>
 <div id="x2-tables" class="section level3">
 <h3>(2x2 tables)</h3>
@@ -582,10 +596,10 @@ div.tocify {
 ## # Groups:   name [2]
 ##   name           cold     count
 ##   &lt;chr&gt;          &lt;chr&gt;    &lt;int&gt;
-## 1 CentralPark_NY cold        42
-## 2 CentralPark_NY not_cold   324
-## 3 Waterhole_WA   cold       150
-## 4 Waterhole_WA   not_cold   216</code></pre>
+## 1 CentralPark_NY cold        44
+## 2 CentralPark_NY not_cold   321
+## 3 Waterhole_WA   cold       172
+## 4 Waterhole_WA   not_cold   193</code></pre>
 <p>This is a “tidy” table, and it’s also a data frame. You could re-organize into a more standard (non-tidy) 2x2 table using <code>pivot_wider</code>, or you could use <code>janitor::tabyl</code>:</p>
 <pre class="r"><code>weather_df %&gt;% 
   mutate(cold = case_when(
@@ -596,8 +610,8 @@ div.tocify {
   filter(name != &quot;Waikiki_HA&quot;) %&gt;% 
   janitor::tabyl(name, cold)
 ##            name cold not_cold
-##  CentralPark_NY   42      324
-##    Waterhole_WA  150      216</code></pre>
+##  CentralPark_NY   44      321
+##    Waterhole_WA  172      193</code></pre>
 <p>This isn’t tidy, but it is still a data frame – and that’s noticeably better than usual output from R’s built-in <code>table</code> function. <code>janitor</code> has a lot of little functions like this that turn out to be useful, so when you have some time you might read through all the things you can do. I don’t really love that this is called <code>tabyl</code>, but you can’t always get what you want in life.</p>
 <p>(Since we’re on the subject, I think 2x2 tables are kind of silly. When are you ever going to actually analyze data in that format?? In grad school I thought I’d be computing odds ratios by hand everyday (<span class="math inline">\(OR = AD / BC\)</span>, right?!), but really I do that as often as I write in cursive – which is never. Just do a logistic regression adjusting for confounders – because there are <em>always confounders</em>. And is a 2x2 table really that much better than the “tidy” version? There are <strong><em>4 numbers</em></strong>. )</p>
 </div>
@@ -614,18 +628,18 @@ div.tocify {
 ## # A tibble: 12 x 5
 ##    month      mean_tmax mean_prec median_tmax sd_tmax
 ##    &lt;date&gt;         &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;
-##  1 2016-01-01      11.6      50.4         5     12.4 
-##  2 2016-02-01      13.2      38.9         8.8   12.1 
-##  3 2016-03-01      15.4      42.9        13.3   11.2 
-##  4 2016-04-01      18.6      11.5        18.3    9.63
-##  5 2016-05-01      20.9      15.8        21.1    8.92
-##  6 2016-06-01      23.4      16.6        28.3    8.61
-##  7 2016-07-01      25.1      39.5        29.4    8.14
-##  8 2016-08-01      26.0      11.5        30      7.02
-##  9 2016-09-01      22.7      19.1        26.7    8.74
-## 10 2016-10-01      18.1      51.5        18.3   10.5 
-## 11 2016-11-01      15.4      72.1        14.7   10.8 
-## 12 2016-12-01      10.4      36.5         7.8   13.1</code></pre>
+##  1 2017-01-01      10.8     37.0          6.1   13.1 
+##  2 2017-02-01      12.2     57.9          8.3   12.1 
+##  3 2017-03-01      13.0     54.6          8.3   12.4 
+##  4 2017-04-01      17.3     32.9         18.3   11.2 
+##  5 2017-05-01      NA       28.4         NA     NA   
+##  6 2017-06-01      23.5     18.7         27.2    8.73
+##  7 2017-07-01      NA       12.7         NA     NA   
+##  8 2017-08-01      26.3     10.2         27.2    5.87
+##  9 2017-09-01      23.8      9.94        26.1    8.42
+## 10 2017-10-01      20.1     41.5         22.2    9.75
+## 11 2017-11-01      14.0     61.5         12.0   11.6 
+## 12 2017-12-01      11.0     40.2          8.9   11.9</code></pre>
 <p>You can group by more than one variable.</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month) %&gt;%
@@ -636,12 +650,12 @@ div.tocify {
 ## # Groups:   name [3]
 ##   name           month      mean_tmax median_tmax
 ##   &lt;chr&gt;          &lt;date&gt;         &lt;dbl&gt;       &lt;dbl&gt;
-## 1 CentralPark_NY 2016-01-01      4.89         5  
-## 2 CentralPark_NY 2016-02-01      7.14         5  
-## 3 CentralPark_NY 2016-03-01     14.1         13.3
-## 4 CentralPark_NY 2016-04-01     16.8         16.7
-## 5 CentralPark_NY 2016-05-01     21.5         21.1
-## 6 CentralPark_NY 2016-06-01     27.2         28.3
+## 1 CentralPark_NY 2017-01-01      5.98         6.1
+## 2 CentralPark_NY 2017-02-01      9.28         8.3
+## 3 CentralPark_NY 2017-03-01      8.22         8.3
+## 4 CentralPark_NY 2017-04-01     18.3         18.3
+## 5 CentralPark_NY 2017-05-01     20.1         19.4
+## 6 CentralPark_NY 2017-06-01     26.3         27.2
 ## # … with 30 more rows</code></pre>
 <p>The fact that <code>summarize()</code> produces a dataframe is important (and consistent with other functions in the <code>tidyverse</code>). You can incorporate grouping and summarizing within broader analysis pipelines. For example, we can take create a plot based on the monthly summary:</p>
 <pre class="r"><code>weather_df %&gt;%
@@ -649,7 +663,8 @@ div.tocify {
   summarize(mean_tmax = mean(tmax)) %&gt;%
   ggplot(aes(x = month, y = mean_tmax, color = name)) + 
     geom_point() + geom_line() + 
-    theme(legend.position = &quot;bottom&quot;)</code></pre>
+    theme(legend.position = &quot;bottom&quot;)
+## Warning: Removed 2 rows containing missing values (geom_point).</code></pre>
 <p><img src="exploratory_analysis_files/figure-html/unnamed-chunk-11-1.png" width="90%" /></p>
 <p>The results of <code>group_by()</code> and <code>summarize()</code> are generally tidy, but presenting reader-friendly results for this kind of exploratory analysis often benefits from some un-tidying. For example, the table below shows month-by-month average max temperatures in a more human-readable format.</p>
 <pre class="r"><code>weather_df %&gt;%
@@ -670,76 +685,76 @@ div.tocify {
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">2016-01-01</td>
-<td align="right">4.9</td>
+<td align="left">2017-01-01</td>
+<td align="right">6.0</td>
+<td align="right">27.8</td>
+<td align="right">-1.4</td>
+</tr>
+<tr class="even">
+<td align="left">2017-02-01</td>
+<td align="right">9.3</td>
+<td align="right">27.2</td>
+<td align="right">0.0</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-03-01</td>
+<td align="right">8.2</td>
+<td align="right">29.1</td>
+<td align="right">1.7</td>
+</tr>
+<tr class="even">
+<td align="left">2017-04-01</td>
+<td align="right">18.3</td>
+<td align="right">29.7</td>
+<td align="right">3.9</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-05-01</td>
+<td align="right">20.1</td>
+<td align="right">NA</td>
+<td align="right">10.1</td>
+</tr>
+<tr class="even">
+<td align="left">2017-06-01</td>
+<td align="right">26.3</td>
+<td align="right">31.3</td>
+<td align="right">12.9</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-07-01</td>
+<td align="right">28.7</td>
+<td align="right">NA</td>
+<td align="right">16.3</td>
+</tr>
+<tr class="even">
+<td align="left">2017-08-01</td>
+<td align="right">27.2</td>
+<td align="right">32.0</td>
+<td align="right">19.6</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-09-01</td>
+<td align="right">25.4</td>
+<td align="right">31.7</td>
+<td align="right">14.2</td>
+</tr>
+<tr class="even">
+<td align="left">2017-10-01</td>
+<td align="right">21.8</td>
+<td align="right">30.3</td>
+<td align="right">8.3</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-11-01</td>
+<td align="right">12.3</td>
 <td align="right">28.4</td>
 <td align="right">1.4</td>
 </tr>
 <tr class="even">
-<td align="left">2016-02-01</td>
-<td align="right">7.1</td>
-<td align="right">28.9</td>
-<td align="right">3.6</td>
-</tr>
-<tr class="odd">
-<td align="left">2016-03-01</td>
-<td align="right">14.1</td>
-<td align="right">28.7</td>
-<td align="right">3.2</td>
-</tr>
-<tr class="even">
-<td align="left">2016-04-01</td>
-<td align="right">16.8</td>
-<td align="right">29.6</td>
-<td align="right">9.4</td>
-</tr>
-<tr class="odd">
-<td align="left">2016-05-01</td>
-<td align="right">21.5</td>
-<td align="right">30.2</td>
-<td align="right">11.1</td>
-</tr>
-<tr class="even">
-<td align="left">2016-06-01</td>
-<td align="right">27.2</td>
-<td align="right">30.3</td>
-<td align="right">12.6</td>
-</tr>
-<tr class="odd">
-<td align="left">2016-07-01</td>
-<td align="right">30.1</td>
-<td align="right">30.8</td>
-<td align="right">14.4</td>
-</tr>
-<tr class="even">
-<td align="left">2016-08-01</td>
-<td align="right">30.3</td>
-<td align="right">30.9</td>
-<td align="right">16.8</td>
-</tr>
-<tr class="odd">
-<td align="left">2016-09-01</td>
-<td align="right">26.1</td>
-<td align="right">30.5</td>
-<td align="right">11.6</td>
-</tr>
-<tr class="even">
-<td align="left">2016-10-01</td>
-<td align="right">18.8</td>
-<td align="right">30.1</td>
-<td align="right">5.5</td>
-</tr>
-<tr class="odd">
-<td align="left">2016-11-01</td>
-<td align="right">13.7</td>
-<td align="right">28.7</td>
-<td align="right">3.8</td>
-</tr>
-<tr class="even">
-<td align="left">2016-12-01</td>
-<td align="right">6.6</td>
-<td align="right">27.5</td>
-<td align="right">-2.8</td>
+<td align="left">2017-12-01</td>
+<td align="right">4.5</td>
+<td align="right">26.5</td>
+<td align="right">2.2</td>
 </tr>
 </tbody>
 </table>
@@ -752,7 +767,8 @@ div.tocify {
   group_by(name) %&gt;%
   mutate(centered_tmax = tmax - mean(tmax)) %&gt;% 
   ggplot(aes(x = date, y = centered_tmax, color = name)) + 
-    geom_point() </code></pre>
+    geom_point() 
+## Warning: Removed 365 rows containing missing values (geom_point).</code></pre>
 <p><img src="exploratory_analysis_files/figure-html/unnamed-chunk-13-1.png" width="90%" /></p>
 </div>
 <div id="window-functions" class="section level3">
@@ -763,63 +779,63 @@ div.tocify {
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month) %&gt;%
   mutate(temp_ranking = min_rank(tmax))
-## # A tibble: 1,098 x 8
+## # A tibble: 1,095 x 8
 ## # Groups:   name, month [36]
 ##   name        id       date       month       prcp  tmax  tmin temp_ranking
 ##   &lt;chr&gt;       &lt;chr&gt;    &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;int&gt;
-## 1 CentralPar… USW0009… 2016-01-01 2016-01-01     0   5.6   1.1           18
-## 2 CentralPar… USW0009… 2016-01-02 2016-01-01     0   4.4   0             14
-## 3 CentralPar… USW0009… 2016-01-03 2016-01-01     0   7.2   1.7           22
-## 4 CentralPar… USW0009… 2016-01-04 2016-01-01     0   2.2  -9.9            8
-## 5 CentralPar… USW0009… 2016-01-05 2016-01-01     0  -1.6 -11.6            3
-## 6 CentralPar… USW0009… 2016-01-06 2016-01-01     0   5    -3.8           16
-## # … with 1,092 more rows</code></pre>
+## 1 CentralPar… USW0009… 2017-01-01 2017-01-01     0   8.9   4.4           22
+## 2 CentralPar… USW0009… 2017-01-02 2017-01-01    53   5     2.8           12
+## 3 CentralPar… USW0009… 2017-01-03 2017-01-01   147   6.1   3.9           15
+## 4 CentralPar… USW0009… 2017-01-04 2017-01-01     0  11.1   1.1           27
+## 5 CentralPar… USW0009… 2017-01-05 2017-01-01     0   1.1  -2.7            5
+## 6 CentralPar… USW0009… 2017-01-06 2017-01-01    13   0.6  -3.8            4
+## # … with 1,089 more rows</code></pre>
 <p>This sort of ranking is useful when filtering data based on rank. We could, for example, keep only the day with the lowest max temperature within each month:</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month) %&gt;%
   filter(min_rank(tmax) &lt; 2)
-## # A tibble: 47 x 7
+## # A tibble: 42 x 7
 ## # Groups:   name, month [36]
 ##   name           id          date       month       prcp  tmax  tmin
 ##   &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 CentralPark_NY USW00094728 2016-01-23 2016-01-01   587  -2.7  -4.3
-## 2 CentralPark_NY USW00094728 2016-02-14 2016-02-01     0  -9.3 -18.2
-## 3 CentralPark_NY USW00094728 2016-03-03 2016-03-01     0   2.2  -3.2
-## 4 CentralPark_NY USW00094728 2016-04-05 2016-04-01     0   6.1  -3.2
-## 5 CentralPark_NY USW00094728 2016-04-09 2016-04-01    28   6.1   2.2
-## 6 CentralPark_NY USW00094728 2016-05-01 2016-05-01    41  10.6   7.2
-## # … with 41 more rows</code></pre>
+## 1 CentralPark_NY USW00094728 2017-01-09 2017-01-01     0  -4.9  -9.9
+## 2 CentralPark_NY USW00094728 2017-02-10 2017-02-01     0   0    -7.1
+## 3 CentralPark_NY USW00094728 2017-03-15 2017-03-01     0  -3.2  -6.6
+## 4 CentralPark_NY USW00094728 2017-04-01 2017-04-01     0   8.9   2.8
+## 5 CentralPark_NY USW00094728 2017-05-13 2017-05-01   409  11.7   7.2
+## 6 CentralPark_NY USW00094728 2017-06-06 2017-06-01    15  14.4  11.1
+## # … with 36 more rows</code></pre>
 <p>We could also keep the three days with the highest max temperature:</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month) %&gt;%
   filter(min_rank(desc(tmax)) &lt; 4)
-## # A tibble: 151 x 7
+## # A tibble: 149 x 7
 ## # Groups:   name, month [36]
 ##   name           id          date       month       prcp  tmax  tmin
 ##   &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 CentralPark_NY USW00094728 2016-01-10 2016-01-01   457  15     4.4
-## 2 CentralPark_NY USW00094728 2016-01-16 2016-01-01    61  11.1   5.6
-## 3 CentralPark_NY USW00094728 2016-01-31 2016-01-01     0  13.3   2.2
-## 4 CentralPark_NY USW00094728 2016-02-20 2016-02-01     0  16.1   3.9
-## 5 CentralPark_NY USW00094728 2016-02-25 2016-02-01     5  16.1   2.8
-## 6 CentralPark_NY USW00094728 2016-02-29 2016-02-01    13  16.1   8.3
-## # … with 145 more rows</code></pre>
+## 1 CentralPark_NY USW00094728 2017-01-12 2017-01-01    13  18.9   8.3
+## 2 CentralPark_NY USW00094728 2017-01-13 2017-01-01     0  16.7   0  
+## 3 CentralPark_NY USW00094728 2017-01-26 2017-01-01     5  13.3   6.1
+## 4 CentralPark_NY USW00094728 2017-02-19 2017-02-01     0  18.3  11.7
+## 5 CentralPark_NY USW00094728 2017-02-23 2017-02-01     0  18.3   6.7
+## 6 CentralPark_NY USW00094728 2017-02-24 2017-02-01     0  21.1  14.4
+## # … with 143 more rows</code></pre>
 <p>In both of these, we’ve skipped a <code>mutate()</code> statement that would create a ranking variable, and gone straight to filtering based on the result.</p>
 <p>Offsets, especially lags, are used to compare an observation to it’s previous value. This is useful, for example, to find the day-by-day change in max temperature within each station over the year:</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name) %&gt;%
   mutate(temp_change = tmax - lag(tmax))
-## # A tibble: 1,098 x 8
+## # A tibble: 1,095 x 8
 ## # Groups:   name [3]
 ##   name        id        date       month       prcp  tmax  tmin temp_change
 ##   &lt;chr&gt;       &lt;chr&gt;     &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
-## 1 CentralPar… USW00094… 2016-01-01 2016-01-01     0   5.6   1.1       NA   
-## 2 CentralPar… USW00094… 2016-01-02 2016-01-01     0   4.4   0         -1.20
-## 3 CentralPar… USW00094… 2016-01-03 2016-01-01     0   7.2   1.7        2.8 
-## 4 CentralPar… USW00094… 2016-01-04 2016-01-01     0   2.2  -9.9       -5   
-## 5 CentralPar… USW00094… 2016-01-05 2016-01-01     0  -1.6 -11.6       -3.8 
-## 6 CentralPar… USW00094… 2016-01-06 2016-01-01     0   5    -3.8        6.6 
-## # … with 1,092 more rows</code></pre>
+## 1 CentralPar… USW00094… 2017-01-01 2017-01-01     0   8.9   4.4       NA   
+## 2 CentralPar… USW00094… 2017-01-02 2017-01-01    53   5     2.8       -3.9 
+## 3 CentralPar… USW00094… 2017-01-03 2017-01-01   147   6.1   3.9        1.10
+## 4 CentralPar… USW00094… 2017-01-04 2017-01-01     0  11.1   1.1        5   
+## 5 CentralPar… USW00094… 2017-01-05 2017-01-01     0   1.1  -2.7      -10   
+## 6 CentralPar… USW00094… 2017-01-06 2017-01-01    13   0.6  -3.8       -0.5 
+## # … with 1,089 more rows</code></pre>
 <p>This kind of variable might be used to quantify the day-by-day variability in max temperature, or to identify the largest one-day increase:</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name) %&gt;%
@@ -829,9 +845,9 @@ div.tocify {
 ## # A tibble: 3 x 3
 ##   name           temp_change_sd temp_change_max
 ##   &lt;chr&gt;                   &lt;dbl&gt;           &lt;dbl&gt;
-## 1 CentralPark_NY           4.28            12.2
-## 2 Waikiki_HA               1.15             5  
-## 3 Waterhole_WA             2.82             9</code></pre>
+## 1 CentralPark_NY           4.45            12.7
+## 2 Waikiki_HA               1.23             6.7
+## 3 Waterhole_WA             3.13             8</code></pre>
 </div>
 <div id="limitations" class="section level3">
 <h3>Limitations</h3>

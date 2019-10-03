@@ -38,8 +38,8 @@ We'll continue in the same Git repo / R project that we used for visualization, 
 weather_df = 
   rnoaa::meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
                       var = c("PRCP", "TMIN", "TMAX"), 
-                      date_min = "2016-01-01",
-                      date_max = "2016-12-31") %>%
+                      date_min = "2017-01-01",
+                      date_max = "2017-12-31") %>%
   mutate(
     name = recode(id, USW00094728 = "CentralPark_NY", 
                       USC00519397 = "Waikiki_HA",
@@ -108,9 +108,9 @@ You might find yourself, someday, wanting to tabulate the frequency of a binary 
 weather_df %>% 
   mutate(
     cold = case_when(
-      tmax < 5 ~ "cold",
-      tmax >=5 ~ "not_cold",
-      TRUE     ~ ""
+      tmax <  5 ~ "cold",
+      tmax >= 5 ~ "not_cold",
+      TRUE      ~ ""
   )) %>% 
   filter(name != "Waikiki_HA") %>% 
   group_by(name, cold) %>% 
@@ -122,8 +122,8 @@ This is a "tidy" table, and it's also a data frame. You could re-organize into a
 ```{r}
 weather_df %>% 
   mutate(cold = case_when(
-    tmax < 5 ~ "cold",
-    tmax >=5 ~ "not_cold",
+    tmax <  5 ~ "cold",
+    tmax >= 5 ~ "not_cold",
     TRUE     ~ ""
   )) %>% 
   filter(name != "Waikiki_HA") %>% 
