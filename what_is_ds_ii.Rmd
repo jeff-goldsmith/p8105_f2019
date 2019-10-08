@@ -8,7 +8,7 @@ output:
 
 We have, by now, established some fundamental tools for doing data science. It's important to revisit our definition, and especially our discussion of connotation, before moving forward. 
 
-The slack channel for today's example is [here](https://p8105-fall2018.slack.com/messages/CDA08BPC7).
+The slack channel for today's example is [here](https://p8105fall2019.slack.com/messages/CNU5YKBHR).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
