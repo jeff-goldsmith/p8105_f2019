@@ -6,7 +6,7 @@ output:
     toc_float: true
 ---
 
-The version of the DOHMH New York City Restaurant Inspection Results data we will use for this class is available [here](./data/DOHMH_New_York_City_Restaurant_Inspection_Results.csv.gz).
+The version of the DOHMH New York City Restaurant Inspection Results data we will use for this class is available [here](./data/DOHMH_New_York_City_Restaurant_Inspection_Results.csv.zip) or through the [p8105.datasets](https://github.com/P8105/p8105.datasets) package.
 
 
 ## Context
@@ -28,7 +28,7 @@ More details about the scoring and grading process can be found [here](http://ww
 
 ## Data description
 
-Data on restaurant inspection results are publicly available at [NYC Open Data](https://dev.socrata.com/foundry/data.cityofnewyork.us/9w7m-hzhe) and are updated daily. The specific data to be used in this class, linked to at the top of this page, was accessed in October 2017 using the code below.
+Data on restaurant inspection results are publicly available at [NYC Open Data](https://dev.socrata.com/foundry/data.cityofnewyork.us/43nn-pn8j) and are updated daily. The specific data to be used in this class, linked to at the top of this page, was accessed in October 2017 using the code below.
 
 ```{r, eval = FALSE}
 library(tidyverse)
@@ -65,13 +65,13 @@ get_all_inspections = function(url) {
   
 }
 
-url = "https://data.cityofnewyork.us/resource/9w7m-hzhe.json"
+url = "https://data.cityofnewyork.us/resource/43nn-pn8j.json"
 
 nyc_inspections = get_all_inspections(url) %>%
   bind_rows() 
 ```
 
-The dataset contains roughly 400,000 rows and 18 columns. There is information on restaurant name and location, type of food, inspection date, and details on violation codes, total scores, and associated grades. The data is longitudinal in nature, with multiple rows per restaurant representing inspections over time. A complete data dictionary can be accessed [here](./data/Restaurant_Inspection_Open_Data_Dictionary_082214.xlsx).
+The dataset contains roughly 400,000 rows and 26 columns. There is information on restaurant name and location, type of food, inspection date, and details on violation codes, total scores, and associated grades. The data is longitudinal in nature, with multiple rows per restaurant representing inspections over time. A complete data dictionary can be accessed [here](./data/Restaurant_Inspection_Open_Data_Dictionary_082214.xlsx).
 
 
 

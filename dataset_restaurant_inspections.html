@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -486,7 +446,7 @@ div.tocify {
 </div>
 
 
-<p>The version of the DOHMH New York City Restaurant Inspection Results data we will use for this class is available <a href="./data/DOHMH_New_York_City_Restaurant_Inspection_Results.csv.gz">here</a>.</p>
+<p>The version of the DOHMH New York City Restaurant Inspection Results data we will use for this class is available <a href="./data/DOHMH_New_York_City_Restaurant_Inspection_Results.csv.zip">here</a> or through the <a href="https://github.com/P8105/p8105.datasets">p8105.datasets</a> package.</p>
 <div id="context" class="section level2">
 <h2>Context</h2>
 <p>The New York City Department of Health and Mental Hygiene (DOHMH) conducts unannounced restaurant inspections on an annual basis in order to check for compliance with policies on food handling, food temperature, personal hygiene of restaurant workers, and vermin control. Regulation violations are each worth a pre-specified number of points, which are totaled at the end of the inspection. Scores are converted into grades, where a lower score earns a higher grade.</p>
@@ -501,7 +461,7 @@ div.tocify {
 </div>
 <div id="data-description" class="section level2">
 <h2>Data description</h2>
-<p>Data on restaurant inspection results are publicly available at <a href="https://dev.socrata.com/foundry/data.cityofnewyork.us/9w7m-hzhe">NYC Open Data</a> and are updated daily. The specific data to be used in this class, linked to at the top of this page, was accessed in October 2017 using the code below.</p>
+<p>Data on restaurant inspection results are publicly available at <a href="https://dev.socrata.com/foundry/data.cityofnewyork.us/43nn-pn8j">NYC Open Data</a> and are updated daily. The specific data to be used in this class, linked to at the top of this page, was accessed in October 2017 using the code below.</p>
 <pre class="r"><code>library(tidyverse)
 library(httr)
 library(jsonlite)
@@ -536,11 +496,11 @@ get_all_inspections = function(url) {
   
 }
 
-url = &quot;https://data.cityofnewyork.us/resource/9w7m-hzhe.json&quot;
+url = &quot;https://data.cityofnewyork.us/resource/43nn-pn8j.json&quot;
 
 nyc_inspections = get_all_inspections(url) %&gt;%
   bind_rows() </code></pre>
-<p>The dataset contains roughly 400,000 rows and 18 columns. There is information on restaurant name and location, type of food, inspection date, and details on violation codes, total scores, and associated grades. The data is longitudinal in nature, with multiple rows per restaurant representing inspections over time. A complete data dictionary can be accessed <a href="./data/Restaurant_Inspection_Open_Data_Dictionary_082214.xlsx">here</a>.</p>
+<p>The dataset contains roughly 400,000 rows and 26 columns. There is information on restaurant name and location, type of food, inspection date, and details on violation codes, total scores, and associated grades. The data is longitudinal in nature, with multiple rows per restaurant representing inspections over time. A complete data dictionary can be accessed <a href="./data/Restaurant_Inspection_Open_Data_Dictionary_082214.xlsx">here</a>.</p>
 </div>
 
 <br><br>
@@ -567,6 +527,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
