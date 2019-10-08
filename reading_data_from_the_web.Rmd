@@ -66,7 +66,8 @@ This has extracted _all_ of the tables on the original page; that's why we have 
 We're only focused on the first table for now, so let's get the contents from the first list element.
 
 ```{r}
-table_marj = (drug_use_xml %>% html_nodes(css = "table")) %>% 
+table_marj = 
+  (drug_use_xml %>% html_nodes(css = "table")) %>% 
   .[[1]] %>%
   html_table() 
 ```
@@ -74,7 +75,8 @@ table_marj = (drug_use_xml %>% html_nodes(css = "table")) %>%
 I won't print the table here, but if you look at it you'll notice a problem: the "note" at the bottom of the table appears in every column in the first row. We need to remove that; I'll also convert to a tibble so that things print nicely.
 
 ```{r}
-table_marj = (drug_use_xml %>% html_nodes(css = "table")) %>% 
+table_marj = 
+  (drug_use_xml %>% html_nodes(css = "table")) %>% 
   .[[1]] %>%
   html_table() %>%
   slice(-1) %>% 
@@ -93,7 +95,8 @@ Success!! At least, mostly. These data aren't [tidy](tidy_data.html), but we'll 
 The code below shows one approach to this data cleaning process:
 
 ```{r, eval = FALSE}
-nyc_cost = read_html("https://www.bestplaces.net/cost_of_living/city/new_york/new_york") %>%
+nyc_cost = 
+  read_html("https://www.bestplaces.net/cost_of_living/city/new_york/new_york") %>%
   html_nodes(css = "table") %>%
   .[[1]] %>%
   html_table(header = TRUE)
@@ -108,7 +111,8 @@ In case you hadn't known, NYC is kind of expensive.
 Suppose we'd like to scrape the data about the [Harry Potter Saga](https://www.imdb.com/list/ls000630791/) from the IMDB page. The first step is the same as before -- we need to get the HTML.
 
 ```{r}
-hpsaga_html = read_html("https://www.imdb.com/list/ls000630791/")
+hpsaga_html = 
+  read_html("https://www.imdb.com/list/ls000630791/")
 ```
 
 The information isn't stored in a handy table, so we're going to isolate the CSS selector for elements we care about. A bit of clicking around gets me something like below. 
@@ -118,23 +122,26 @@ The information isn't stored in a handy table, so we're going to isolate the CSS
 For each element, I'll use the CSS selector in `html_nodes()` to extract the relevant HTML code, and convert it to text. Then I can combine these into a data frame. 
 
 ```{r}
-title_vec = hpsaga_html %>%
+title_vec = 
+  hpsaga_html %>%
   html_nodes(".lister-item-header a") %>%
   html_text()
 
-gross_rev_vec = hpsaga_html %>%
+gross_rev_vec = 
+  hpsaga_html %>%
   html_nodes(".text-small:nth-child(7) span:nth-child(5)") %>%
   html_text()
 
-runtime_vec = hpsaga_html %>%
+runtime_vec = 
+  hpsaga_html %>%
   html_nodes(".runtime") %>%
   html_text()
 
-hpsaga_df = tibble(
-  title = title_vec,
-  rev = gross_rev_vec,
-  runtime = runtime_vec
-)
+hpsaga_df = 
+  tibble(
+    title = title_vec,
+    rev = gross_rev_vec,
+    runtime = runtime_vec)
 ```
 
 **_Learning Assessment:_** [This page](https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1) contains the 10 most recent reviews of the movie "Napoleon Dynamite". Use a process similar to the one above to extract the titles of the reviews. Note: getting the star ratings from Amazon is trickier, but the CSS path `"#cm_cr-review_list .review-rating"` helps -- I discovered this after about an hour of googling around. 
@@ -149,17 +156,20 @@ url = "https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt
 
 dynamite_html = read_html(url)
 
-review_titles = dynamite_html %>%
-  html_nodes("#cm_cr-review_list .review-title") %>%
+review_titles = 
+  dynamite_html %>%
+  html_nodes(".a-text-bold span") %>%
   html_text()
 
-review_stars = dynamite_html %>%
+review_stars = 
+  dynamite_html %>%
   html_nodes("#cm_cr-review_list .review-rating") %>%
   html_text()
 
-review_text = dynamite_html %>%
-    html_nodes(".review-data:nth-child(5)") %>%
-    html_text()
+review_text = 
+  dynamite_html %>%
+  html_nodes(".review-text-content span") %>%
+  html_text()
 
 reviews = tibble(
   title = review_titles,
@@ -178,14 +188,16 @@ New York City has a great open data resource, and we'll use that for our API exa
 As a simple example, [this page](https://data.cityofnewyork.us/Environment/Water-Consumption-In-The-New-York-City/ia2d-e54m) is about a dataset for annual water consumption in NYC, along with the population in that year. First, we'll import this as a CSV and parse it.
 
 ```{r}
-nyc_water = GET("https://data.cityofnewyork.us/resource/waf7-5gvc.csv") %>% 
+nyc_water = 
+  GET("https://data.cityofnewyork.us/resource/waf7-5gvc.csv") %>% 
   content("parsed")
 ```
 
 We can also import this dataset as a JSON file. This takes a bit more work (and this is, really, a pretty easy case), but it's still doable.
 
 ```{r}
-nyc_water = GET("https://data.cityofnewyork.us/resource/waf7-5gvc.json") %>% 
+nyc_water = 
+  GET("https://data.cityofnewyork.us/resource/waf7-5gvc.json") %>% 
   content("text") %>%
   jsonlite::fromJSON() %>%
   as_tibble()
@@ -204,7 +216,8 @@ Both of the previous examples are _extremely_ easy -- we accessed data that is e
 To get a sense of how this becomes complicated, let's look at the [Pokemon API](https://pokeapi.co) (which is also pretty nice).
 
 ```{r}
-poke = GET("http://pokeapi.co/api/v2/pokemon/1") %>%
+poke = 
+  GET("http://pokeapi.co/api/v2/pokemon/1") %>%
   content()
 
 poke$name

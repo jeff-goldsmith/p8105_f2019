@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -536,11 +496,13 @@ drug_use_xml
 ## [15] &lt;table class=&quot;rti&quot; border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;1&quot; width ...</code></pre>
 <p>This has extracted <em>all</em> of the tables on the original page; that’s why we have a list with 15 elements. (We haven’t really talked about lists yet, but for now you can think of them as a general collection of objects in R. As we proceed, syntax for extracting individual elements from a list will become clear, and we’ll talk lots about lists in <a href="listcols_and_bootstrapping.html">list columns</a>.)</p>
 <p>We’re only focused on the first table for now, so let’s get the contents from the first list element.</p>
-<pre class="r"><code>table_marj = (drug_use_xml %&gt;% html_nodes(css = &quot;table&quot;)) %&gt;% 
+<pre class="r"><code>table_marj = 
+  (drug_use_xml %&gt;% html_nodes(css = &quot;table&quot;)) %&gt;% 
   .[[1]] %&gt;%
   html_table() </code></pre>
 <p>I won’t print the table here, but if you look at it you’ll notice a problem: the “note” at the bottom of the table appears in every column in the first row. We need to remove that; I’ll also convert to a tibble so that things print nicely.</p>
-<pre class="r"><code>table_marj = (drug_use_xml %&gt;% html_nodes(css = &quot;table&quot;)) %&gt;% 
+<pre class="r"><code>table_marj = 
+  (drug_use_xml %&gt;% html_nodes(css = &quot;table&quot;)) %&gt;% 
   .[[1]] %&gt;%
   html_table() %&gt;%
   slice(-1) %&gt;% 
@@ -548,15 +510,19 @@ drug_use_xml
 
 table_marj
 ## # A tibble: 56 x 16
-##   State `12+(2013-2014)` `12+(2014-2015)` `12+(P Value)` `12-17(2013-201…
-##   &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;           
-## 1 Tota… 12.90a           13.36            0.002          13.28b          
-## 2 Nort… 13.88a           14.66            0.005          13.98           
-## 3 Midw… 12.40b           12.76            0.082          12.45           
-## 4 South 11.24a           11.64            0.029          12.02           
-## 5 West  15.27            15.62            0.262          15.53a          
-## 6 Alab… 9.98             9.60             0.426          9.90            
-## # … with 50 more rows, and 11 more variables: `12-17(2014-2015)` &lt;chr&gt;,
+##    State `12+(2013-2014)` `12+(2014-2015)` `12+(P Value)` `12-17(2013-201…
+##    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;           
+##  1 Tota… 12.90a           13.36            0.002          13.28b          
+##  2 Nort… 13.88a           14.66            0.005          13.98           
+##  3 Midw… 12.40b           12.76            0.082          12.45           
+##  4 South 11.24a           11.64            0.029          12.02           
+##  5 West  15.27            15.62            0.262          15.53a          
+##  6 Alab… 9.98             9.60             0.426          9.90            
+##  7 Alas… 19.60a           21.92            0.010          17.30           
+##  8 Ariz… 13.69            13.12            0.364          15.12           
+##  9 Arka… 11.37            11.59            0.678          12.79           
+## 10 Cali… 14.49            15.25            0.103          15.03           
+## # … with 46 more rows, and 11 more variables: `12-17(2014-2015)` &lt;chr&gt;,
 ## #   `12-17(P Value)` &lt;chr&gt;, `18-25(2013-2014)` &lt;chr&gt;,
 ## #   `18-25(2014-2015)` &lt;chr&gt;, `18-25(P Value)` &lt;chr&gt;,
 ## #   `26+(2013-2014)` &lt;chr&gt;, `26+(2014-2015)` &lt;chr&gt;, `26+(P Value)` &lt;chr&gt;,
@@ -566,7 +532,8 @@ table_marj
 <details>
 <p><summary> Solution </summary></p>
 <p>The code below shows one approach to this data cleaning process:</p>
-<pre class="r"><code>nyc_cost = read_html(&quot;https://www.bestplaces.net/cost_of_living/city/new_york/new_york&quot;) %&gt;%
+<pre class="r"><code>nyc_cost = 
+  read_html(&quot;https://www.bestplaces.net/cost_of_living/city/new_york/new_york&quot;) %&gt;%
   html_nodes(css = &quot;table&quot;) %&gt;%
   .[[1]] %&gt;%
   html_table(header = TRUE)</code></pre>
@@ -576,27 +543,31 @@ table_marj
 <div id="css-selectors" class="section level3">
 <h3>CSS Selectors</h3>
 <p>Suppose we’d like to scrape the data about the <a href="https://www.imdb.com/list/ls000630791/">Harry Potter Saga</a> from the IMDB page. The first step is the same as before – we need to get the HTML.</p>
-<pre class="r"><code>hpsaga_html = read_html(&quot;https://www.imdb.com/list/ls000630791/&quot;)</code></pre>
+<pre class="r"><code>hpsaga_html = 
+  read_html(&quot;https://www.imdb.com/list/ls000630791/&quot;)</code></pre>
 <p>The information isn’t stored in a handy table, so we’re going to isolate the CSS selector for elements we care about. A bit of clicking around gets me something like below.</p>
 <p><img src="images/read_from_web_css_selctor.png" style="width:75%"></p>
 <p>For each element, I’ll use the CSS selector in <code>html_nodes()</code> to extract the relevant HTML code, and convert it to text. Then I can combine these into a data frame.</p>
-<pre class="r"><code>title_vec = hpsaga_html %&gt;%
+<pre class="r"><code>title_vec = 
+  hpsaga_html %&gt;%
   html_nodes(&quot;.lister-item-header a&quot;) %&gt;%
   html_text()
 
-gross_rev_vec = hpsaga_html %&gt;%
+gross_rev_vec = 
+  hpsaga_html %&gt;%
   html_nodes(&quot;.text-small:nth-child(7) span:nth-child(5)&quot;) %&gt;%
   html_text()
 
-runtime_vec = hpsaga_html %&gt;%
+runtime_vec = 
+  hpsaga_html %&gt;%
   html_nodes(&quot;.runtime&quot;) %&gt;%
   html_text()
 
-hpsaga_df = tibble(
-  title = title_vec,
-  rev = gross_rev_vec,
-  runtime = runtime_vec
-)</code></pre>
+hpsaga_df = 
+  tibble(
+    title = title_vec,
+    rev = gross_rev_vec,
+    runtime = runtime_vec)</code></pre>
 <p><strong><em>Learning Assessment:</em></strong> <a href="https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=1">This page</a> contains the 10 most recent reviews of the movie “Napoleon Dynamite”. Use a process similar to the one above to extract the titles of the reviews. Note: getting the star ratings from Amazon is trickier, but the CSS path <code>&quot;#cm_cr-review_list .review-rating&quot;</code> helps – I discovered this after about an hour of googling around.</p>
 <details>
 <p><summary> Solution </summary></p>
@@ -605,17 +576,20 @@ hpsaga_df = tibble(
 
 dynamite_html = read_html(url)
 
-review_titles = dynamite_html %&gt;%
-  html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
+review_titles = 
+  dynamite_html %&gt;%
+  html_nodes(&quot;.a-text-bold span&quot;) %&gt;%
   html_text()
 
-review_stars = dynamite_html %&gt;%
+review_stars = 
+  dynamite_html %&gt;%
   html_nodes(&quot;#cm_cr-review_list .review-rating&quot;) %&gt;%
   html_text()
 
-review_text = dynamite_html %&gt;%
-    html_nodes(&quot;.review-data:nth-child(5)&quot;) %&gt;%
-    html_text()
+review_text = 
+  dynamite_html %&gt;%
+  html_nodes(&quot;.review-text-content span&quot;) %&gt;%
+  html_text()
 
 reviews = tibble(
   title = review_titles,
@@ -628,7 +602,8 @@ reviews = tibble(
 <h3>Using an API</h3>
 <p>New York City has a great open data resource, and we’ll use that for our API examples. Although most (all?) of these datasets can be accessed by clicking through a website, we’ll access them directly using the API to improve reproducibility and make it easier to update results to reflect new data.</p>
 <p>As a simple example, <a href="https://data.cityofnewyork.us/Environment/Water-Consumption-In-The-New-York-City/ia2d-e54m">this page</a> is about a dataset for annual water consumption in NYC, along with the population in that year. First, we’ll import this as a CSV and parse it.</p>
-<pre class="r"><code>nyc_water = GET(&quot;https://data.cityofnewyork.us/resource/waf7-5gvc.csv&quot;) %&gt;% 
+<pre class="r"><code>nyc_water = 
+  GET(&quot;https://data.cityofnewyork.us/resource/waf7-5gvc.csv&quot;) %&gt;% 
   content(&quot;parsed&quot;)
 ## Parsed with column specification:
 ## cols(
@@ -638,7 +613,8 @@ reviews = tibble(
 ##   per_capita_gallons_per_person_per_day = col_double()
 ## )</code></pre>
 <p>We can also import this dataset as a JSON file. This takes a bit more work (and this is, really, a pretty easy case), but it’s still doable.</p>
-<pre class="r"><code>nyc_water = GET(&quot;https://data.cityofnewyork.us/resource/waf7-5gvc.json&quot;) %&gt;% 
+<pre class="r"><code>nyc_water = 
+  GET(&quot;https://data.cityofnewyork.us/resource/waf7-5gvc.json&quot;) %&gt;% 
   content(&quot;text&quot;) %&gt;%
   jsonlite::fromJSON() %&gt;%
   as_tibble()</code></pre>
@@ -648,7 +624,8 @@ reviews = tibble(
   content(&quot;parsed&quot;)</code></pre>
 <p>Both of the previous examples are <em>extremely</em> easy – we accessed data that is essentially a data table, and we had a very straightforward API.</p>
 <p>To get a sense of how this becomes complicated, let’s look at the <a href="https://pokeapi.co">Pokemon API</a> (which is also pretty nice).</p>
-<pre class="r"><code>poke = GET(&quot;http://pokeapi.co/api/v2/pokemon/1&quot;) %&gt;%
+<pre class="r"><code>poke = 
+  GET(&quot;http://pokeapi.co/api/v2/pokemon/1&quot;) %&gt;%
   content()
 
 poke$name
@@ -733,6 +710,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
