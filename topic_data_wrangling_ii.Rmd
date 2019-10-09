@@ -9,7 +9,7 @@ The topic is made up of the following components:
 * [Reading data from the web](reading_data_from_the_web.html)
 * [Strings and factors](strings_and_factors.html)
 
-The slack channel for this topic is [here](https://p8105-fall2018.slack.com/messages/CCC345PM5).
+The slack channel for this topic is [here](https://p8105fall2019.slack.com/messages/CN8998SH5).
 
 The code that I produced working examples in lecture is [here](https://github.com/P8105/data_wrangling_ii).
 

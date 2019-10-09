@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -89,7 +90,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -250,18 +250,6 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
@@ -393,7 +381,7 @@ $(document).ready(function () {
 <li><a href="reading_data_from_the_web.html">Reading data from the web</a></li>
 <li><a href="strings_and_factors.html">Strings and factors</a></li>
 </ul>
-<p>The slack channel for this topic is <a href="https://p8105-fall2018.slack.com/messages/CCC345PM5">here</a>.</p>
+<p>The slack channel for this topic is <a href="https://p8105fall2019.slack.com/messages/CN8998SH5">here</a>.</p>
 <p>The code that I produced working examples in lecture is <a href="https://github.com/P8105/data_wrangling_ii">here</a>.</p>
 
 <br><br>
@@ -419,6 +407,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

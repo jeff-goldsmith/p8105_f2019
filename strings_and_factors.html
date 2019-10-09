@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -92,7 +93,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -253,48 +253,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +304,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -487,7 +446,7 @@ div.tocify {
 
 
 <p>Most of the tools we examined in <a href="topic_data_wrangling_i.html">Data Wrangling I</a> were general purpose things – what tidy data is, using <code>dplyr</code> and <code>tidyr</code> for manipulation of data tables. Two variable types, strings and factors, present enough challenges to examine in some detail. Now might also be a good time to read up on the <a href="https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/">history</a> of strings and factors in R!</p>
-<p>This is the second module in the <a href="topic_data_wrangling_ii.html">Data Wrangling II</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCC345PM5">here</a>.</p>
+<p>This is the second module in the <a href="topic_data_wrangling_ii.html">Data Wrangling II</a> topic; the relevant slack channel is <a href="https://p8105fall2019.slack.com/messages/CN8998SH5">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="bfb454627b71408889958f0893413097" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
@@ -500,6 +459,15 @@ div.tocify {
 <h2>Example</h2>
 <p>I’ll write code for today’s content in a new R Markdown document called <code>strings_and_factors.Rmd</code>, and put it in the same directory / GitHub repo as <code>reading_data.Rmd</code>. Since we’ll revisit some scraped examples, I’ll load <code>rvest</code> now; we’ll also use some datasets in <code>p8105.datasets</code> so I’ll load that as well.</p>
 <pre class="r"><code>library(rvest)
+## Loading required package: xml2
+## 
+## Attaching package: &#39;rvest&#39;
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     pluck
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding
 library(p8105.datasets)</code></pre>
 <div id="strings-and-regex" class="section level3">
 <h3>Strings and regex</h3>
@@ -643,6 +611,20 @@ urls = str_c(url_base, 1:5)
 read_html(urls[1]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
+##  [1] &quot;Good movie\n            &quot;                             
+##  [2] &quot;A classic\n            &quot;                              
+##  [3] &quot;FRIKKEN SWEET MOVIE, GAWSH.\n            &quot;            
+##  [4] &quot;You gonna eat the rest of your tots?\n            &quot;   
+##  [5] &quot;Tina you fat lard come get some dinner!\n            &quot;
+##  [6] &quot;Great family movie\n            &quot;                     
+##  [7] &quot;Teens love it\n            &quot;                          
+##  [8] &quot;Great\n            &quot;                                  
+##  [9] &quot;Great Movie, Bad Packaging\n            &quot;             
+## [10] &quot;jeez napoleon\n            &quot;
+
+read_html(urls[2]) %&gt;% 
+  html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
+  html_text()
 ##  [1] &quot;\U0001f44d\n            &quot;                       
 ##  [2] &quot;A classic!\n            &quot;                       
 ##  [3] &quot;A must own\n            &quot;                       
@@ -652,21 +634,7 @@ read_html(urls[1]) %&gt;%
 ##  [7] &quot;Awesome!\n            &quot;                         
 ##  [8] &quot;Very funny\n            &quot;                       
 ##  [9] &quot;Eat your food tina\n            &quot;               
-## [10] &quot;Dumb funny\n            &quot;
-
-read_html(urls[2]) %&gt;% 
-  html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
-  html_text()
-##  [1] &quot;Annoying! Not in a good way.\n            &quot;                   
-##  [2] &quot;Fun\n            &quot;                                            
-##  [3] &quot;such a great movie\n            &quot;                             
-##  [4] &quot;Napoleon Dud\n            &quot;                                   
-##  [5] &quot;Five stars\n            &quot;                                     
-##  [6] &quot;Fun!\n            &quot;                                           
-##  [7] &quot;Funny movie- bravo for Amazon’s wide selection!\n            &quot;
-##  [8] &quot;Movie\n            &quot;                                          
-##  [9] &quot;Funny movie, quotable lines\n            &quot;                    
-## [10] &quot;Great for teenagers!\n            &quot;</code></pre>
+## [10] &quot;Dumb funny\n            &quot;</code></pre>
 <p>It would get really tedious to try to scrape all (~2500) reviews by copying code over and over; before long we’ll learn about writing R functions to reuse code and make this much easier!</p>
 </div>
 <div id="thoughts-on-factors" class="section level3">
@@ -883,6 +851,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

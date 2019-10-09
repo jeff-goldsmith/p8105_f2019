@@ -8,7 +8,7 @@ output:
   
 In [data import](data_import.html), we saw how to load data from a variety of formats; this is a fairly standard way to get data that have been gathered as part of a study. In a lot of cases, though, you're going to have to go out and get the data you want or need. That's what we're covering now.
 
-This is the first module in the [Data Wrangling II](topic_data_wrangling_ii.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCC345PM5).
+This is the first module in the [Data Wrangling II](topic_data_wrangling_ii.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN8998SH5).
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
