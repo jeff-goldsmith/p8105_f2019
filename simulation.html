@@ -343,8 +343,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -487,7 +485,7 @@ div.tocify {
 
 
 <p>We’ve noted that functions are helpful when you repeat code more than twice; we’ve also noted that a lot of statistical methods involve doing the same thing a large number of times. Simulation is a common statistical approach that takes advantage of the ability to iterate many times using computers.</p>
-<p>This is the third module in the <a href="topic_iteration.html">Iteration</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCAAE7XDW">here</a>.</p>
+<p>This is the third module in the <a href="topic_iteration.html">Iteration</a> topic; the relevant slack channel is <a href="https://p8105fall2019.slack.com/messages/CN8KK99NJ">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="285289b17d194a4282d53f1800d37199" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
@@ -599,14 +597,18 @@ for (i in 1:4) {
 sim_results = 
   tibble(sample_size = c(30, 60, 120, 240)) %&gt;% 
   mutate(estimate_dfs = map(.x = sample_size, ~simulate_n_regressions(n = .x))) %&gt;% 
-  unnest</code></pre>
+  unnest
+## Warning: `cols` is now required.
+## Please use `cols = c(estimate_dfs)`</code></pre>
 <p>Using a different call, I could increase the number of simulation runs or vary the parameters in the regression model:</p>
 <pre class="r"><code>sim_results = 
   tibble(sample_size = c(30, 60, 120, 240)) %&gt;% 
   mutate(
     estimate_dfs = map(.x = sample_size, ~simulate_n_regressions(n_runs = 1000, n = .x))
   ) %&gt;% 
-  unnest</code></pre>
+  unnest
+## Warning: `cols` is now required.
+## Please use `cols = c(estimate_dfs)`</code></pre>
 <p>Let’s take a look at what we’ve accomplished in our simulations! First I’ll take a look at the distribution of slope estimates across sample sizes.</p>
 <pre class="r"><code>sim_results %&gt;% 
   mutate(
@@ -725,7 +727,9 @@ sim_results =
   unnest() %&gt;% 
   filter(term == &quot;x&quot;) %&gt;% 
   select(beta1_true, estimate, p.value) %&gt;% 
-  mutate(significant = as.numeric(p.value &lt; 0.05))</code></pre>
+  mutate(significant = as.numeric(p.value &lt; 0.05))
+## Warning: `cols` is now required.
+## Please use `cols = c(estimate_dfs)`</code></pre>
 <p>The plot below shows the proportion of times the null was rejected (i.e. the power of the test for a fixed alternative) on the y axis and the true value of <span class="math inline">\(\beta_1\)</span> on the x axis.</p>
 <p><img src="simulation_files/figure-html/simulation_summary-1.png" width="90%" /></p>
 <p>The power increases as the effect size of <span class="math inline">\(\beta_1\)</span> increases. For <span class="math inline">\(\beta_1=0\)</span>, the probability of rejection is near 0.05, which is exactly as expected.</p>

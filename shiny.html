@@ -343,8 +343,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -487,7 +485,7 @@ div.tocify {
 
 
 <p><code>Shiny</code> is RStudio’s framework for creating interactive graphics and web-like applications. There are several ways to use <code>Shiny</code>, and we’re going to focus on how to use it in conjunction with <code>flexdashboard</code> to make interactive dashboards within R Markdown.</p>
-<p>This page is related to content in <a href="plotly_and_dashboards.html">plotly and dashboards</a>, and the slack channel for extra topics is <a href="https://p8105-fall2018.slack.com/messages/CEC9L1JKV">here</a>.</p>
+<p>This page is related to content in <a href="plotly_and_dashboards.html">plotly and dashboards</a>, and the slack channel for extra topics is <a href="https://p8105fall2019.slack.com/messages/CN01H0GHX">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="c1b6fe0d9dd44fa494b5004c839798c2" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
@@ -546,9 +544,21 @@ Column {data-width=350}
 <p>I’ll add the following libraryies to the template, but we won’t need much else.</p>
 <pre class="r"><code>library(tidyverse)
 library(viridis)
+## Loading required package: viridisLite
 library(p8105.datasets)
 
-library(plotly)</code></pre>
+library(plotly)
+## 
+## Attaching package: &#39;plotly&#39;
+## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     last_plot
+## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter
+## The following object is masked from &#39;package:graphics&#39;:
+## 
+##     layout</code></pre>
 <p>As in <a href="plotly_and_dashboards.html">plotly and dashboards</a>, we’re going to focus on the <a href="dataset_airbnb.html">Airbnb</a> data. Our goal is to make a dashboard similar to the one produced there, but with interactive elements in place of hard-coded data manipulation choices.</p>
 <div id="data-import" class="section level3">
 <h3>Data import</h3>

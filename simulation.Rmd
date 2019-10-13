@@ -8,7 +8,7 @@ output:
 
 We've noted that functions are helpful when you repeat code more than twice; we've also noted that a lot of statistical methods involve doing the same thing a large number of times. Simulation is a common statistical approach that takes advantage of the ability to iterate many times using computers. 
 
-This is the third module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAAE7XDW).
+This is the third module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN8KK99NJ).
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(

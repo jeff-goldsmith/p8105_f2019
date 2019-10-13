@@ -8,7 +8,7 @@ output:
 
 If you use the same code twice, you need a function -- this will improve code readability, facilitate troubleshooting, and reduce chances for mistakes. This content looks at the best approaches for writing R functions.
 
-This is the first module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105-fall2017.slack.com/messages/C7WC2UPT7).
+This is the first module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN8KK99NJ).
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(

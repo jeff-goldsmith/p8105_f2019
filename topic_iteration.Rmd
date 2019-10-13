@@ -10,6 +10,6 @@ This topic is made up of the following components:
 * [Iteration and list columns](iteration_and_listcols.html)
 * [Simulation](simulation.html)
 
-The slack channel for this topic is [here](https://p8105-fall2018.slack.com/messages/CCAAE7XDW).
+The slack channel for this topic is [here](https://p8105fall2019.slack.com/messages/CN8KK99NJ).
 
 The code that I produced working examples in lecture is [here](https://github.com/p8105/iteration).

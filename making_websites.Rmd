@@ -8,7 +8,7 @@ output:
 
 This page outlines the process of making a basic website using R Markdown, and hosting that website on GitHub -- the content assumes familiarity with both .Rmd and GitHub. 
 
-This is the first module in the [Interactivity](topic_interactivity.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCATLNVUK).
+This is the first module in the [Interactivity](topic_interactivity.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN6DF7F1B).
 
 ## Some slides
 

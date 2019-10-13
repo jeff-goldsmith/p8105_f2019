@@ -343,8 +343,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -487,7 +485,7 @@ div.tocify {
 
 
 <p>If you use the same code twice, you need a function – this will improve code readability, facilitate troubleshooting, and reduce chances for mistakes. This content looks at the best approaches for writing R functions.</p>
-<p>This is the first module in the <a href="topic_iteration.html">Iteration</a> topic; the relevant slack channel is <a href="https://p8105-fall2017.slack.com/messages/C7WC2UPT7">here</a>.</p>
+<p>This is the first module in the <a href="topic_iteration.html">Iteration</a> topic; the relevant slack channel is <a href="https://p8105fall2019.slack.com/messages/CN8KK99NJ">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="3f91d97c70e641cea46366ac9d90c929" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
@@ -501,6 +499,15 @@ div.tocify {
 <p>For this topic, I’ll create a GitHub repo + directory / R Project called <code>iteration</code>. I’ll write code for today’s content in a new R Markdown document called <code>writing_functions.Rmd</code>, and I’m going to load the usual packages. I’m also setting the seed so that the output on this page is fixed.</p>
 <pre class="r"><code>library(tidyverse)
 library(rvest)
+## Loading required package: xml2
+## 
+## Attaching package: &#39;rvest&#39;
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     pluck
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding
 
 set.seed(1)</code></pre>
 <div id="my-first-function" class="section level3">
@@ -695,14 +702,19 @@ dynamite_reviews = bind_rows(
 
 dynamite_reviews
 ## # A tibble: 50 x 3
-##   title                                  stars text                        
-##   &lt;chr&gt;                                  &lt;dbl&gt; &lt;chr&gt;                       
-## 1 &quot;👍\n            &quot;                         5 Format: Prime VideoVerified…
-## 2 &quot;A classic!\n            &quot;                 5 Format: DVDVerified Purchase
-## 3 &quot;A must own\n            &quot;                 5 Format: Prime VideoVerified…
-## 4 &quot;If you like 80s ...you must watch\n …     5 Format: Prime VideoVerified…
-## 5 &quot;🤘\n            &quot;                         5 Format: Prime VideoVerified…
-## # … with 45 more rows</code></pre>
+##    title                                   stars text                      
+##    &lt;chr&gt;                                   &lt;dbl&gt; &lt;chr&gt;                     
+##  1 &quot;This movie is so stupid.\n           …     5 Format: Prime VideoVerifi…
+##  2 &quot;Hilarious\n            &quot;                   5 Format: Prime VideoVerifi…
+##  3 &quot;Waste of money\n            &quot;              1 Format: Prime VideoVerifi…
+##  4 &quot;Good movie\n            &quot;                  5 Format: Prime VideoVerifi…
+##  5 &quot;A classic\n            &quot;                   5 Format: Prime VideoVerifi…
+##  6 &quot;FRIKKEN SWEET MOVIE, GAWSH.\n        …     5 Format: Prime VideoVerifi…
+##  7 &quot;You gonna eat the rest of your tots?\…     5 Format: Prime VideoVerifi…
+##  8 &quot;Tina you fat lard come get some dinne…     5 Format: Prime VideoVerifi…
+##  9 &quot;Great family movie\n            &quot;          5 Format: Blu-rayVerified P…
+## 10 &quot;Teens love it\n            &quot;               5 Format: Prime VideoVerifi…
+## # … with 40 more rows</code></pre>
 </div>
 <div id="loading-lotr-data" class="section level4">
 <h4>Loading LoTR data</h4>

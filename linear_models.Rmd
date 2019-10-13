@@ -10,7 +10,7 @@ Linear regression models are fundamental in statistics and data science. When se
 
 This content assumes some familiarity with linear models, and focuses on the implementation of models in R rather than on the theory or interpretation of the models themselves.
 
-This is the first module in the [Linear Models](topic_linear_models.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAAE9AAU).
+This is the first module in the [Linear Models](topic_linear_models.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN6D894NL).
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(

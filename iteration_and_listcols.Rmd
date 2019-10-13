@@ -10,7 +10,7 @@ We’ve noted that functions are helpful when you repeat code more than twice; w
 
 Meanwhile, R's data structures, especially data frames, are surprisingly flexible. This is useful when the "observations" you want to store become more complex than single values; for example, each row many contain a few scalar observations as well a complete data set. In these cases, _list columns_ are an appropriate column type, and `map` functions provide a way to interact with those columns.
 
-This is the second module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAAE7XDW).
+This is the second module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN8KK99NJ).
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(

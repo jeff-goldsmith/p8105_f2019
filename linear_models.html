@@ -343,8 +343,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -488,7 +486,7 @@ div.tocify {
 
 <p>Linear regression models are fundamental in statistics and data science. When seeking to understand how covariates are associated with outcomes, linear models are among the first, best options. Although other regression approaches are possible, the flexibility and interpretability and of linear models make them essential.</p>
 <p>This content assumes some familiarity with linear models, and focuses on the implementation of models in R rather than on the theory or interpretation of the models themselves.</p>
-<p>This is the first module in the <a href="topic_linear_models.html">Linear Models</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCAAE9AAU">here</a>.</p>
+<p>This is the first module in the <a href="topic_linear_models.html">Linear Models</a> topic; the relevant slack channel is <a href="https://p8105fall2019.slack.com/messages/CN6D894NL">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="3d7ef29c65ab4412a21c18ad2711dca2" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
@@ -606,26 +604,34 @@ fit %&gt;%
 <p>The <code>modelr</code> package can be used to add residuals and fitted values to a dataframe.</p>
 <pre class="r"><code>modelr::add_residuals(nyc_airbnb, fit)
 ## # A tibble: 40,492 x 6
-##   price stars boro  neighborhood room_type        resid
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;            &lt;dbl&gt;
-## 1    99     5 Bronx City Island  Private room      9.47
-## 2   200    NA Bronx City Island  Private room     NA   
-## 3   300    NA Bronx City Island  Entire home/apt  NA   
-## 4   125     5 Bronx City Island  Entire home/apt  35.5 
-## 5    69     5 Bronx City Island  Private room    -20.5 
-## 6   125     5 Bronx City Island  Entire home/apt  35.5 
-## # … with 4.049e+04 more rows
+##    price stars boro  neighborhood room_type        resid
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;            &lt;dbl&gt;
+##  1    99   5   Bronx City Island  Private room      9.47
+##  2   200  NA   Bronx City Island  Private room     NA   
+##  3   300  NA   Bronx City Island  Entire home/apt  NA   
+##  4   125   5   Bronx City Island  Entire home/apt  35.5 
+##  5    69   5   Bronx City Island  Private room    -20.5 
+##  6   125   5   Bronx City Island  Entire home/apt  35.5 
+##  7    85   5   Bronx City Island  Entire home/apt  -4.53
+##  8    39   4.5 Bronx Allerton     Private room    -34.5 
+##  9    95   5   Bronx Allerton     Entire home/apt   5.47
+## 10   125   4.5 Bronx Allerton     Entire home/apt  51.5 
+## # … with 40,482 more rows
 modelr::add_predictions(nyc_airbnb, fit)
 ## # A tibble: 40,492 x 6
-##   price stars boro  neighborhood room_type        pred
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;           &lt;dbl&gt;
-## 1    99     5 Bronx City Island  Private room     89.5
-## 2   200    NA Bronx City Island  Private room     NA  
-## 3   300    NA Bronx City Island  Entire home/apt  NA  
-## 4   125     5 Bronx City Island  Entire home/apt  89.5
-## 5    69     5 Bronx City Island  Private room     89.5
-## 6   125     5 Bronx City Island  Entire home/apt  89.5
-## # … with 4.049e+04 more rows</code></pre>
+##    price stars boro  neighborhood room_type        pred
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;           &lt;dbl&gt;
+##  1    99   5   Bronx City Island  Private room     89.5
+##  2   200  NA   Bronx City Island  Private room     NA  
+##  3   300  NA   Bronx City Island  Entire home/apt  NA  
+##  4   125   5   Bronx City Island  Entire home/apt  89.5
+##  5    69   5   Bronx City Island  Private room     89.5
+##  6   125   5   Bronx City Island  Entire home/apt  89.5
+##  7    85   5   Bronx City Island  Entire home/apt  89.5
+##  8    39   4.5 Bronx Allerton     Private room     73.5
+##  9    95   5   Bronx Allerton     Entire home/apt  89.5
+## 10   125   4.5 Bronx Allerton     Entire home/apt  73.5
+## # … with 40,482 more rows</code></pre>
 <p>Like many things in the tidyverse, the first argument is a dataframe. That makes it easy to included steps adding residuals or predictions in pipeline of commands to conduct inspections and perform diagnostics.</p>
 <pre class="r"><code>nyc_airbnb %&gt;% 
   modelr::add_residuals(fit) %&gt;% 
@@ -800,7 +806,9 @@ fit_alt = lm(price ~ stars + boro + room_type, data = nyc_airbnb)</code></pre>
   mutate(models = map(data, ~lm(price ~ stars + room_type, data = .x)),
          models = map(models, broom::tidy)) %&gt;% 
   select(-data) %&gt;% 
-  unnest()</code></pre>
+  unnest()
+## Warning: `cols` is now required.
+## Please use `cols = c(models)`</code></pre>
 <p>The results of this approach are given in the table below.</p>
 <pre class="r"><code>nest_lm_res %&gt;% 
   select(boro, term, estimate) %&gt;% 
@@ -862,7 +870,9 @@ manhattan_nest_lm_res =
   mutate(models = map(data, ~lm(price ~ stars + room_type, data = .x)),
          models = map(models, broom::tidy)) %&gt;% 
   select(-data) %&gt;% 
-  unnest()</code></pre>
+  unnest()
+## Warning: `cols` is now required.
+## Please use `cols = c(models)`</code></pre>
 <p>And the chunk below shows neighborhood-specific estimates for the coefficients related to room type.</p>
 <pre class="r"><code>manhattan_nest_lm_res %&gt;% 
   filter(str_detect(term, &quot;room_type&quot;)) %&gt;% 
@@ -993,15 +1003,19 @@ manhattan_nest_lm_res =
   modelr::add_predictions(fit_logistic) %&gt;% 
   mutate(fitted_prob = boot::inv.logit(pred))
 ## # A tibble: 2,827 x 6
-##   resolved victim_age victim_race victim_sex   pred fitted_prob
-##      &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt;       &lt;chr&gt;       &lt;dbl&gt;       &lt;dbl&gt;
-## 1        0         17 Black       Male       -0.654       0.342
-## 2        0         26 Black       Male       -0.720       0.327
-## 3        0         21 Black       Male       -0.683       0.335
-## 4        1         61 White       Male       -0.131       0.467
-## 5        1         46 Black       Male       -0.864       0.296
-## 6        1         27 Black       Male       -0.727       0.326
-## # … with 2,821 more rows</code></pre>
+##    resolved victim_age victim_race victim_sex    pred fitted_prob
+##       &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt;       &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+##  1        0         17 Black       Male       -0.654        0.342
+##  2        0         26 Black       Male       -0.720        0.327
+##  3        0         21 Black       Male       -0.683        0.335
+##  4        1         61 White       Male       -0.131        0.467
+##  5        1         46 Black       Male       -0.864        0.296
+##  6        1         27 Black       Male       -0.727        0.326
+##  7        1         21 Black       Male       -0.683        0.335
+##  8        1         16 Black       Male       -0.647        0.344
+##  9        1         21 Black       Male       -0.683        0.335
+## 10        1         44 Black       Female      0.0297       0.507
+## # … with 2,817 more rows</code></pre>
 </div>
 </div>
 <div id="other-materials" class="section level2">

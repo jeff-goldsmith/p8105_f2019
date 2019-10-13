@@ -8,7 +8,7 @@ output:
 
 Plotly is a flexible framework for producing interactive graphics; it has a variety of implementations, including one for R. We'll take a look at a few common plot types, and then introduce `flexdashboards` as a way to collect plots (either static or interactive).
 
-This is the second module in the [Interactivity](topic_interactivity.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCATLNVUK).
+This is the second module in the [Interactivity](topic_interactivity.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN6DF7F1B).
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(

@@ -6,7 +6,7 @@ output:
     toc_float: true
 ---
 
-This is a bit of a diversion for a public-health-focused course in data science, but it's fun, related to web data, strings, and factors, and emphasizes tools in data wrangling. It's most closely related to content in the [Data Wrangling II](topic_data_wrangling_ii.html) topic, and the slack channel for extra topics is [here](https://p8105-fall2018.slack.com/messages/CEC9L1JKV).
+This is a bit of a diversion for a public-health-focused course in data science, but it's fun, related to web data, strings, and factors, and emphasizes tools in data wrangling. It's most closely related to content in the [Data Wrangling II](topic_data_wrangling_ii.html) topic, and the slack channel for extra topics is [here](https://p8105fall2019.slack.com/messages/CN01H0GHX).
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(

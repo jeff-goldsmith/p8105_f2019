@@ -10,6 +10,6 @@ This topic is made up of the following components:
 * [Cross Validation](cross_validation.html)
 * [Bootstrapping](bootstrapping.html)
 
-The slack channel for this topic is [here](https://p8105-fall2018.slack.com/messages/CCAAE9AAU).
+The slack channel for this topic is [here](https://p8105fall2019.slack.com/messages/CN6D894NL).
 
 The code that I produced working examples in lecture is [here](https://github.com/P8105/linear_models).
