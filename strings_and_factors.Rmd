@@ -11,17 +11,26 @@ Most of the tools we examined in [Data Wrangling I](topic_data_wrangling_i.html)
 This is the second module in the [Data Wrangling II](topic_data_wrangling_ii.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN8998SH5).
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  fig.width = 6,
-  fig.asp = .6,
-  out.width = "90%"
-)
-
 library(tidyverse)
 library(viridis)
 
-theme_set(theme_bw() + theme(legend.position = "bottom"))
+knitr::opts_chunk$set(
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
 
@@ -33,7 +42,7 @@ theme_set(theme_bw() + theme(legend.position = "bottom"))
 
 ## Example
 
-I'll write code for today's content in a new R Markdown document called `strings_and_factors.Rmd`, and put it in the same directory / GitHub repo as `reading_data.Rmd`. Since we'll revisit some scraped examples, I'll load `rvest` now; we'll also use some datasets in `p8105.datasets` so I'll load that as well. 
+I'll write code for today's content in a new R Markdown document called `strings_and_factors.Rmd`, and put it in the same directory / GitHub repo as `reading_data.Rmd`. Since we'll revisit some scraped examples, I'll load `rvest` now; we'll also use some datasets in `p8105.datasets` so I'll load that as well. And finally, we'll use some of [these examples](./resources/data_import_examples.zip), so I'll make sure I have them in a `data` subdirectory.. 
 
 ```{r}
 library(rvest)
@@ -74,7 +83,7 @@ string_vec = c(
   "Y'all remember Pres. HW Bush?",
   "I saw a green bush",
   "BBQ and Bushwalking at Molonglo Gorge",
-  "BUSH!!"
+  "BUSH -- LIVE IN CONCERT!!"
   )
 
 str_detect(string_vec,"[Bb]ush")
@@ -129,12 +138,18 @@ We'll start by revisiting a [dataset](./data/public_pulse_data.sas7bdat) we've s
 The code below updates the data processing pipeline for the PULSE data using `stringr` and `forcats`. The result is the same, and the differences are pretty small, but this is a bit cleaner. 
 
 ```{r}
-pulse_data = haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
+pulse_data = 
+  haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
   janitor::clean_names() %>%
-  gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %>%
-  mutate(visit = str_replace(visit, "bdi_score_", ""),
-         visit = str_replace(visit, "bl", "00m"),
-         visit = fct_relevel(visit, str_c(c("00", "01", "06", "12"), "m"))) %>%
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit", 
+    names_prefix = "bdi_score_",
+    values_to = "bdi") %>%
+  select(id, visit, everything()) %>%
+  mutate(
+    visit = str_replace(visit, "bl", "00m"),
+    visit = fct_relevel(visit, str_c(c("00", "01", "06", "12"), "m"))) %>%
   arrange(id, visit)
 
 print(pulse_data, n = 12)
@@ -146,10 +161,11 @@ print(pulse_data, n = 12)
 Next we'll revisit the table scraped from the National Survey on Drug Use and Health data on [this page](http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm). In [reading data from the web](reading_data_from_the_web.html), we loaded this data using the code below, but noted it wasn't tidy. 
 
 ```{r}
-url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
-drug_use_xml = read_html(url)
+nsduh_url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
 
-table_marj = (drug_use_xml %>% html_nodes(css = "table")) %>% 
+table_marj = 
+  read_html(nsduh_url) %>% 
+  html_nodes(css = "table") %>% 
   .[[1]] %>%
   html_table() %>%
   slice(-1) %>%
@@ -162,11 +178,15 @@ There are a few steps we need to implement to tidy these data. For now I'm not i
 data_marj = 
   table_marj %>%
   select(-contains("P Value")) %>%
-  gather(key = key, value = percent, -State) %>%
-  separate(key, into = c("age", "year"), sep = "\\(") %>%
-  mutate(year = str_replace(year, "\\)", ""),
-         percent = str_replace(percent, "[a-c]$", ""),
-         percent = as.numeric(percent)) %>%
+  pivot_longer(
+    -State,
+    names_to = "age_year", 
+    values_to = "percent") %>%
+  separate(age_year, into = c("age", "year"), sep = "\\(") %>%
+  mutate(
+    year = str_replace(year, "\\)", ""),
+    percent = str_replace(percent, "[a-c]$", ""),
+    percent = as.numeric(percent)) %>%
   filter(!(State %in% c("Total U.S.", "Northeast", "Midwest", "South", "West")))
 ```
 
@@ -176,7 +196,7 @@ We used `stringr` and regular expressions a couple of times above:
 * we stripped out the close parenthesis in `mutate`
 * to remove character superscripts, we replaced any character using `"[a-c]$"`
 
-Let's quickly visualize these data for the 12-17 age group; to make the plot readable, we'll treat `State` as a factor are reorder according to `percent`. 
+Let's quickly visualize these data for the 12-17 age group; to make the plot readable, we'll treat `State` as a factor are reorder according to the median `percent` value. 
 
 ```{r}
 data_marj %>%
@@ -190,7 +210,7 @@ data_marj %>%
 
 ### Toothbrush reviews
 
-We were able to scrape toothbrush reviews for a single review page in [reading data from the web](reading_data_from_the_web.html). If we want to scrape more reviews, it's necessary to construct the URLs for several review pages. This is possible based on an observation about the the structure of the URL for the [first page](https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1) of reviews -- it ended with `pageNumber=1` and, sure enough, changing this to `pageNumber=2` will bring up the [second page](https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1) of reviews. 
+We were able to scrape Napoleon Dynamite reviews for a single review page in [reading data from the web](reading_data_from_the_web.html). If we want to scrape more reviews, it's necessary to construct the URLs for several review pages. This is possible based on an observation about the the structure of the URL for the [first page](https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1) of reviews -- it ended with `pageNumber=1` and, sure enough, changing this to `pageNumber=2` will bring up the [second page](https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1) of reviews. 
 
 ```{r}
 url_base = "https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber="
@@ -206,7 +226,7 @@ read_html(urls[2]) %>%
   html_text()
 ```
 
-It would get really tedious to try to scrape all (~2500) reviews by copying code over and over; before long we'll learn about writing R functions to reuse code and make this much easier!
+It would get really tedious to try to scrape all (~1400) reviews by copying code over and over; before long we'll learn about writing R functions to reuse code and make this much easier!
 
 
 ### Thoughts on factors
@@ -219,6 +239,7 @@ This is the kind of thing that can get you in trouble.
 
 ```{r}
 vec_sex = factor(c("male", "male", "female", "female"))
+vec_sex
 as.numeric(vec_sex)
 
 vec_sex = relevel(vec_sex, ref = "male")
@@ -237,10 +258,11 @@ Our first step is to load the data we used.
 
 ```{r weather_data_create, cache = TRUE}
 weather_df = 
-  rnoaa::meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
-                      var = c("PRCP", "TMIN", "TMAX"), 
-                      date_min = "2017-01-01",
-                      date_max = "2017-12-31") %>%
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
   mutate(
     name = recode(id, USW00094728 = "CentralPark_NY", 
                       USC00519397 = "Waikiki_HA",
@@ -248,6 +270,7 @@ weather_df =
     tmin = tmin / 10,
     tmax = tmax / 10) %>%
   select(name, id, everything())
+
 weather_df
 ```
 
@@ -282,6 +305,21 @@ weather_df %>%
   lm(tmax ~ name, data = .)
 ```
 
+We also saw factors in our exploratory analysis of the [Airbnb](dataset_airbnb.html) data, when looking at the distribution of prices in various neighborhoods. Ordering these according to the median price made for clearer plots than ordering neighborhoods alphabetically. 
+
+```{r}
+data("nyc_airbnb")
+
+nyc_airbnb %>%
+  filter(neighbourhood_group == "Manhattan") %>% 
+  mutate(
+    neighbourhood = fct_reorder(neighbourhood, price, na.rm = TRUE)) %>% 
+  ggplot(aes(x = neighbourhood, y = price)) +
+  geom_boxplot() +
+  coord_flip() + 
+  ylim(0, 1000)
+```
+
 
 ### Restaurant inspections
 
@@ -290,7 +328,7 @@ As a final example of strings and factors, we'll take a look at the [NYC Restuar
 First we'll import the data and take a look.
 
 ```{r}
-data(rest_inspec)
+data("rest_inspec")
 
 rest_inspec %>% 
   group_by(boro, grade) %>% 
@@ -333,8 +371,7 @@ The table is okay but I'd like to visualize this.
 rest_inspec %>% 
   filter(str_detect(dba, "[Pp][Ii][Zz][Zz][Aa]")) %>%
   ggplot(aes(x = boro, fill = grade)) + 
-  geom_bar() + 
-  scale_fill_viridis(discrete = TRUE)
+  geom_bar() 
 ```
 
 Might help to have things in a different order -- maybe number of pizza places? Fortunately this can be done using `fct_infreq`. 
@@ -344,29 +381,46 @@ rest_inspec %>%
   filter(str_detect(dba, "[Pp][Ii][Zz][Zz][Aa]")) %>%
   mutate(boro = fct_infreq(boro)) %>%
   ggplot(aes(x = boro, fill = grade)) + 
-  geom_bar() + 
-  scale_fill_viridis(discrete = TRUE)
+  geom_bar() 
 ```
 
 Suppose I want to rename a boro; I'll try to do this using `replace`.
 
-```{r}
+```{r, warning = TRUE}
 rest_inspec %>% 
   filter(str_detect(dba, "[Pp][Ii][Zz][Zz][Aa]")) %>%
-  mutate(boro = fct_infreq(boro),
-         boro = replace(boro, which(boro == "Brooklyn"), "HipsterHQ")) %>%
+  mutate(
+    boro = fct_infreq(boro),
+    boro = replace(boro, which(boro == "Brooklyn"), "HipsterHQ")) %>%
   ggplot(aes(x = boro, fill = grade)) + 
   geom_bar() + 
   scale_fill_viridis(discrete = TRUE)
 ```
 
-That didn't work at all! Factors have very specific values, trying to use a value that is not an existing factor level won't work. Fortunately there is a dedicated function for renaming factor levels:
+That didn't work at all! Factors have very specific values, trying to use a value that is not an existing factor level won't work. 
+
+Alternatively, I could try using `str_replace`.
+
+```{r}
+rest_inspec %>% 
+  filter(str_detect(dba, "[Pp][Ii][Zz][Zz][Aa]")) %>%
+  mutate(
+    boro = fct_infreq(boro),
+    boro = str_replace(boro, "Brooklyn", "HipsterHQ")) %>%
+  ggplot(aes(x = boro, fill = grade)) + 
+  geom_bar() 
+```
+
+This renamed the Borough, but then converted the result back to a string -- which, when plotted, was implicitly made a factor and ordered alphabetically. I could switch the order in which I rename and encode the factor order I want, but that might not always work. 
+
+Fortunately there is a dedicated function for renaming factor levels:
 
 ```{r}
 rest_inspec %>% 
   filter(str_detect(dba, regex("pizza", ignore_case = TRUE))) %>%
-  mutate(boro = fct_infreq(boro),
-         boro = fct_recode(boro, "HipsterHQ" = "Brooklyn")) %>%
+  mutate(
+    boro = fct_infreq(boro),
+    boro = fct_recode(boro, "HipsterHQ" = "Brooklyn")) %>%
   ggplot(aes(x = boro, fill = grade)) + 
   geom_bar() + 
   scale_fill_viridis(discrete = TRUE)
