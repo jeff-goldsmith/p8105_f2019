@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -488,7 +448,7 @@ div.tocify {
 
 <div id="independence" class="section level3">
 <h3>Independence</h3>
-<p>In contrast to Homework assignments, you must work completely independently on this project – do not discuss your approach, your code, or your results with any other students, and do not use the discussion board for questions related to this project. If questions do arise, please email the instructor.</p>
+<p>In contrast to Homework assignments, you must work completely independently on this project – do not discuss your approach, your code, or your results with any other students, and do not use the discussion board for questions related to this project. If questions do arise, please email the instructor and lead TAs.</p>
 </div>
 <div id="context" class="section level3">
 <h3>Context</h3>
@@ -508,15 +468,54 @@ div.tocify {
 <li>non-private repos will be treated as inconsistent with the independent work requirement and as violations of the academic integrity policy</li>
 </ul></li>
 <li>add the GitHub user “bst-p8105” as a collaborator on the project, which will give us (and only us) access to your repo</li>
-<li>create a <code>data</code> directory and add <code>data/</code> to the <code>.gitignore</code> file
-<ul>
-<li>the <code>data</code> folder and its contents should not appear in your git history or on GitHub, but you can still access files in this folder using relative paths</li>
-<li>after downloading your submission, we’ll add the <code>data</code> directory and data files to</li>
-</ul></li>
 <li>create a single .Rmd file named <code>p8105_mtp_YOURUNI.Rmd</code> that renders to <code>github_document</code></li>
 <li>submit a link to your repo via Courseworks</li>
 </ul>
 <p>We will assess adherence to the instructions above and whether we are able to knit your .Rmd in the grading of this project. Adherence to appropriate styling and clarity of code will be assessed. This project includes figures; the readability of your embedded plots (e.g. font sizes, axis labels, titles) will be assessed.</p>
+</div>
+<div id="deliverable" class="section level2">
+<h2>Deliverable</h2>
+<p>For this project, you should write a report describing your work in a way that targets a reasonably sophisticated collaborator – not an expert data scientist, but an interested observer. Structure your report to include an introduction and four sections corresponding to the problems below. Write in a reproducible way (e.g. using inline R code where necessary) and include relevant code chunks and their output. Include only relevant information, and adhere to a strict-500 word limit (this excludes figures and tables, code chunks, inline code, YAML, and other non-text elements). You can check your word count using <code>wordcountaddin::text_stats(&quot;p8105_mtp_YOURUNI.Rmd&quot;)</code>; installation instructions can be found on the <a href="https://github.com/benmarwick/wordcountaddin"><code>wordcountaddin</code> package website</a>. We’ll use the “koRpus” count.</p>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>In 2018, Nature Scientific Reports published an <a href="https://www.nature.com/articles/s41598-018-21625-1">article</a> by Australian researchers published describing the relationship between posture and “enlarged protuberances”, especially among younger subjects. This was later reported in the <a href="https://www.washingtonpost.com/nation/2019/06/20/horns-are-growing-young-peoples-skulls-phone-use-is-blame-research-suggests/">popular press</a> in articles drawing the conclusion that phone usage was leading to “horns” growing in the back of millenials’ heads. Later articles were more <a href="https://www.nytimes.com/2019/06/20/health/horns-cellphones-bones.html">skeptical</a>, and a limited <a href="https://www.nature.com/articles/s41598-019-49153-6">author correction</a> was published in Nature.</p>
+<p>The <a href="data/p8105_mtp_data.xlsx">data for this project</a> are those that accompany the author correction.</p>
+</div>
+<div id="problems" class="section level2">
+<h2>Problems</h2>
+<div id="problem-1-data." class="section level3">
+<h3>Problem 1 – Data.</h3>
+<p>Import and clean the data. Format the data to use appropriate variable names; fill in missing values with data where appropriate (as indicated in the header information); create character and ordered factors for categorical variables.</p>
+<p>Briefly describe the data cleaning process and the resulting dataset, identifying key variables based on your understanding of the original scientific report. How many participants are included? What is the age and gender distribution (a human-readable table may help here)?</p>
+<p>Note (but don’t correct) issues in the available data – in particular, whether categorical variables in the dataset correctly implement the definitions based on underlying continuous variables. Use tables, figures, or specific examples (i.e. data for particular subjects) as needed to illustrate these issues.</p>
+</div>
+<div id="problem-2-visualization." class="section level3">
+<h3>Problem 2 – Visualization.</h3>
+<p>In the original scientific report, Figures 3 and 4 show data or derived quantities. Both are flawed. Figure 3 shows only the mean and standard deviation for FHP, but does not show the distribution of the underlying data. Figure 4 shows the number of participants in each age and sex group who have an enlarged EOP (based on categorical EOP Size – groups 0 and 1 vs groups 2, 3, 4, and 5). However, the number of participants in each age and sex group was controlled by the researchers, so the <em>number</em> with enlarged EOP in each group is not as informative as the <em>rate</em> of enlarged EOP in each group. Create a two-panel figure that contains improved versions of both of these.</p>
+<p>Although the authors are interested in how FHP size, age, and sex affect EOP size, no figure contains each of these. Create a 2 x 5 collection of panels, which show the association between FHP size and EOP size in each age and sex group.</p>
+<p>Comment on your plots with respect to the scientific question of interest.</p>
+</div>
+<div id="problem-3-reproducing-reported-results." class="section level3">
+<h3>Problem 3 – Reproducing reported results.</h3>
+<p>Are the authors’ stated sample sizes in each age group consistent with the data you have available?</p>
+<p>Are the reported mean and standard deviations for FHP size consistent with the data you have available?</p>
+<p>The authors find “the prevalence of EEOP to be 33% of the study population”. What is the definition of EEOP, and what variables can you use to evaluate this claim? Is the finding consistent with the data available to you?</p>
+<p>FHP is noted to be more common in older subjects, with “FHP &gt;40 mm observed frequently (34.5%) in the over 60s cases”. Are the broad trends and specific values consistent with your data?</p>
+</div>
+<div id="problem-4-discussion." class="section level3">
+<h3>Problem 4 – Discussion.</h3>
+<p>Summarize your results, the quality of the data analysis / presentation of results in the original report, and comment on the conclusions of the reports’ authors. Do you think the data provide evidence that cell phones are causing horn growth? What other data would you like to have to address this hypothesis?</p>
+</div>
+</div>
+<div id="some-past-examples" class="section level2">
+<h2>Some past examples</h2>
+<p>Last year’s assignment was more open-ended, and approaches varied widely. However, some things we look for are clearly-written code, conducting necessary exploratory analyses, and documenting results in a concise report. These submissions from last year were strong in each of those areas.</p>
+<ul>
+<li><a href="https://github.com/Raarbiarsan1899/p8105_mtp_zf2213">Project 1</a></li>
+<li><a href="https://github.com/sal2222/p8105_mtp_sal2222">Project 2</a></li>
+<li><a href="https://github.com/tiffanyxi/p8105_mtp_hx2263">Project 3</a></li>
+</ul>
 </div>
 
 <br><br>
@@ -543,6 +542,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
