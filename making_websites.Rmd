@@ -71,7 +71,8 @@ navbar:
     - icon: fa-github fa-lg
       href: http://github.com/<YOUR_GH_NAME>/
 output:
-  html_document
+  html_document:
+    theme: cerulean
 ```
 
 This contains some usual kinds of formatting stuff, like `output` options, but also the `navbar`. After saving this (and removing YAML from each page), re-knit `index.Rmd` and `about.Rmd` -- there's a navigation bar across the top that has nothing to do with `index.Rmd`. 

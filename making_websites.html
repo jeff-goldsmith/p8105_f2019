@@ -498,7 +498,8 @@ navbar:
     - icon: fa-github fa-lg
       href: http://github.com/&lt;YOUR_GH_NAME&gt;/
 output:
-  html_document</code></pre>
+  html_document:
+    theme: cerulean</code></pre>
 <p>This contains some usual kinds of formatting stuff, like <code>output</code> options, but also the <code>navbar</code>. After saving this (and removing YAML from each page), re-knit <code>index.Rmd</code> and <code>about.Rmd</code> – there’s a navigation bar across the top that has nothing to do with <code>index.Rmd</code>.</p>
 <p>There are several ways you can arrange the nav bar (right vs. left; single pages vs. drop-down menus) but the idea is to give a way to navigate through your <em>site</em>, not just your <em>page</em>. The two icons are there to encourage good practices – an easy way for someone to email you, and a link to the source for the site on GitHub (icons come from <a href="http://fontawesome.io/icons/">font awesome</a>). I’ve also included an “About” page, which is pretty common for pages describing projects.</p>
 </div>
