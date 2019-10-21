@@ -11,16 +11,26 @@ Plotly is a flexible framework for producing interactive graphics; it has a vari
 This is the second module in the [Interactivity](topic_interactivity.html) topic; the relevant slack channel is [here](https://p8105fall2019.slack.com/messages/CN6DF7F1B).
 
 ```{r, include = FALSE}
+library(tidyverse)
+library(viridis)
+
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  fig.width = 6,
-  fig.asp = .6,
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
   out.width = "90%"
 )
 
-library(tidyverse)
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
 
-theme_set(theme_bw() + theme(legend.position = "bottom"))
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
 
@@ -51,13 +61,13 @@ data(nyc_airbnb)
 nyc_airbnb = 
   nyc_airbnb %>% 
   mutate(rating = review_scores_location / 2) %>%
-  rename(latitude = lat, longitude = long) %>%
-  select(boro = neighbourhood_group, neighbourhood, rating, price, room_type,
-         latitude, longitude) %>%
-  filter(!is.na(rating), 
-         boro == "Manhattan",
-         room_type == "Entire home/apt",
-         price %in% 100:500)  %>% 
+  select(
+    neighbourhood_group, neighbourhood, rating, price, room_type, lat, long) %>%
+  filter(
+    !is.na(rating), 
+    neighbourhood_group == "Manhattan",
+    room_type == "Entire home/apt",
+    price %in% 100:500)  %>% 
   sample_n(5000)
 ```
 
@@ -75,10 +85,9 @@ The type of plot is `scatter`, which has several "modes": `markers` produces the
 ```{r}
 nyc_airbnb %>%
   mutate(text_label = str_c("Price: $", price, '\nRating: ', rating)) %>% 
-  plot_ly(x = ~longitude, y = ~latitude, type = "scatter", mode = "markers",
-          alpha = 0.5, 
-          color = ~price,
-          text = ~text_label)
+  plot_ly(
+    x = ~lat, y = ~long, type = "scatter", mode = "markers",
+    color = ~price, text = ~text_label, alpha = 0.5)
 ```
 
 This can be a useful way to show the data -- it gives additional information on hovering and allows you to zoom in or out, for example. 
@@ -96,8 +105,7 @@ common_neighborhoods =
   top_n(8) %>% 
   select(neighbourhood)
 
-inner_join(nyc_airbnb, common_neighborhoods,
-             by = "neighbourhood") %>% 
+inner_join(nyc_airbnb, common_neighborhoods, by = "neighbourhood") %>% 
   mutate(neighbourhood = fct_reorder(neighbourhood, price)) %>% 
   plot_ly(y = ~price, color = ~neighbourhood, type = "box",
           colors = "Set2")
@@ -127,7 +135,7 @@ For example, the code below recreates our scatterplot using `ggplot` followed by
 ```{r}
 scatter_ggplot = 
   nyc_airbnb %>%
-  ggplot(aes(x = longitude, y = latitude, color = price)) +
+  ggplot(aes(x = lat, y = long, color = price)) +
   geom_point(alpha = 0.25) +
   scale_color_viridis() +
   coord_cartesian() +
@@ -177,10 +185,10 @@ Dashboard layouts are controlled by specifying columns and rows, and potentially
 
 You can share the HTML files for dashboards directly (e.g. by email); you can also host these online to make the dashboard visible to others. That process is essentially the same as for any other [website](making_websites.html) you'd make. 
 
-However, the website's `_site.yml` file conflicts with the dashboard's `YAML` header (and the website's `_site.yml` "wins). To avoid this, instead of knitting you can use
+However, the website's `_site.yml` file conflicts with the dashboard's `YAML` header regarding the output format -- and the website's `_site.yml` "wins". To address this issue, instead of knitting you can use this command to knit the dashboard.
 
 ```{r, eval = FALSE}
-rmarkdown::render("dashboard_template.Rmd", output_format = "flex_dashboard")
+rmarkdown::render("dashboard_template.Rmd", output_format = "flexdashboard::flex_dashboard")
 ```
 
 This will create `dashboard_template.html` but not open it in RStudio's Viewer pane; you can open the file in a browser instead. Alternatively, using RStudio's Build pane to Build Website will produce the same results. To illustrate, we'll put the dashboard we just created on a website for this topic. 
