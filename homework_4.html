@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -343,8 +305,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -496,6 +456,70 @@ div.tocify {
 <p>Please submit (via courseworks) the web address of the GitHub repo containing your work for this assignment; git commits after the due date will cause the assignment to be considered late.</p>
 <p>R Markdown documents included as part of your solutions must not install packages, and should only load the packages necessary for your submission to knit.</p>
 </div>
+<div id="points" class="section level3">
+<h3>Points</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Problem</th>
+<th align="left">Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Problem 0</td>
+<td align="left">20</td>
+</tr>
+<tr class="even">
+<td align="left">Problem 1</td>
+<td align="left">40</td>
+</tr>
+<tr class="odd">
+<td align="left">Problem 2</td>
+<td align="left">40</td>
+</tr>
+<tr class="even">
+<td align="left">Optional survey</td>
+<td align="left">No points</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="problem-0" class="section level3">
+<h3>Problem 0</h3>
+<p>This “problem” focuses on structure of your submission, especially the use git and GitHub for reproducibility, R Projects to organize your work, R Markdown to write reproducible reports, relative paths to load data from local files (if necessary), and reasonable naming structures for your files.</p>
+<p>To that end:</p>
+<ul>
+<li>create a public GitHub repo + local R Project for this assignment</li>
+<li>submit a link to your repo via Courseworks</li>
+</ul>
+<p>Your solutions to Problems 1 and 2 should be implemented in your .Rmd file(s), and your git commit history should reflect the process you used to solve these Problems.</p>
+<p>For Problem 0, we will assess adherence to the instructions above regarding repo structure, git commit history, and whether we are able to knit your .Rmd to ensure that your work is reproducible. Adherence to appropriate styling and clarity of code will be assessed in Problems 1+ using the homework <a href="homework_style_rubric.html">style rubric</a>.</p>
+<p>This homework includes figures; the readability of your embedded plots (e.g. font sizes, axis labels, titles) will be assessed in Problems 1+.</p>
+</div>
+<div id="problem-1" class="section level3">
+<h3>Problem 1</h3>
+<p>Create a personal website at <code>&lt;YOUR_GH_NAME&gt;.github.io</code> (or some other reasonably-named location). This page can be as extensive as you’d like, but it should include at least:</p>
+<ul>
+<li>A brief introductory landing page</li>
+<li>A page giving your academic and professional experience (i.e. a resume)</li>
+<li>Links in the site navigation for your GitHub account, your email, and any other professional networks.</li>
+</ul>
+</div>
+<div id="problem-2" class="section level3">
+<h3>Problem 2</h3>
+<p>Create a flexdashboard using <code>plotly</code> for that includes at least three distinct plot types (e.g. scatterplots, line plots, bar plots, box plots, etc.). Use one of the following datasets, and load from the <code>p8105.datasets</code> package:</p>
+<ul>
+<li><a href="dataset_instacart.html">Instacart</a></li>
+<li><a href="dataset_noaa.html">NY NOAA</a></li>
+<li><a href="dataset_restaurant_inspections.html">NYC Restaurant Inspections</a></li>
+</ul>
+<p>These datasets are large; you may want / need to filter or randomly sample from the complete dataset to ensure a reasonable product.</p>
+</div>
+<div id="optional-post-assignment-survey" class="section level3">
+<h3>Optional post-assignment survey</h3>
+<p>If you’d like, a you can complete <a href="">this short survey</a> after you’ve finished the assignment.</p>
+</div>
 
 <br><br>
 <footer>
@@ -521,6 +545,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
