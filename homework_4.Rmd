@@ -65,4 +65,4 @@ These datasets are large; you may want / need to filter or randomly sample from 
 
 ### Optional post-assignment survey
 
-If you'd like, a you can complete [this short survey]() after you've finished the assignment.
+If you'd like, a you can complete [this short survey](https://forms.gle/ud4gQNCKKHff4CAXA) after you've finished the assignment.
