@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -253,48 +254,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -513,9 +475,9 @@ set.seed(1)</code></pre>
 <div id="my-first-function" class="section level3">
 <h3>My first function</h3>
 <p>The best way to build up a function is to start with code you’ve written outside a function. To see how this might work, I’ll start with a simple example: the chunk below takes a sample from a normal distribution and then computes the vector of Z scores for the sample.</p>
-<pre class="r"><code>x = rnorm(25, mean = 5, sd = 3)
+<pre class="r"><code>x_vec = rnorm(25, mean = 5, sd = 3)
 
-(x - mean(x)) / sd(x)
+(x_vec - mean(x_vec)) / sd(x_vec)
 ##  [1] -0.83687228  0.01576465 -1.05703126  1.50152998  0.16928872
 ##  [6] -1.04107494  0.33550276  0.59957343  0.42849461 -0.49894708
 ## [11]  1.41364561  0.23279252 -0.83138529 -2.50852027  1.00648110
@@ -529,7 +491,7 @@ set.seed(1)</code></pre>
   
 }
 
-z_scores(x)
+z_scores(x_vec)
 ##  [1] -0.83687228  0.01576465 -1.05703126  1.50152998  0.16928872
 ##  [6] -1.04107494  0.33550276  0.59957343  0.42849461 -0.49894708
 ## [11]  1.41364561  0.23279252 -0.83138529 -2.50852027  1.00648110
@@ -702,18 +664,18 @@ dynamite_reviews = bind_rows(
 
 dynamite_reviews
 ## # A tibble: 50 x 3
-##    title                                   stars text                      
-##    &lt;chr&gt;                                   &lt;dbl&gt; &lt;chr&gt;                     
-##  1 &quot;This movie is so stupid.\n           …     5 Format: Prime VideoVerifi…
-##  2 &quot;Hilarious\n            &quot;                   5 Format: Prime VideoVerifi…
-##  3 &quot;Waste of money\n            &quot;              1 Format: Prime VideoVerifi…
-##  4 &quot;Good movie\n            &quot;                  5 Format: Prime VideoVerifi…
-##  5 &quot;A classic\n            &quot;                   5 Format: Prime VideoVerifi…
-##  6 &quot;FRIKKEN SWEET MOVIE, GAWSH.\n        …     5 Format: Prime VideoVerifi…
-##  7 &quot;You gonna eat the rest of your tots?\…     5 Format: Prime VideoVerifi…
-##  8 &quot;Tina you fat lard come get some dinne…     5 Format: Prime VideoVerifi…
-##  9 &quot;Great family movie\n            &quot;          5 Format: Blu-rayVerified P…
-## 10 &quot;Teens love it\n            &quot;               5 Format: Prime VideoVerifi…
+##    title                               stars text                          
+##    &lt;chr&gt;                               &lt;dbl&gt; &lt;chr&gt;                         
+##  1 &quot;Great movie\n            &quot;             5 Format: Blu-rayVerified Purch…
+##  2 &quot;Duh\n            &quot;                     5 Format: Prime VideoVerified P…
+##  3 &quot;Great video\n            &quot;             5 Format: DVDVerified Purchase  
+##  4 &quot;Give me some of your tots\n      …     5 Format: Prime VideoVerified P…
+##  5 &quot;Nostalgic\n            &quot;               5 Format: Prime VideoVerified P…
+##  6 &quot;Make you giggle type movie\n     …     5 Format: Blu-rayVerified Purch…
+##  7 &quot;This movie is so stupid.\n       …     5 Format: Prime VideoVerified P…
+##  8 &quot;Hilarious\n            &quot;               5 Format: Prime VideoVerified P…
+##  9 &quot;Waste of money\n            &quot;          1 Format: Prime VideoVerified P…
+## 10 &quot;Good movie\n            &quot;              5 Format: Prime VideoVerified P…
 ## # … with 40 more rows</code></pre>
 </div>
 <div id="loading-lotr-data" class="section level4">
@@ -827,6 +789,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

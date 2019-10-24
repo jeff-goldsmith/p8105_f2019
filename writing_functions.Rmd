@@ -46,9 +46,9 @@ set.seed(1)
 The best way to build up a function is to start with code you've written outside a function. To see how this might work, I'll start with a simple example: the chunk below takes a sample from a normal distribution and then computes the vector of Z scores for the sample. 
 
 ```{r}
-x = rnorm(25, mean = 5, sd = 3)
+x_vec = rnorm(25, mean = 5, sd = 3)
 
-(x - mean(x)) / sd(x)
+(x_vec - mean(x_vec)) / sd(x_vec)
 ```
 
 If I want to repeat this (admittedly simple) process for lots of samples, I might want to have a function that takes the sample as an *argument*, computes the vector of Z scores in the *body*, and *returns* the result. I define such a function below. 
@@ -61,7 +61,7 @@ z_scores = function(x) {
   
 }
 
-z_scores(x)
+z_scores(x_vec)
 ```
 
 I can try this with a few samples and confirm that it works. I should also try to think of ways this code might break; the attempts below try a variety of inputs to see what happens. 
