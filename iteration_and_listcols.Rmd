@@ -83,7 +83,7 @@ Lists seem bizarre but are really useful. Right now, we'll use them to hold gene
 For this example, I'm going to start with the pretty simple data frame defined below, and confirm that "under the hood" this is a list.
 
 ```{r}
-df = data_frame(
+df = tibble(
   a = rnorm(20, 3, 1),
   b = rnorm(20, 0, 5),
   c = rnorm(20, 10, .2),
@@ -189,7 +189,7 @@ Similarly, since we know `mean_and_sd` produces a data frame, we can use the out
 output = map_dfr(df, mean_and_sd, .id = "input")
 ```
 
-The `map_df` variant is helpful when your map statement is part of a longer chain of piped commands. 
+The `map_df` variants can be helpful when your map statement is part of a longer chain of piped commands. 
 
 Finally, `map2` (and `map2_dbl`, etc) is helpful when your function has two arguments. In these cases, I find it very helpful to be specific about arguments using something like the following:
 
@@ -269,13 +269,12 @@ As with previous examples, using a for loop is pretty okay but the `map_df` call
 Shifting gears a bit, let's revisit the weather data from [visualization](visualization.html) and elsewhere; these data consist of one year of observations from three monitoring stations. The code below pulls these data into R (using the `rnoaa` package, which interacts with the NOAA API).
 
 ```{r weather_data_create, cache = TRUE}
-library(rnoaa)
-
 weather = 
-  meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
-                      var = c("PRCP", "TMIN", "TMAX"), 
-                      date_min = "2016-01-01",
-                      date_max = "2016-12-31") %>%
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2016-01-01",
+    date_max = "2016-12-31") %>%
   mutate(
     name = recode(id, USW00094728 = "CentralPark_NY", 
                       USC00519397 = "Waikiki_HA",
@@ -289,7 +288,7 @@ The station name and id are constant across the year's temperature and precipita
 
 ```{r}
 weather_nest = 
-  nest(weather, date:tmin)
+  nest(weather, data = date:tmin)
 
 weather_nest
 ```
@@ -312,7 +311,7 @@ weather_nest$data[[1]]
 Of course, if you can `nest` data you should be able to `unnest` it as well, and you can (with the caveat that you're unnesting a list column that contains a data frame).
 
 ```{r}
-unnest(weather_nest)
+unnest(weather_nest, cols = data)
 ```
 
 Nesting columns can help with data organization and comprehension by masking complexity you're less concerned about right now and clarifying the things you are concerned about. In the weather data, it can be helpful to think of stations as the basic unit of observation, and daily weather recordings as a more granular level of observation. Nesting can also simplify the use of analytic approaches across levels of a higher variable. 
@@ -343,7 +342,7 @@ Great! Keeping in mind that `weather$data` is a **_list_**, we can apply our `we
 map(weather_nest$data, weather_lm)
 ```
 
-I'll also note that you can avoid the creation of a dedicated function using `map`'s syntax for "anonymous" (i.e. not named and saved) functions.
+You can avoid the creation of a dedicated function using `map`'s syntax for "anonymous" (i.e. not named and saved) functions. This is fine for really short operations, but I typically write a dedicated function instead of using this option.
 
 ```{r}
 map(weather_nest$data, ~lm(tmax ~ tmin, data = .x))
@@ -392,9 +391,12 @@ lotr_tidy =
   mutate(
     word_data = map(cells, ~readxl::read_excel("./data/LotR_Words.xlsx", range = .x))
   ) %>% 
-  unnest() %>% 
+  unnest(cols = word_data) %>% 
   janitor::clean_names() %>% 
-  gather(key = sex, value = words, female:male) %>%
+  pivot_longer(
+    female:male,
+    names_to = "sex",
+    values_to = "words") %>%
   mutate(race = str_to_lower(race)) %>% 
   select(movie, everything(), -cells) 
 ```
