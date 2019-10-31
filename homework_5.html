@@ -532,19 +532,19 @@ iris_with_missing = iris %&gt;%
 </div>
 <div id="problem-3" class="section level3">
 <h3>Problem 3</h3>
-<p>When designing an experiment or analysis, a common question is whether it is likely that a true effect will be detected – put differently, whether a false null hypothesis will be rejected. The probability that a false null hypothesis is rejected is referred to as power, and it depends on several factors, including: the sample size; the effect size; and the error variance. In this problem, you will conduct a simulation to explore power in a multiple linear regression.</p>
+<p>When designing an experiment or analysis, a common question is whether it is likely that a true effect will be detected – put differently, whether a false null hypothesis will be rejected. The probability that a false null hypothesis is rejected is referred to as power, and it depends on several factors, including: the sample size; the effect size; and the error variance. In this problem, you will conduct a simulation to explore power in a simple linear regression.</p>
 <p>First set the following design elements:</p>
 <ul>
 <li>Fix <span class="math inline">\(n=30\)</span></li>
-<li>Fix <span class="math inline">\(x_{i1}\)</span> and <span class="math inline">\(x_{i2}\)</span> as draws from independent standard normal distributions</li>
-<li>Fix <span class="math inline">\(\beta_0=1\)</span> and <span class="math inline">\(\beta_1 = 1\)</span>.</li>
+<li>Fix <span class="math inline">\(x_{i1}\)</span> as draws from a standard Normal distribution</li>
+<li>Fix <span class="math inline">\(\beta_0 = 2\)</span></li>
 <li>Fix <span class="math inline">\(\sigma^2 = 50\)</span></li>
 </ul>
-<p>Next, set <span class="math inline">\(\beta_2=0\)</span>. Generate 10000 datasets from the model <span class="math display">\[ y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \epsilon_{i} \]</span> with <span class="math inline">\(\epsilon_{i} ∼ N[0,\sigma^2]\)</span>. For each dataset, save <span class="math inline">\(\hat{\beta}_2\)</span> and the p-value arising from a test of <span class="math inline">\(H : \beta_2 = 0\)</span> using <span class="math inline">\(\alpha = 0.05\)</span>.</p>
-<p>Repeat the above for <span class="math inline">\(\beta_2 = \{1, 2, 3, 4, 5, 6\}\)</span>, and complete the following:</p>
+<p>Set <span class="math inline">\(\beta_1=0\)</span>. Generate 10000 datasets from the model <span class="math display">\[ y_i = \beta_0 + \beta_1 x_{i1} + \epsilon_{i} \]</span> with <span class="math inline">\(\epsilon_{i} ∼ N[0,\sigma^2]\)</span>. For each dataset, save <span class="math inline">\(\hat{\beta}_1\)</span> and the p-value arising from a test of <span class="math inline">\(H : \beta_1 = 0\)</span> using <span class="math inline">\(\alpha = 0.05\)</span>.</p>
+<p>Repeat the above for <span class="math inline">\(\beta_1 = \{1, 2, 3, 4, 5, 6\}\)</span>, and complete the following:</p>
 <ul>
 <li>Make a plot showing the proportion of times the null was rejected (the power of the test) on the y axis and the true value of <span class="math inline">\(\beta_2\)</span> on the x axis. Describe the association between effect size and power.</li>
-<li>Make a plot showing the average estimate of <span class="math inline">\(\hat{\beta}_2\)</span> on the y axis and the true value of <span class="math inline">\(\beta_2\)</span> on the x axis. Make a second plot (or overlay on the first) the average estimate of <span class="math inline">\(\hat{\beta}_2\)</span> in tests for which the null is rejected on the y axis and the true value of <span class="math inline">\(\beta_2\)</span> on the x axis. Is the sample average of <span class="math inline">\(\hat{\beta}_2\)</span> across tests for which the null is rejected approximately equal to the true value of <span class="math inline">\(\beta_2\)</span>? Why or why not?</li>
+<li>Make a plot showing the average estimate of <span class="math inline">\(\hat{\beta}_1\)</span> on the y axis and the true value of <span class="math inline">\(\beta_1\)</span> on the x axis. Make a second plot (or overlay on the first) the average estimate of <span class="math inline">\(\hat{\beta}_1\)</span> <strong>only in samples for which the null was rejected</strong> on the y axis and the true value of <span class="math inline">\(\beta_1\)</span> on the x axis. Is the sample average of <span class="math inline">\(\hat{\beta}_1\)</span> across tests for which the null is rejected approximately equal to the true value of <span class="math inline">\(\beta_1\)</span>? Why or why not?</li>
 </ul>
 </div>
 <div id="extra-topics-survey" class="section level3">
