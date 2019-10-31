@@ -103,7 +103,10 @@ sim_results %>%
   geom_point()
 
 sim_results %>% 
-  gather(key = parameter, value = estimate, beta0_hat:beta1_hat) %>% 
+  pivot_longer(
+    beta0_hat:beta1_hat,
+    names_to = "parameter", 
+    values_to = "estimate") %>% 
   group_by(parameter) %>% 
   summarize(emp_mean = mean(estimate),
             emp_var = var(estimate)) %>% 
@@ -134,33 +137,17 @@ for (i in 1:4) {
 
 After this loop, `output` is a list of 4 data frames; each data frame contains the results of 100 simulations at different sample sizes. 
 
-Before we spend time looking at the results of the simulation, let's recast this using list columns and `map`. I want to use a single function in my call to `map_df`, so I'm going to write a wrapper for the call to `rerun` that allows me to change the parameters of the simulation (i.e. the argument to `sim_regression`) and the number of simulation replicates (i.e. the first argument to `rerun`). Once I have this, I'll call `map_df` to perform the complete simulation.
-
-```{r}
-simulate_n_regressions = function(n_runs = 100, n, beta0 = 2, beta1 = 3) {
-  
-  rerun(n_runs, sim_regression(n, beta0, beta1)) %>% 
-    bind_rows()
-  
-}
-
-sim_results = 
-  tibble(sample_size = c(30, 60, 120, 240)) %>% 
-  mutate(estimate_dfs = map(.x = sample_size, ~simulate_n_regressions(n = .x))) %>% 
-  unnest
-```
-
-Using a different call, I could increase the number of simulation runs or vary the parameters in the regression model:
+Before we spend time looking at the results of the simulation, let's recast this using list columns and `map`. I'll set up a tibble with the sample sizes I want to investigate, and then use `rerun` to perform the complete simulation for each sample size. Remember that `rerun` produces a list, so I'm going to use `bind_rows` to produce a tibble of simulation results for each sample size. Finally, I'll `unnest` the tibbles to produce a standard data frame with no list columns.
 
 ```{r}
 sim_results = 
   tibble(sample_size = c(30, 60, 120, 240)) %>% 
   mutate(
-    estimate_dfs = map(.x = sample_size, ~simulate_n_regressions(n_runs = 1000, n = .x))
-  ) %>% 
-  unnest
+    output_lists = map(.x = sample_size, ~rerun(1000, sim_regression(n = .x))),
+    estimate_dfs = map(output_lists, bind_rows)) %>% 
+  select(-output_lists) %>% 
+  unnest(estimate_dfs)
 ```
-
 
 Let's take a look at what we've accomplished in our simulations! First I'll take a look at the distribution of slope estimates across sample sizes. 
 
@@ -193,7 +180,10 @@ Lastly I'll look at the empirical mean and variance of these estimates.
 
 ```{r}
 sim_results %>% 
-  gather(key = parameter, value = estimate, beta0_hat:beta1_hat) %>% 
+  pivot_longer(
+    beta0_hat:beta1_hat,
+    names_to = "parameter", 
+    values_to = "estimate") %>% 
   group_by(parameter, sample_size) %>% 
   summarize(emp_mean = mean(estimate),
             emp_var = var(estimate)) %>% 

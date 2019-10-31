@@ -505,7 +505,10 @@ sim_results = bind_rows(output)</code></pre>
 <p><img src="simulation_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
 <pre class="r"><code>
 sim_results %&gt;% 
-  gather(key = parameter, value = estimate, beta0_hat:beta1_hat) %&gt;% 
+  pivot_longer(
+    beta0_hat:beta1_hat,
+    names_to = &quot;parameter&quot;, 
+    values_to = &quot;estimate&quot;) %&gt;% 
   group_by(parameter) %&gt;% 
   summarize(emp_mean = mean(estimate),
             emp_var = var(estimate)) %&gt;% 
@@ -548,29 +551,14 @@ for (i in 1:4) {
     bind_rows
 }</code></pre>
 <p>After this loop, <code>output</code> is a list of 4 data frames; each data frame contains the results of 100 simulations at different sample sizes.</p>
-<p>Before we spend time looking at the results of the simulation, let’s recast this using list columns and <code>map</code>. I want to use a single function in my call to <code>map_df</code>, so I’m going to write a wrapper for the call to <code>rerun</code> that allows me to change the parameters of the simulation (i.e. the argument to <code>sim_regression</code>) and the number of simulation replicates (i.e. the first argument to <code>rerun</code>). Once I have this, I’ll call <code>map_df</code> to perform the complete simulation.</p>
-<pre class="r"><code>simulate_n_regressions = function(n_runs = 100, n, beta0 = 2, beta1 = 3) {
-  
-  rerun(n_runs, sim_regression(n, beta0, beta1)) %&gt;% 
-    bind_rows()
-  
-}
-
-sim_results = 
-  tibble(sample_size = c(30, 60, 120, 240)) %&gt;% 
-  mutate(estimate_dfs = map(.x = sample_size, ~simulate_n_regressions(n = .x))) %&gt;% 
-  unnest
-## Warning: `cols` is now required.
-## Please use `cols = c(estimate_dfs)`</code></pre>
-<p>Using a different call, I could increase the number of simulation runs or vary the parameters in the regression model:</p>
+<p>Before we spend time looking at the results of the simulation, let’s recast this using list columns and <code>map</code>. I’ll set up a tibble with the sample sizes I want to investigate, and then use <code>rerun</code> to perform the complete simulation for each sample size. Remember that <code>rerun</code> produces a list, so I’m going to use <code>bind_rows</code> to produce a tibble of simulation results for each sample size. Finally, I’ll <code>unnest</code> the tibbles to produce a standard data frame with no list columns.</p>
 <pre class="r"><code>sim_results = 
   tibble(sample_size = c(30, 60, 120, 240)) %&gt;% 
   mutate(
-    estimate_dfs = map(.x = sample_size, ~simulate_n_regressions(n_runs = 1000, n = .x))
-  ) %&gt;% 
-  unnest
-## Warning: `cols` is now required.
-## Please use `cols = c(estimate_dfs)`</code></pre>
+    output_lists = map(.x = sample_size, ~rerun(1000, sim_regression(n = .x))),
+    estimate_dfs = map(output_lists, bind_rows)) %&gt;% 
+  select(-output_lists) %&gt;% 
+  unnest(estimate_dfs)</code></pre>
 <p>Let’s take a look at what we’ve accomplished in our simulations! First I’ll take a look at the distribution of slope estimates across sample sizes.</p>
 <pre class="r"><code>sim_results %&gt;% 
   mutate(
@@ -578,7 +566,7 @@ sim_results =
     sample_size = fct_inorder(sample_size)) %&gt;% 
   ggplot(aes(x = sample_size, y = beta1_hat, fill = sample_size)) + 
   geom_violin()</code></pre>
-<p><img src="simulation_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
+<p><img src="simulation_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
 <p>These estimates are centered around the truth (3) for each sample size, and the width of the distribution shrinks as sample size grows.</p>
 <p>Next, I’ll look at the bivariate distribution of intercept and slope estimates across sample sizes.</p>
 <pre class="r"><code>sim_results %&gt;% 
@@ -588,11 +576,14 @@ sim_results =
   ggplot(aes(x = beta0_hat, y = beta1_hat)) + 
   geom_point(alpha = .2) + 
   facet_grid(~sample_size)</code></pre>
-<p><img src="simulation_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
+<p><img src="simulation_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
 <p>The variability in the slope estimates was shown in the violin plot, but now we have a sense for the bivariate distribution of intercepts and slopes. Estimates of the intercept and slope are correlated with each other; this is expected from theoretical results describing the joint distribution of estimated regression coefficients.</p>
 <p>Lastly I’ll look at the empirical mean and variance of these estimates.</p>
 <pre class="r"><code>sim_results %&gt;% 
-  gather(key = parameter, value = estimate, beta0_hat:beta1_hat) %&gt;% 
+  pivot_longer(
+    beta0_hat:beta1_hat,
+    names_to = &quot;parameter&quot;, 
+    values_to = &quot;estimate&quot;) %&gt;% 
   group_by(parameter, sample_size) %&gt;% 
   summarize(emp_mean = mean(estimate),
             emp_var = var(estimate)) %&gt;% 
@@ -610,49 +601,49 @@ sim_results =
 <tr class="odd">
 <td align="left">beta0_hat</td>
 <td align="right">30</td>
-<td align="right">1.998</td>
+<td align="right">2.000</td>
 <td align="right">0.073</td>
 </tr>
 <tr class="even">
 <td align="left">beta0_hat</td>
 <td align="right">60</td>
-<td align="right">2.000</td>
+<td align="right">2.011</td>
 <td align="right">0.037</td>
 </tr>
 <tr class="odd">
 <td align="left">beta0_hat</td>
 <td align="right">120</td>
-<td align="right">2.003</td>
+<td align="right">2.007</td>
 <td align="right">0.017</td>
 </tr>
 <tr class="even">
 <td align="left">beta0_hat</td>
 <td align="right">240</td>
-<td align="right">1.996</td>
+<td align="right">2.000</td>
 <td align="right">0.008</td>
 </tr>
 <tr class="odd">
 <td align="left">beta1_hat</td>
 <td align="right">30</td>
-<td align="right">3.003</td>
-<td align="right">0.036</td>
+<td align="right">2.997</td>
+<td align="right">0.039</td>
 </tr>
 <tr class="even">
 <td align="left">beta1_hat</td>
 <td align="right">60</td>
-<td align="right">3.000</td>
+<td align="right">2.993</td>
 <td align="right">0.019</td>
 </tr>
 <tr class="odd">
 <td align="left">beta1_hat</td>
 <td align="right">120</td>
-<td align="right">2.997</td>
+<td align="right">2.993</td>
 <td align="right">0.008</td>
 </tr>
 <tr class="even">
 <td align="left">beta1_hat</td>
 <td align="right">240</td>
-<td align="right">3.003</td>
+<td align="right">3.002</td>
 <td align="right">0.004</td>
 </tr>
 </tbody>
