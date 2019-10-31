@@ -12,7 +12,7 @@ This assignment reinforces ideas in [Iteration](topic_iteration.html).
 
 ### Due date and submission
 
-Due: November 8 at 4:00pm. 
+Due: November 11 at 4:00pm. 
 
 Please submit (via courseworks) the web address of the GitHub repo containing your work for this assignment; git commits after the due date will cause the assignment to be considered late.
 
