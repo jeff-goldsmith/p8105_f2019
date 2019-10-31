@@ -94,7 +94,7 @@ First set the following design elements:
 
 Set $\beta_1=0$. Generate 10000 datasets from the model 
 $$ y_i = \beta_0 + \beta_1 x_{i1} + \epsilon_{i} $$
-with $\epsilon_{i} ∼ N[0,\sigma^2]$. For each dataset, save $\hat{\beta}_1$ and the p-value arising from a test of $H : \beta_1 = 0$ using $\alpha = 0.05$.
+with $\epsilon_{i} ∼ N[0,\sigma^2]$. For each dataset, save $\hat{\beta}_1$ and the p-value arising from a test of $H : \beta_1 = 0$ using $\alpha = 0.05$. _Hint: to obtain the estimate and p-value, use `broom::tidy` to clean the output of `lm`._ 
 
 Repeat the above for $\beta_1 = \{1, 2, 3, 4, 5, 6\}$, and complete the following:
 
