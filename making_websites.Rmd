@@ -34,6 +34,7 @@ All websites have an `index.html` file -- it's the most common name for the defa
 
 <img src="images/making_websites_First_Website.png" style="width:75%">
 
+**NOTE:** Web page names are case sensitive, and `index.html` has to start with a lower-case "i". 
 
 ### Common content
 
