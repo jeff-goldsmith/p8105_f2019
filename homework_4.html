@@ -32,6 +32,16 @@
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151578452-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-151578452-1');
+</script>
+
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -93,7 +103,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -491,7 +500,7 @@ div.tocify {
 <p>To that end:</p>
 <ul>
 <li>create a public GitHub repo + local R Project for this assignment</li>
-<li>submit a link to your repo via Courseworks</li>
+<li>submit a link to <strong>your website</strong> (note your <em>repo</em>) via Courseworks</li>
 </ul>
 <p>Your solutions to Problems 1 and 2 should be implemented in your .Rmd file(s), and your git commit history should reflect the process you used to solve these Problems.</p>
 <p>For Problem 0, we will assess adherence to the instructions above regarding repo structure, git commit history, and whether we are able to knit your .Rmd to ensure that your work is reproducible. Adherence to appropriate styling and clarity of code will be assessed in Problems 1+ using the homework <a href="homework_style_rubric.html">style rubric</a>.</p>

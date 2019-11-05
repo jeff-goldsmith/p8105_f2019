@@ -32,6 +32,16 @@
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151578452-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-151578452-1');
+</script>
+
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -93,7 +103,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -463,20 +472,7 @@ div.tocify {
 <pre class="r"><code>devtools::install_github(&quot;thomasp85/patchwork&quot;)</code></pre>
 <p>Next I’ll load the relevant packages for this page.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ─────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
-## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
-## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
-## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
-## ✔ readr   1.3.1     ✔ forcats 0.4.0
-## ── Conflicts ────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
 library(ggridges)
-## 
-## Attaching package: &#39;ggridges&#39;
-## The following object is masked from &#39;package:ggplot2&#39;:
-## 
-##     scale_discrete_manual
 library(patchwork)</code></pre>
 <p>We’ll still work with NOAA weather data, which is loaded using the same code as in <a href="visualization_pt1.html">Visualization Pt 1</a>.</p>
 <pre class="r"><code>weather_df = 

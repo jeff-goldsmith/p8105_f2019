@@ -32,6 +32,16 @@
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151578452-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-151578452-1');
+</script>
+
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -93,7 +103,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -459,17 +468,8 @@ div.tocify {
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>I’ll write code for today’s content in a new R Markdown document called <code>strings_and_factors.Rmd</code>, and put it in the same directory / GitHub repo as <code>reading_data.Rmd</code>. Since we’ll revisit some scraped examples, I’ll load <code>rvest</code> now; we’ll also use some datasets in <code>p8105.datasets</code> so I’ll load that as well. And finally, we’ll use some of <a href="./resources/data_import_examples.zip">these examples</a>, so I’ll make sure I have them in a <code>data</code> subdirectory..</p>
-<pre class="r"><code>library(rvest)</code></pre>
-<pre><code>## Loading required package: xml2</code></pre>
-<pre><code>## 
-## Attaching package: &#39;rvest&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     pluck</code></pre>
-<pre><code>## The following object is masked from &#39;package:readr&#39;:
-## 
-##     guess_encoding</code></pre>
-<pre class="r"><code>library(p8105.datasets)</code></pre>
+<pre class="r"><code>library(rvest)
+library(p8105.datasets)</code></pre>
 <div id="strings-and-regex" class="section level3">
 <h3>Strings and regex</h3>
 <p>Lots of the examples below are drawn from materials by <a href="https://docs.google.com/presentation/d/1rLNJVyWuIEQqkqTWUlCY4G-l7H610wM1IRz3CL67Gec">Jeff Leek</a>.</p>
@@ -621,6 +621,19 @@ urls = str_c(url_base, 1:5)
 read_html(urls[1]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()</code></pre>
+<pre><code>##  [1] &quot;Good comedy\n            &quot;               
+##  [2] &quot;Awesome\n            &quot;                   
+##  [3] &quot;yes\n            &quot;                       
+##  [4] &quot;Gotta watch it!\n            &quot;           
+##  [5] &quot;Great movie\n            &quot;               
+##  [6] &quot;Duh\n            &quot;                       
+##  [7] &quot;Great video\n            &quot;               
+##  [8] &quot;Give me some of your tots\n            &quot; 
+##  [9] &quot;Nostalgic\n            &quot;                 
+## [10] &quot;Make you giggle type movie\n            &quot;</code></pre>
+<pre class="r"><code>read_html(urls[2]) %&gt;% 
+  html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
+  html_text()</code></pre>
 <pre><code>##  [1] &quot;This movie is so stupid.\n            &quot;               
 ##  [2] &quot;Hilarious\n            &quot;                              
 ##  [3] &quot;Waste of money\n            &quot;                         
@@ -631,19 +644,6 @@ read_html(urls[1]) %&gt;%
 ##  [8] &quot;Tina you fat lard come get some dinner!\n            &quot;
 ##  [9] &quot;Great family movie\n            &quot;                     
 ## [10] &quot;Teens love it\n            &quot;</code></pre>
-<pre class="r"><code>read_html(urls[2]) %&gt;% 
-  html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
-  html_text()</code></pre>
-<pre><code>##  [1] &quot;Great\n            &quot;                            
-##  [2] &quot;Great Movie, Bad Packaging\n            &quot;       
-##  [3] &quot;jeez napoleon\n            &quot;                    
-##  [4] &quot;\U0001f44d\n            &quot;                       
-##  [5] &quot;A classic!\n            &quot;                       
-##  [6] &quot;A must own\n            &quot;                       
-##  [7] &quot;If you like 80s ...you must watch\n            &quot;
-##  [8] &quot;\U0001f918\n            &quot;                       
-##  [9] &quot;Super Slow Mooovie...\n            &quot;            
-## [10] &quot;Awesome!\n            &quot;</code></pre>
 <p>It would get really tedious to try to scrape all (~1400) reviews by copying code over and over; before long we’ll learn about writing R functions to reuse code and make this much easier!</p>
 </div>
 <div id="thoughts-on-factors" class="section level3">

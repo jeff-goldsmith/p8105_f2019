@@ -32,6 +32,16 @@
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151578452-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-151578452-1');
+</script>
+
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -93,7 +103,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -703,83 +712,63 @@ weather_nest %&gt;% pull(data)
 ## &gt;[3]&gt;
 ## [[1]]
 ## # A tibble: 366 x 4
-##    date        prcp  tmax  tmin
-##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 2016-01-01     0   5.6   1.1
-##  2 2016-01-02     0   4.4   0  
-##  3 2016-01-03     0   7.2   1.7
-##  4 2016-01-04     0   2.2  -9.9
-##  5 2016-01-05     0  -1.6 -11.6
-##  6 2016-01-06     0   5    -3.8
-##  7 2016-01-07     0   7.8  -0.5
-##  8 2016-01-08     0   7.8  -0.5
-##  9 2016-01-09     0   8.3   4.4
-## 10 2016-01-10   457  15     4.4
-## # … with 356 more rows
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0   5.6   1.1
+## 2 2016-01-02     0   4.4   0  
+## 3 2016-01-03     0   7.2   1.7
+## 4 2016-01-04     0   2.2  -9.9
+## 5 2016-01-05     0  -1.6 -11.6
+## 6 2016-01-06     0   5    -3.8
+## # … with 360 more rows
 ## 
 ## [[2]]
 ## # A tibble: 366 x 4
-##    date        prcp  tmax  tmin
-##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 2016-01-01     0  29.4  16.7
-##  2 2016-01-02     0  28.3  16.7
-##  3 2016-01-03     0  28.3  16.7
-##  4 2016-01-04     0  28.3  16.1
-##  5 2016-01-05     0  27.2  16.7
-##  6 2016-01-06     0  27.2  20  
-##  7 2016-01-07    46  27.8  18.3
-##  8 2016-01-08     3  28.3  17.8
-##  9 2016-01-09     8  27.8  19.4
-## 10 2016-01-10     3  28.3  18.3
-## # … with 356 more rows
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0  29.4  16.7
+## 2 2016-01-02     0  28.3  16.7
+## 3 2016-01-03     0  28.3  16.7
+## 4 2016-01-04     0  28.3  16.1
+## 5 2016-01-05     0  27.2  16.7
+## 6 2016-01-06     0  27.2  20  
+## # … with 360 more rows
 ## 
 ## [[3]]
 ## # A tibble: 366 x 4
-##    date        prcp  tmax  tmin
-##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 2016-01-01     0   1.7  -5.9
-##  2 2016-01-02    25  -0.1  -6  
-##  3 2016-01-03     0  -5   -10  
-##  4 2016-01-04    25   0.3  -9.8
-##  5 2016-01-05    25   1.9  -1.8
-##  6 2016-01-06    25   1.4  -2.6
-##  7 2016-01-07     0   1.4  -3.9
-##  8 2016-01-08     0   1.1  -4  
-##  9 2016-01-09     0   1.4  -4.5
-## 10 2016-01-10     0   2.3  -3.8
-## # … with 356 more rows</code></pre>
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0   1.7  -5.9
+## 2 2016-01-02    25  -0.1  -6  
+## 3 2016-01-03     0  -5   -10  
+## 4 2016-01-04    25   0.3  -9.8
+## 5 2016-01-05    25   1.9  -1.8
+## 6 2016-01-06    25   1.4  -2.6
+## # … with 360 more rows</code></pre>
 <p>The list column really is a list, and will behave as such elsewhere in R. So, for example, you can examine the first list entry using usual list index procedures.</p>
 <pre class="r"><code>weather_nest$data[[1]]
 ## # A tibble: 366 x 4
-##    date        prcp  tmax  tmin
-##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 2016-01-01     0   5.6   1.1
-##  2 2016-01-02     0   4.4   0  
-##  3 2016-01-03     0   7.2   1.7
-##  4 2016-01-04     0   2.2  -9.9
-##  5 2016-01-05     0  -1.6 -11.6
-##  6 2016-01-06     0   5    -3.8
-##  7 2016-01-07     0   7.8  -0.5
-##  8 2016-01-08     0   7.8  -0.5
-##  9 2016-01-09     0   8.3   4.4
-## 10 2016-01-10   457  15     4.4
-## # … with 356 more rows</code></pre>
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0   5.6   1.1
+## 2 2016-01-02     0   4.4   0  
+## 3 2016-01-03     0   7.2   1.7
+## 4 2016-01-04     0   2.2  -9.9
+## 5 2016-01-05     0  -1.6 -11.6
+## 6 2016-01-06     0   5    -3.8
+## # … with 360 more rows</code></pre>
 <p>Of course, if you can <code>nest</code> data you should be able to <code>unnest</code> it as well, and you can (with the caveat that you’re unnesting a list column that contains a data frame).</p>
 <pre class="r"><code>unnest(weather_nest, cols = data)
 ## # A tibble: 1,098 x 6
-##    name           id          date        prcp  tmax  tmin
-##    &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 CentralPark_NY USW00094728 2016-01-01     0   5.6   1.1
-##  2 CentralPark_NY USW00094728 2016-01-02     0   4.4   0  
-##  3 CentralPark_NY USW00094728 2016-01-03     0   7.2   1.7
-##  4 CentralPark_NY USW00094728 2016-01-04     0   2.2  -9.9
-##  5 CentralPark_NY USW00094728 2016-01-05     0  -1.6 -11.6
-##  6 CentralPark_NY USW00094728 2016-01-06     0   5    -3.8
-##  7 CentralPark_NY USW00094728 2016-01-07     0   7.8  -0.5
-##  8 CentralPark_NY USW00094728 2016-01-08     0   7.8  -0.5
-##  9 CentralPark_NY USW00094728 2016-01-09     0   8.3   4.4
-## 10 CentralPark_NY USW00094728 2016-01-10   457  15     4.4
-## # … with 1,088 more rows</code></pre>
+##   name           id          date        prcp  tmax  tmin
+##   &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 CentralPark_NY USW00094728 2016-01-01     0   5.6   1.1
+## 2 CentralPark_NY USW00094728 2016-01-02     0   4.4   0  
+## 3 CentralPark_NY USW00094728 2016-01-03     0   7.2   1.7
+## 4 CentralPark_NY USW00094728 2016-01-04     0   2.2  -9.9
+## 5 CentralPark_NY USW00094728 2016-01-05     0  -1.6 -11.6
+## 6 CentralPark_NY USW00094728 2016-01-06     0   5    -3.8
+## # … with 1,092 more rows</code></pre>
 <p>Nesting columns can help with data organization and comprehension by masking complexity you’re less concerned about right now and clarifying the things you are concerned about. In the weather data, it can be helpful to think of stations as the basic unit of observation, and daily weather recordings as a more granular level of observation. Nesting can also simplify the use of analytic approaches across levels of a higher variable.</p>
 </div>
 <div id="operations-on-list-columns" class="section level3">
@@ -883,8 +872,6 @@ weather_nest
          urls = str_c(url_base, page)) %&gt;% 
   mutate(reviews = map(urls, read_page_reviews)) %&gt;% 
   unnest()
-## Warning: `data_frame()` is deprecated, use `tibble()`.
-## This warning is displayed once per session.
 ## Warning: `cols` is now required.
 ## Please use `cols = c(reviews)`</code></pre>
 <p>I’ll also revisit a way to load and tidy the LoTR words data that starts with a dataframe containing cell ranges for each movie. Of all the approaches we’ve seen, this is probably my favorite.</p>

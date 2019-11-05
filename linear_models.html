@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -30,6 +31,16 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151578452-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-151578452-1');
+</script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -92,7 +103,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -253,48 +263,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -604,34 +575,26 @@ fit %&gt;%
 <p>The <code>modelr</code> package can be used to add residuals and fitted values to a dataframe.</p>
 <pre class="r"><code>modelr::add_residuals(nyc_airbnb, fit)
 ## # A tibble: 40,492 x 6
-##    price stars boro  neighborhood room_type        resid
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;            &lt;dbl&gt;
-##  1    99   5   Bronx City Island  Private room      9.47
-##  2   200  NA   Bronx City Island  Private room     NA   
-##  3   300  NA   Bronx City Island  Entire home/apt  NA   
-##  4   125   5   Bronx City Island  Entire home/apt  35.5 
-##  5    69   5   Bronx City Island  Private room    -20.5 
-##  6   125   5   Bronx City Island  Entire home/apt  35.5 
-##  7    85   5   Bronx City Island  Entire home/apt  -4.53
-##  8    39   4.5 Bronx Allerton     Private room    -34.5 
-##  9    95   5   Bronx Allerton     Entire home/apt   5.47
-## 10   125   4.5 Bronx Allerton     Entire home/apt  51.5 
-## # … with 40,482 more rows
+##   price stars boro  neighborhood room_type        resid
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;            &lt;dbl&gt;
+## 1    99     5 Bronx City Island  Private room      9.47
+## 2   200    NA Bronx City Island  Private room     NA   
+## 3   300    NA Bronx City Island  Entire home/apt  NA   
+## 4   125     5 Bronx City Island  Entire home/apt  35.5 
+## 5    69     5 Bronx City Island  Private room    -20.5 
+## 6   125     5 Bronx City Island  Entire home/apt  35.5 
+## # … with 4.049e+04 more rows
 modelr::add_predictions(nyc_airbnb, fit)
 ## # A tibble: 40,492 x 6
-##    price stars boro  neighborhood room_type        pred
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;           &lt;dbl&gt;
-##  1    99   5   Bronx City Island  Private room     89.5
-##  2   200  NA   Bronx City Island  Private room     NA  
-##  3   300  NA   Bronx City Island  Entire home/apt  NA  
-##  4   125   5   Bronx City Island  Entire home/apt  89.5
-##  5    69   5   Bronx City Island  Private room     89.5
-##  6   125   5   Bronx City Island  Entire home/apt  89.5
-##  7    85   5   Bronx City Island  Entire home/apt  89.5
-##  8    39   4.5 Bronx Allerton     Private room     73.5
-##  9    95   5   Bronx Allerton     Entire home/apt  89.5
-## 10   125   4.5 Bronx Allerton     Entire home/apt  73.5
-## # … with 40,482 more rows</code></pre>
+##   price stars boro  neighborhood room_type        pred
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;           &lt;dbl&gt;
+## 1    99     5 Bronx City Island  Private room     89.5
+## 2   200    NA Bronx City Island  Private room     NA  
+## 3   300    NA Bronx City Island  Entire home/apt  NA  
+## 4   125     5 Bronx City Island  Entire home/apt  89.5
+## 5    69     5 Bronx City Island  Private room     89.5
+## 6   125     5 Bronx City Island  Entire home/apt  89.5
+## # … with 4.049e+04 more rows</code></pre>
 <p>Like many things in the tidyverse, the first argument is a dataframe. That makes it easy to included steps adding residuals or predictions in pipeline of commands to conduct inspections and perform diagnostics.</p>
 <pre class="r"><code>nyc_airbnb %&gt;% 
   modelr::add_residuals(fit) %&gt;% 
@@ -1003,19 +966,15 @@ manhattan_nest_lm_res =
   modelr::add_predictions(fit_logistic) %&gt;% 
   mutate(fitted_prob = boot::inv.logit(pred))
 ## # A tibble: 2,827 x 6
-##    resolved victim_age victim_race victim_sex    pred fitted_prob
-##       &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt;       &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;
-##  1        0         17 Black       Male       -0.654        0.342
-##  2        0         26 Black       Male       -0.720        0.327
-##  3        0         21 Black       Male       -0.683        0.335
-##  4        1         61 White       Male       -0.131        0.467
-##  5        1         46 Black       Male       -0.864        0.296
-##  6        1         27 Black       Male       -0.727        0.326
-##  7        1         21 Black       Male       -0.683        0.335
-##  8        1         16 Black       Male       -0.647        0.344
-##  9        1         21 Black       Male       -0.683        0.335
-## 10        1         44 Black       Female      0.0297       0.507
-## # … with 2,817 more rows</code></pre>
+##   resolved victim_age victim_race victim_sex   pred fitted_prob
+##      &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt;       &lt;chr&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+## 1        0         17 Black       Male       -0.654       0.342
+## 2        0         26 Black       Male       -0.720       0.327
+## 3        0         21 Black       Male       -0.683       0.335
+## 4        1         61 White       Male       -0.131       0.467
+## 5        1         46 Black       Male       -0.864       0.296
+## 6        1         27 Black       Male       -0.727       0.326
+## # … with 2,821 more rows</code></pre>
 </div>
 </div>
 <div id="other-materials" class="section level2">
@@ -1056,6 +1015,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

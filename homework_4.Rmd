@@ -35,7 +35,7 @@ This "problem" focuses on structure of your submission, especially the use git a
 To that end: 
 
 * create a public GitHub repo + local R Project for this assignment
-* submit a link to your repo via Courseworks
+* submit a link to **your website** (note your _repo_) via Courseworks
 
 Your solutions to Problems 1 and 2 should be implemented in your .Rmd file(s), and your git commit history should reflect the process you used to solve these Problems. 
 

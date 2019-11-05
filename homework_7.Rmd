@@ -18,3 +18,9 @@ Please submit (via courseworks) the web address of the GitHub repo containing yo
 
 R Markdown documents included as part of your solutions must not install packages, and should only load the packages necessary for your submission to knit. 
 
+
+
+
+### Optional post-assignment survey
+
+If you'd like, a you can complete [this short survey]() after you've finished the assignment.

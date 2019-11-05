@@ -32,6 +32,16 @@
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151578452-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-151578452-1');
+</script>
+
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -93,7 +103,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -461,15 +470,6 @@ div.tocify {
 <p>For this topic, I’ll create a GitHub repo + directory / R Project called <code>iteration</code>. I’ll write code for today’s content in a new R Markdown document called <code>writing_functions.Rmd</code>, and I’m going to load the usual packages. I’m also setting the seed so that the output on this page is fixed.</p>
 <pre class="r"><code>library(tidyverse)
 library(rvest)
-## Loading required package: xml2
-## 
-## Attaching package: &#39;rvest&#39;
-## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     pluck
-## The following object is masked from &#39;package:readr&#39;:
-## 
-##     guess_encoding
 
 set.seed(1)</code></pre>
 <div id="my-first-function" class="section level3">
@@ -664,19 +664,14 @@ dynamite_reviews = bind_rows(
 
 dynamite_reviews
 ## # A tibble: 50 x 3
-##    title                               stars text                          
-##    &lt;chr&gt;                               &lt;dbl&gt; &lt;chr&gt;                         
-##  1 &quot;Great movie\n            &quot;             5 Format: Blu-rayVerified Purch…
-##  2 &quot;Duh\n            &quot;                     5 Format: Prime VideoVerified P…
-##  3 &quot;Great video\n            &quot;             5 Format: DVDVerified Purchase  
-##  4 &quot;Give me some of your tots\n      …     5 Format: Prime VideoVerified P…
-##  5 &quot;Nostalgic\n            &quot;               5 Format: Prime VideoVerified P…
-##  6 &quot;Make you giggle type movie\n     …     5 Format: Blu-rayVerified Purch…
-##  7 &quot;This movie is so stupid.\n       …     5 Format: Prime VideoVerified P…
-##  8 &quot;Hilarious\n            &quot;               5 Format: Prime VideoVerified P…
-##  9 &quot;Waste of money\n            &quot;          1 Format: Prime VideoVerified P…
-## 10 &quot;Good movie\n            &quot;              5 Format: Prime VideoVerified P…
-## # … with 40 more rows</code></pre>
+##   title                           stars text                               
+##   &lt;chr&gt;                           &lt;dbl&gt; &lt;chr&gt;                              
+## 1 &quot;Good comedy\n            &quot;         4 Format: Prime VideoVerified Purcha…
+## 2 &quot;Awesome\n            &quot;             5 Format: Prime VideoVerified Purcha…
+## 3 &quot;yes\n            &quot;                 5 Format: Prime VideoVerified Purcha…
+## 4 &quot;Gotta watch it!\n            &quot;     5 Format: Prime VideoVerified Purcha…
+## 5 &quot;Great movie\n            &quot;         5 Format: Blu-rayVerified Purchase   
+## # … with 45 more rows</code></pre>
 </div>
 <div id="loading-lotr-data" class="section level4">
 <h4>Loading LoTR data</h4>
