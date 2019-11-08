@@ -103,6 +103,7 @@ code {
 }
 img {
   max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -552,7 +553,7 @@ iris_with_missing = iris %&gt;%
 <p>Set <span class="math inline">\(\beta_1=0\)</span>. Generate 10000 datasets from the model <span class="math display">\[ y_i = \beta_0 + \beta_1 x_{i1} + \epsilon_{i} \]</span> with <span class="math inline">\(\epsilon_{i} ∼ N[0,\sigma^2]\)</span>. For each dataset, save <span class="math inline">\(\hat{\beta}_1\)</span> and the p-value arising from a test of <span class="math inline">\(H : \beta_1 = 0\)</span> using <span class="math inline">\(\alpha = 0.05\)</span>. <em>Hint: to obtain the estimate and p-value, use <code>broom::tidy</code> to clean the output of <code>lm</code>.</em></p>
 <p>Repeat the above for <span class="math inline">\(\beta_1 = \{1, 2, 3, 4, 5, 6\}\)</span>, and complete the following:</p>
 <ul>
-<li>Make a plot showing the proportion of times the null was rejected (the power of the test) on the y axis and the true value of <span class="math inline">\(\beta_2\)</span> on the x axis. Describe the association between effect size and power.</li>
+<li>Make a plot showing the proportion of times the null was rejected (the power of the test) on the y axis and the true value of <span class="math inline">\(\beta_1\)</span> on the x axis. Describe the association between effect size and power.</li>
 <li>Make a plot showing the average estimate of <span class="math inline">\(\hat{\beta}_1\)</span> on the y axis and the true value of <span class="math inline">\(\beta_1\)</span> on the x axis. Make a second plot (or overlay on the first) the average estimate of <span class="math inline">\(\hat{\beta}_1\)</span> <strong>only in samples for which the null was rejected</strong> on the y axis and the true value of <span class="math inline">\(\beta_1\)</span> on the x axis. Is the sample average of <span class="math inline">\(\hat{\beta}_1\)</span> across tests for which the null is rejected approximately equal to the true value of <span class="math inline">\(\beta_1\)</span>? Why or why not?</li>
 </ul>
 </div>
