@@ -103,6 +103,7 @@ code {
 }
 img {
   max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -467,7 +468,7 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>I’ll write code for today’s content in a new R Markdown document called <code>simulation.Rmd</code> in the <code>iteration</code> directory / repo. The code chunk below loads the usual packages (plus <code>mgcv</code>) and sets a seed for reproducibility.</p>
+<p>I’ll write code for today’s content in a new R Markdown document called <code>cross_validation.Rmd</code> in the <code>linear_models</code> directory / repo. The code chunk below loads the usual packages (plus <code>mgcv</code>) and sets a seed for reproducibility.</p>
 <pre class="r"><code>library(tidyverse)
 library(modelr)
 library(mgcv)
@@ -483,13 +484,16 @@ set.seed(1)</code></pre>
 <div id="cv-by-hand" class="section level3">
 <h3>CV “by hand”</h3>
 <p>We’ll start with a simulated example. The code chunk below generates data under a non-linear model; I like to use this setting because “model complexity” is easiest for me to understand when I can see it.</p>
-<pre class="r"><code>nonlin_df = tibble(
-  id = 1:100,
-  x = runif(100, 0, 1),
-  y = 1 - 10 * (x - .3) ^ 2 + rnorm(100, 0, .3)
-)
+<pre class="r"><code>nonlin_df = 
+  tibble(
+    id = 1:100,
+    x = runif(100, 0, 1),
+    y = 1 - 10 * (x - .3) ^ 2 + rnorm(100, 0, .3)
+  )
 
-ggplot(nonlin_df, aes(x = x, y = y)) + geom_point() + theme_bw()</code></pre>
+nonlin_df %&gt;% 
+  ggplot(aes(x = x, y = y)) + 
+  geom_point() + theme_bw()</code></pre>
 <p><img src="cross_validation_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
 <p>I’ll split this data into training and test sets (using <code>anti_join</code>!!), and replot showing the split. Our goal will be to use the training data (in black) to build candidate models, and then see how those models predict in the testing data (in red).</p>
 <pre class="r"><code>train_df = sample_n(nonlin_df, 80)
@@ -502,11 +506,11 @@ ggplot(train_df, aes(x = x, y = y)) +
 <p>I’ll fit three three models to the training data. Throughout, I’m going to use <code>mgcv::gam</code> for non-linear models – this is my go-to package for “additive models”, and I much prefer it to e.g. polynomial models. For today, you don’t have to know what this means, how <code>gam</code> works, or why I prefer it – just know that we’re putting smooth lines through data clouds, and we can control how smooth we want the fit to be.</p>
 <p>The three models below have very different levels of complexity and aren’t nested, so testing approaches for nested model don’t apply.</p>
 <pre class="r"><code>lin_mod = lm(y ~ x, data = train_df)
-nonlin_mod = mgcv::gam(y ~ s(x), data = train_df)
+smooth_mod = mgcv::gam(y ~ s(x), data = train_df)
 wiggly_mod = mgcv::gam(y ~ s(x, k = 30), sp = 10e-6, data = train_df)</code></pre>
 <p>To understand what these models have done, I’ll plot the two <code>gam</code> fits.</p>
 <pre class="r"><code>train_df %&gt;% 
-  add_predictions(nonlin_mod) %&gt;% 
+  add_predictions(smooth_mod) %&gt;% 
   ggplot(aes(x = x, y = y)) + geom_point() + 
   geom_line(aes(y = pred), color = &quot;red&quot;)</code></pre>
 <p><img src="cross_validation_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
@@ -516,9 +520,9 @@ train_df %&gt;%
   ggplot(aes(x = x, y = y)) + geom_point() + 
   geom_line(aes(y = pred), color = &quot;red&quot;)</code></pre>
 <p><img src="cross_validation_files/figure-html/unnamed-chunk-6-2.png" width="90%" /></p>
-<p>In a case like this, I can also use the handy <code>modelr::gather_predictions</code> function – this is, essentially, a short way of adding predictions for several models and then gathering so the result is “tidy” and easily plottable.</p>
+<p>In a case like this, I can also use the handy <code>modelr::gather_predictions</code> function – this is, essentially, a short way of adding predictions for several models to a data frame and then “pivoting” so the result is a tidy, “long” dataset that’s easily plottable.</p>
 <pre class="r"><code>train_df %&gt;% 
-  gather_predictions(lin_mod, nonlin_mod, wiggly_mod) %&gt;% 
+  gather_predictions(lin_mod, smooth_mod, wiggly_mod) %&gt;% 
   mutate(model = fct_inorder(model)) %&gt;% 
   ggplot(aes(x = x, y = y)) + 
   geom_point() + 
@@ -529,7 +533,7 @@ train_df %&gt;%
 <p>As a next step in my CV procedure, I’ll compute root mean squared errors (RMSEs) for each model.</p>
 <pre class="r"><code>rmse(lin_mod, test_df)
 ## [1] 0.7052956
-rmse(nonlin_mod, test_df)
+rmse(smooth_mod, test_df)
 ## [1] 0.2221774
 rmse(wiggly_mod, test_df)
 ## [1] 0.289051</code></pre>
@@ -575,23 +579,27 @@ cv_df %&gt;% pull(test) %&gt;% .[[1]] %&gt;% as_tibble
 
 cv_df =
   cv_df %&gt;% 
-  mutate(train = map(train, as_tibble),
-         test = map(test, as_tibble))</code></pre>
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble))</code></pre>
 <p>I now have many training and testing datasets, and I’d like to fit my candidate models above and assess prediction accuracy as I did for the single training / testing split. To do this, I’ll fit models and obtain RMSEs using <code>mutate</code> + <code>map</code> &amp; <code>map2</code>.</p>
 <pre class="r"><code>cv_df = 
   cv_df %&gt;% 
   mutate(lin_mod    = map(train, ~lm(y ~ x, data = .x)),
-         nonlin_mod = map(train, ~mgcv::gam(y ~ s(x), data = .x)),
+         smooth_mod = map(train, ~mgcv::gam(y ~ s(x), data = .x)),
          wiggly_mod = map(train, ~gam(y ~ s(x, k = 30), sp = 10e-6, data = .x))) %&gt;% 
   mutate(rmse_lin    = map2_dbl(lin_mod, test, ~rmse(model = .x, data = .y)),
-         rmse_nonlin = map2_dbl(nonlin_mod, test, ~rmse(model = .x, data = .y)),
+         rmse_nonlin = map2_dbl(smooth_mod, test, ~rmse(model = .x, data = .y)),
          rmse_wiggly = map2_dbl(wiggly_mod, test, ~rmse(model = .x, data = .y)))</code></pre>
 <p>I’m mostly focused on RMSE as a way to compare these models, and the plot below shows the distribution of RMSE values for each candidate model.</p>
 <pre class="r"><code>cv_df %&gt;% 
   select(starts_with(&quot;rmse&quot;)) %&gt;% 
-  gather(key = model, value = rmse) %&gt;% 
-  mutate(model = str_replace(model, &quot;rmse_&quot;, &quot;&quot;),
-         model = fct_inorder(model)) %&gt;% 
+  pivot_longer(
+    everything(),
+    names_to = &quot;model&quot;, 
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;) %&gt;% 
+  mutate(model = fct_inorder(model)) %&gt;% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()</code></pre>
 <p><img src="cross_validation_files/figure-html/unnamed-chunk-12-1.png" width="90%" /></p>
 <p>Repeating the split is helpful – now we get a sense of variance in prediction error and can compare prediction error distributions across methods. The smooth fit is a clear winner!</p>
@@ -614,17 +622,17 @@ child_growth %&gt;%
   ggplot(aes(x = weight, y = armc)) + 
   geom_point(alpha = .5)</code></pre>
 <p><img src="cross_validation_files/figure-html/unnamed-chunk-13-1.png" width="90%" /></p>
-<p>The plots suggests some non-linearity, especially at the low end of the weight distribution. We’ll try three models: a linear fit; a piecewise linear fit; and a smooth fit using <code>gam</code>. For the piecewise linear fit, we need to add a “spline term” to our dataframe. (Like additive models, for now it’s not critical that you understand everything about a piecewise linear fit – we’ll see a plot of the results soon, and the intuition from that is enough for our purposes.)</p>
+<p>The plots suggests some non-linearity, especially at the low end of the weight distribution. We’ll try three models: a linear fit; a piecewise linear fit; and a smooth fit using <code>gam</code>. For the piecewise linear fit, we need to add a “change point term” to our dataframe. (Like additive models, for now it’s not critical that you understand everything about a piecewise linear fit – we’ll see a plot of the results soon, and the intuition from that is enough for our purposes.)</p>
 <pre class="r"><code>child_growth =
   child_growth %&gt;% 
-  mutate(weight_sp = (weight &gt; 7) * (weight - 7))</code></pre>
+  mutate(weight_cp = (weight &gt; 7) * (weight - 7))</code></pre>
 <p>The code chunk below fits each of the candidate models to the full dataset. The piecewise linear model is nested in the linear model and could be assessed using statistical significance, but the smooth model is not nested in anything else. (Also, comparing a piecewise model with a changepoint at 7 to a piecewise model with a changepoint at 8 would be a non-nested comparison…)</p>
-<pre class="r"><code>lin_mod = lm(armc ~ weight, data = child_growth)
-pwl_mod = lm(armc ~ weight + weight_sp, data = child_growth)
-nonlin_mod = gam(armc ~ s(weight), data = child_growth)</code></pre>
+<pre class="r"><code>lin_mod    = lm(armc ~ weight, data = child_growth)
+pwl_mod    = lm(armc ~ weight + weight_cp, data = child_growth)
+smooth_mod = gam(armc ~ s(weight), data = child_growth)</code></pre>
 <p>As before, I’ll plot the three models to get intuition for goodness of fit.</p>
 <pre class="r"><code>child_growth %&gt;% 
-  gather_predictions(lin_mod, pwl_mod, nonlin_mod) %&gt;% 
+  gather_predictions(lin_mod, pwl_mod, smooth_mod) %&gt;% 
   mutate(model = fct_inorder(model)) %&gt;% 
   ggplot(aes(x = weight, y = armc)) + 
   geom_point(alpha = .5) +
@@ -634,23 +642,27 @@ nonlin_mod = gam(armc ~ s(weight), data = child_growth)</code></pre>
 <p>It’s not clear which is best – the linear model is <em>maybe</em> too simple, but the piecewise and non-linear models are pretty similar! Better check prediction errors using the same process as before – again, since I want to fit a <code>gam</code> model, I have to convert the <code>resample</code> objects produced by <code>crossv_mc</code> to dataframes, but wouldn’t have to do this if I only wanted to compare the linear and piecewise models.</p>
 <pre class="r"><code>cv_df =
   crossv_mc(child_growth, 100) %&gt;% 
-  mutate(train = map(train, as_tibble),
-         test = map(test, as_tibble))</code></pre>
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble))</code></pre>
 <p>Next I’ll use <code>mutate</code> + <code>map</code> &amp; <code>map2</code> to fit models to training data and obtain corresponding RMSEs for the testing data.</p>
 <pre class="r"><code>cv_df = 
   cv_df %&gt;% 
   mutate(lin_mod = map(train, ~lm(armc ~ weight, data = .x)),
-         pwl_mod = map(train, ~lm(armc ~ weight + weight_sp, data = .x)),
-         nonlin_mod = map(train, ~gam(armc ~ s(weight), data = as_tibble(.x)))) %&gt;% 
+         pwl_mod = map(train, ~lm(armc ~ weight + weight_cp, data = .x)),
+         smooth_mod = map(train, ~gam(armc ~ s(weight), data = as_tibble(.x)))) %&gt;% 
   mutate(rmse_lin    = map2_dbl(lin_mod, test, ~rmse(model = .x, data = .y)),
          rmse_pwl = map2_dbl(pwl_mod, test, ~rmse(model = .x, data = .y)),
-         rmse_nonlin = map2_dbl(nonlin_mod, test, ~rmse(model = .x, data = .y)))</code></pre>
+         rmse_nonlin = map2_dbl(smooth_mod, test, ~rmse(model = .x, data = .y)))</code></pre>
 <p>Finally, I’ll plot the prediction error distribution for each candidate model.</p>
 <pre class="r"><code>cv_df %&gt;% 
   select(starts_with(&quot;rmse&quot;)) %&gt;% 
-  gather(key = model, value = rmse) %&gt;% 
-  mutate(model = str_replace(model, &quot;rmse_&quot;, &quot;&quot;),
-         model = fct_inorder(model)) %&gt;% 
+pivot_longer(
+    everything(),
+    names_to = &quot;model&quot;, 
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;) %&gt;% 
+  mutate(model = fct_inorder(model)) %&gt;% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()</code></pre>
 <p><img src="cross_validation_files/figure-html/unnamed-chunk-19-1.png" width="90%" /></p>
 <p>Based on these results, there’s clearly some improvement in predictive accuracy gained by allowing non-linearity – whether this is sufficient to justify a more complex model isn’t obvious, though. Among the non-linear models, the smooth fit from <code>gam</code> <em>might</em> be a bit better than the piecewise linear model. Which candidate model is best, though, depends a bit on the need to balance complexity with goodness of fit and interpretability. In the end, I’d probably go with the piecewise linear model – the non-linearity is clear enough that it should be accounted for, and the differences between the piecewise and <code>gam</code> fits are small enough that the easy interpretation of the piecewise model “wins”.</p>

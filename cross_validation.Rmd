@@ -31,7 +31,7 @@ theme_set(theme_bw() + theme(legend.position = "bottom"))
 
 ## Example
 
-I'll write code for today's content in a new R Markdown document called `simulation.Rmd` in the `iteration` directory / repo. The code chunk below loads the usual packages (plus `mgcv`) and sets a seed for reproducibility.
+I'll write code for today's content in a new R Markdown document called `cross_validation.Rmd` in the `linear_models` directory / repo. The code chunk below loads the usual packages (plus `mgcv`) and sets a seed for reproducibility.
 
 ```{r}
 library(tidyverse)
@@ -47,13 +47,16 @@ set.seed(1)
 We'll start with a simulated example. The code chunk below generates data under a non-linear model; I like to use this setting because "model complexity" is easiest for me to understand when I can see it. 
 
 ```{r}
-nonlin_df = tibble(
-  id = 1:100,
-  x = runif(100, 0, 1),
-  y = 1 - 10 * (x - .3) ^ 2 + rnorm(100, 0, .3)
-)
+nonlin_df = 
+  tibble(
+    id = 1:100,
+    x = runif(100, 0, 1),
+    y = 1 - 10 * (x - .3) ^ 2 + rnorm(100, 0, .3)
+  )
 
-ggplot(nonlin_df, aes(x = x, y = y)) + geom_point() + theme_bw()
+nonlin_df %>% 
+  ggplot(aes(x = x, y = y)) + 
+  geom_point() + theme_bw()
 ```
 
 I'll split this data into training and test sets (using `anti_join`!!), and replot showing the split. Our goal will be to use the training data (in black) to build candidate models, and then see how those models predict in the testing data (in red).
@@ -73,7 +76,7 @@ The three models below have very different levels of complexity and aren't neste
 
 ```{r}
 lin_mod = lm(y ~ x, data = train_df)
-nonlin_mod = mgcv::gam(y ~ s(x), data = train_df)
+smooth_mod = mgcv::gam(y ~ s(x), data = train_df)
 wiggly_mod = mgcv::gam(y ~ s(x, k = 30), sp = 10e-6, data = train_df)
 ```
 
@@ -81,7 +84,7 @@ To understand what these models have done, I'll plot the two `gam` fits.
 
 ```{r}
 train_df %>% 
-  add_predictions(nonlin_mod) %>% 
+  add_predictions(smooth_mod) %>% 
   ggplot(aes(x = x, y = y)) + geom_point() + 
   geom_line(aes(y = pred), color = "red")
 
@@ -91,11 +94,11 @@ train_df %>%
   geom_line(aes(y = pred), color = "red")
 ```
 
-In a case like this, I can also use the handy `modelr::gather_predictions` function -- this is, essentially, a short way of adding predictions for several models and then gathering so the result is "tidy" and easily plottable.
+In a case like this, I can also use the handy `modelr::gather_predictions` function -- this is, essentially, a short way of adding predictions for several models to a data frame and then "pivoting" so the result is a tidy, "long" dataset that's easily plottable.
 
 ```{r}
 train_df %>% 
-  gather_predictions(lin_mod, nonlin_mod, wiggly_mod) %>% 
+  gather_predictions(lin_mod, smooth_mod, wiggly_mod) %>% 
   mutate(model = fct_inorder(model)) %>% 
   ggplot(aes(x = x, y = y)) + 
   geom_point() + 
@@ -109,7 +112,7 @@ As a next step in my CV procedure, I'll compute root mean squared errors (RMSEs)
 
 ```{r}
 rmse(lin_mod, test_df)
-rmse(nonlin_mod, test_df)
+rmse(smooth_mod, test_df)
 rmse(wiggly_mod, test_df)
 ```
 
@@ -135,8 +138,9 @@ cv_df %>% pull(test) %>% .[[1]] %>% as_tibble
 
 cv_df =
   cv_df %>% 
-  mutate(train = map(train, as_tibble),
-         test = map(test, as_tibble))
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble))
 ```
 
 I now have many training and testing datasets, and I'd like to fit my candidate models above and assess prediction accuracy as I did for the single training / testing split. To do this, I'll fit models and obtain RMSEs using `mutate` + `map` & `map2`.
@@ -145,10 +149,10 @@ I now have many training and testing datasets, and I'd like to fit my candidate 
 cv_df = 
   cv_df %>% 
   mutate(lin_mod    = map(train, ~lm(y ~ x, data = .x)),
-         nonlin_mod = map(train, ~mgcv::gam(y ~ s(x), data = .x)),
+         smooth_mod = map(train, ~mgcv::gam(y ~ s(x), data = .x)),
          wiggly_mod = map(train, ~gam(y ~ s(x, k = 30), sp = 10e-6, data = .x))) %>% 
   mutate(rmse_lin    = map2_dbl(lin_mod, test, ~rmse(model = .x, data = .y)),
-         rmse_nonlin = map2_dbl(nonlin_mod, test, ~rmse(model = .x, data = .y)),
+         rmse_nonlin = map2_dbl(smooth_mod, test, ~rmse(model = .x, data = .y)),
          rmse_wiggly = map2_dbl(wiggly_mod, test, ~rmse(model = .x, data = .y)))
 ```
 
@@ -157,9 +161,12 @@ I'm mostly focused on RMSE as a way to compare these models, and the plot below 
 ```{r}
 cv_df %>% 
   select(starts_with("rmse")) %>% 
-  gather(key = model, value = rmse) %>% 
-  mutate(model = str_replace(model, "rmse_", ""),
-         model = fct_inorder(model)) %>% 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") %>% 
+  mutate(model = fct_inorder(model)) %>% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()
 ```
 
@@ -180,27 +187,27 @@ child_growth %>%
   geom_point(alpha = .5)
 ```
 
-The plots suggests some non-linearity, especially at the low end of the weight distribution. We'll try three models: a linear fit; a piecewise linear fit; and a smooth fit using `gam`. For the piecewise linear fit, we need to add a "spline term" to our dataframe. (Like additive models, for now it's not critical that you understand everything about a piecewise linear fit -- we'll see a plot of the results soon, and the intuition from that is enough for our purposes.)
+The plots suggests some non-linearity, especially at the low end of the weight distribution. We'll try three models: a linear fit; a piecewise linear fit; and a smooth fit using `gam`. For the piecewise linear fit, we need to add a "change point term" to our dataframe. (Like additive models, for now it's not critical that you understand everything about a piecewise linear fit -- we'll see a plot of the results soon, and the intuition from that is enough for our purposes.)
 
 ```{r}
 child_growth =
   child_growth %>% 
-  mutate(weight_sp = (weight > 7) * (weight - 7))
+  mutate(weight_cp = (weight > 7) * (weight - 7))
 ```
 
 The code chunk below fits each of the candidate models to the full dataset. The piecewise linear model is nested in the linear model and could be assessed using statistical significance, but the smooth model is not nested in anything else. (Also, comparing a piecewise model with a changepoint at 7 to a piecewise model with a changepoint at 8 would be a non-nested comparison...)
 
 ```{r}
-lin_mod = lm(armc ~ weight, data = child_growth)
-pwl_mod = lm(armc ~ weight + weight_sp, data = child_growth)
-nonlin_mod = gam(armc ~ s(weight), data = child_growth)
+lin_mod    = lm(armc ~ weight, data = child_growth)
+pwl_mod    = lm(armc ~ weight + weight_cp, data = child_growth)
+smooth_mod = gam(armc ~ s(weight), data = child_growth)
 ```
 
 As before, I'll plot the three models to get intuition for goodness of fit.
 
 ```{r}
 child_growth %>% 
-  gather_predictions(lin_mod, pwl_mod, nonlin_mod) %>% 
+  gather_predictions(lin_mod, pwl_mod, smooth_mod) %>% 
   mutate(model = fct_inorder(model)) %>% 
   ggplot(aes(x = weight, y = armc)) + 
   geom_point(alpha = .5) +
@@ -213,8 +220,9 @@ It's not clear which is best -- the linear model is *maybe* too simple, but the 
 ```{r}
 cv_df =
   crossv_mc(child_growth, 100) %>% 
-  mutate(train = map(train, as_tibble),
-         test = map(test, as_tibble))
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble))
 ```
 
 Next I'll use `mutate` + `map` & `map2` to fit models to training data and obtain corresponding RMSEs for the testing data. 
@@ -223,11 +231,11 @@ Next I'll use `mutate` + `map` & `map2` to fit models to training data and obtai
 cv_df = 
   cv_df %>% 
   mutate(lin_mod = map(train, ~lm(armc ~ weight, data = .x)),
-         pwl_mod = map(train, ~lm(armc ~ weight + weight_sp, data = .x)),
-         nonlin_mod = map(train, ~gam(armc ~ s(weight), data = as_tibble(.x)))) %>% 
+         pwl_mod = map(train, ~lm(armc ~ weight + weight_cp, data = .x)),
+         smooth_mod = map(train, ~gam(armc ~ s(weight), data = as_tibble(.x)))) %>% 
   mutate(rmse_lin    = map2_dbl(lin_mod, test, ~rmse(model = .x, data = .y)),
          rmse_pwl = map2_dbl(pwl_mod, test, ~rmse(model = .x, data = .y)),
-         rmse_nonlin = map2_dbl(nonlin_mod, test, ~rmse(model = .x, data = .y)))
+         rmse_nonlin = map2_dbl(smooth_mod, test, ~rmse(model = .x, data = .y)))
 ```
 
 Finally, I'll plot the prediction error distribution for each candidate model.
@@ -235,9 +243,12 @@ Finally, I'll plot the prediction error distribution for each candidate model.
 ```{r}
 cv_df %>% 
   select(starts_with("rmse")) %>% 
-  gather(key = model, value = rmse) %>% 
-  mutate(model = str_replace(model, "rmse_", ""),
-         model = fct_inorder(model)) %>% 
+pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") %>% 
+  mutate(model = fct_inorder(model)) %>% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()
 ```
 
