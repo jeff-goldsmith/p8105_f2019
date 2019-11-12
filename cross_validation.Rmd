@@ -75,7 +75,7 @@ I'll fit three three models to the training data. Throughout, I'm going to use `
 The three models below have very different levels of complexity and aren't nested, so testing approaches for nested model don't apply. 
 
 ```{r}
-lin_mod = lm(y ~ x, data = train_df)
+linear_mod = lm(y ~ x, data = train_df)
 smooth_mod = mgcv::gam(y ~ s(x), data = train_df)
 wiggly_mod = mgcv::gam(y ~ s(x, k = 30), sp = 10e-6, data = train_df)
 ```
@@ -98,7 +98,7 @@ In a case like this, I can also use the handy `modelr::gather_predictions` funct
 
 ```{r}
 train_df %>% 
-  gather_predictions(lin_mod, smooth_mod, wiggly_mod) %>% 
+  gather_predictions(linear_mod, smooth_mod, wiggly_mod) %>% 
   mutate(model = fct_inorder(model)) %>% 
   ggplot(aes(x = x, y = y)) + 
   geom_point() + 
@@ -111,7 +111,7 @@ A quick visual inspection suggests that the linear model is too simple, the stan
 As a next step in my CV procedure, I'll compute root mean squared errors (RMSEs) for each model. 
 
 ```{r}
-rmse(lin_mod, test_df)
+rmse(linear_mod, test_df)
 rmse(smooth_mod, test_df)
 rmse(wiggly_mod, test_df)
 ```
@@ -148,11 +148,11 @@ I now have many training and testing datasets, and I'd like to fit my candidate 
 ```{r}
 cv_df = 
   cv_df %>% 
-  mutate(lin_mod    = map(train, ~lm(y ~ x, data = .x)),
-         smooth_mod = map(train, ~mgcv::gam(y ~ s(x), data = .x)),
-         wiggly_mod = map(train, ~gam(y ~ s(x, k = 30), sp = 10e-6, data = .x))) %>% 
-  mutate(rmse_lin    = map2_dbl(lin_mod, test, ~rmse(model = .x, data = .y)),
-         rmse_nonlin = map2_dbl(smooth_mod, test, ~rmse(model = .x, data = .y)),
+  mutate(linear_mod  = map(train, ~lm(y ~ x, data = .x)),
+         smooth_mod  = map(train, ~mgcv::gam(y ~ s(x), data = .x)),
+         wiggly_mod  = map(train, ~gam(y ~ s(x, k = 30), sp = 10e-6, data = .x))) %>% 
+  mutate(rmse_linear = map2_dbl(linear_mod, test, ~rmse(model = .x, data = .y)),
+         rmse_smooth = map2_dbl(smooth_mod, test, ~rmse(model = .x, data = .y)),
          rmse_wiggly = map2_dbl(wiggly_mod, test, ~rmse(model = .x, data = .y)))
 ```
 
@@ -198,7 +198,7 @@ child_growth =
 The code chunk below fits each of the candidate models to the full dataset. The piecewise linear model is nested in the linear model and could be assessed using statistical significance, but the smooth model is not nested in anything else. (Also, comparing a piecewise model with a changepoint at 7 to a piecewise model with a changepoint at 8 would be a non-nested comparison...)
 
 ```{r}
-lin_mod    = lm(armc ~ weight, data = child_growth)
+linear_mod    = lm(armc ~ weight, data = child_growth)
 pwl_mod    = lm(armc ~ weight + weight_cp, data = child_growth)
 smooth_mod = gam(armc ~ s(weight), data = child_growth)
 ```
@@ -207,7 +207,7 @@ As before, I'll plot the three models to get intuition for goodness of fit.
 
 ```{r}
 child_growth %>% 
-  gather_predictions(lin_mod, pwl_mod, smooth_mod) %>% 
+  gather_predictions(linear_mod, pwl_mod, smooth_mod) %>% 
   mutate(model = fct_inorder(model)) %>% 
   ggplot(aes(x = weight, y = armc)) + 
   geom_point(alpha = .5) +
@@ -230,12 +230,12 @@ Next I'll use `mutate` + `map` & `map2` to fit models to training data and obtai
 ```{r}
 cv_df = 
   cv_df %>% 
-  mutate(lin_mod = map(train, ~lm(armc ~ weight, data = .x)),
-         pwl_mod = map(train, ~lm(armc ~ weight + weight_cp, data = .x)),
-         smooth_mod = map(train, ~gam(armc ~ s(weight), data = as_tibble(.x)))) %>% 
-  mutate(rmse_lin    = map2_dbl(lin_mod, test, ~rmse(model = .x, data = .y)),
-         rmse_pwl = map2_dbl(pwl_mod, test, ~rmse(model = .x, data = .y)),
-         rmse_nonlin = map2_dbl(smooth_mod, test, ~rmse(model = .x, data = .y)))
+  mutate(linear_mod  = map(train, ~lm(armc ~ weight, data = .x)),
+         pwl_mod     = map(train, ~lm(armc ~ weight + weight_cp, data = .x)),
+         smooth_mod  = map(train, ~gam(armc ~ s(weight), data = as_tibble(.x)))) %>% 
+  mutate(rmse_linear = map2_dbl(linear_mod, test, ~rmse(model = .x, data = .y)),
+         rmse_pwl    = map2_dbl(pwl_mod, test, ~rmse(model = .x, data = .y)),
+         rmse_smooth = map2_dbl(smooth_mod, test, ~rmse(model = .x, data = .y)))
 ```
 
 Finally, I'll plot the prediction error distribution for each candidate model.
