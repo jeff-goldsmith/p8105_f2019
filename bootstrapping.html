@@ -457,6 +457,14 @@ div.tocify {
 
 <p>Bootstrapping is a popular resampling-based approach to statistical inference, and is helpful when usual statistical methods are intractable or inappropriate. The idea is to draw repeated samples from your original sample <em>with replacement</em>, thereby approximating the repeated sampling framework. Using list columns to store bootstrap samples is natural and provides a “tidy” approach to resampling-based inference.</p>
 <p>This is the third module in the <a href="topic_linear_models.html">Linear Models</a> topic; the relevant slack channel is <a href="https://p8105fall2019.slack.com/messages/CN6D894NL">here</a>.</p>
+<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
+<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="dd7f4987ef08497696bdc9a66902203a" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
@@ -589,10 +597,11 @@ lm(y ~ x, data = sim_df_nonconst) %&gt;%
 <h3>Drawing many bootstrap samples</h3>
 <p>We’re going to draw repeated samples with replacement, and then analyze each of those samples separately. It would be really great to have a data structure that makes it possible to keep track of everything. Maybe a <strong><em>list column</em></strong>??!</p>
 <p>Let’s give that a try:</p>
-<pre class="r"><code>boot_straps = data_frame(
-  strap_number = 1:1000,
-  strap_sample = rerun(1000, boot_sample(sim_df_nonconst))
-)
+<pre class="r"><code>boot_straps = 
+  data_frame(
+    strap_number = 1:1000,
+    strap_sample = rerun(1000, boot_sample(sim_df_nonconst))
+  )
 ## Warning: `data_frame()` is deprecated, use `tibble()`.
 ## This warning is displayed once per session.
 
@@ -650,13 +659,11 @@ boot_straps
 <p>Seems okay – some values are repeated, some don’t appear in both datasets. Next I’ll use <code>ggplot</code> to show some of these datasets, and to include a linear fit for each.</p>
 <pre class="r"><code>boot_straps %&gt;% 
   filter(strap_number %in% 1:3) %&gt;% 
-  unnest() %&gt;% 
+  unnest(strap_sample) %&gt;% 
   ggplot(aes(x = x, y = y)) + 
   geom_point(alpha = .5) +
   stat_smooth(method = &quot;lm&quot;, se = FALSE) +
-  facet_grid(~strap_number) 
-## Warning: `cols` is now required.
-## Please use `cols = c(strap_sample)`</code></pre>
+  facet_grid(~strap_number) </code></pre>
 <p><img src="bootstrapping_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
 <p>This shows some of the differences across bootstrap samples, and shows that the fitted regression lines aren’t the same for every bootstrap sample.</p>
 </div>
@@ -666,8 +673,9 @@ boot_straps
 <p>To do that, I’ll use the analytic pipeline we established when looking at nested datasets in <a href="linear_models.html">linear models</a>: fit the model; tidy the output; unnest and examine the results. The code chunk below uses this pipeline to look at bootstrap standard errors for the estimated regression coefficients.</p>
 <pre class="r"><code>bootstrap_results = 
   boot_straps %&gt;% 
-  mutate(models = map(strap_sample, ~lm(y ~ x, data = .x) ),
-         results = map(models, broom::tidy)) %&gt;% 
+  mutate(
+    models = map(strap_sample, ~lm(y ~ x, data = .x) ),
+    results = map(models, broom::tidy)) %&gt;% 
   select(-strap_sample, -models) %&gt;% 
   unnest() %&gt;% 
   group_by(term) %&gt;% 
@@ -698,12 +706,10 @@ bootstrap_results %&gt;%
 <p>Comparing these to the results of ordinary least squares, the standard error for the intercept is much smaller and the standard error for the intercept is a bit larger. This is reasonable, given the non-constant variance in the data given smaller residuals around zero and larger residuals in the the tails of the <code>x</code> distribution.</p>
 <p>For a simple linear regression, we can show the fitted lines for each bootstrap sample to build intuition for these results.</p>
 <pre class="r"><code>boot_straps %&gt;% 
-  unnest() %&gt;% 
+  unnest(strap_sample) %&gt;% 
   ggplot(aes(x = x, y = y)) + 
   geom_line(aes(group = strap_number), stat = &quot;smooth&quot;, method = &quot;lm&quot;, se = FALSE, alpha = .1, color = &quot;blue&quot;) +
-  geom_point(data = sim_df_nonconst, alpha = .5)
-## Warning: `cols` is now required.
-## Please use `cols = c(strap_sample)`</code></pre>
+  geom_point(data = sim_df_nonconst, alpha = .5)</code></pre>
 <p><img src="bootstrapping_files/figure-html/unnamed-chunk-12-1.png" width="90%" /></p>
 <p>In comparison to the standard error bands in our previous plot (which are based on OLS), the distribution of regression lines is narrower near <span class="math inline">\(x = 0\)</span> and wider at the ends of the <span class="math inline">\(x\)</span> distribution.</p>
 </div>
@@ -736,14 +742,13 @@ as_data_frame(boot_straps$strap[[1]])
 <p>Let’s repeat our analysis pipeline using the <code>bootstrap</code> function instead of our own process for drawing samples with replacement.</p>
 <pre class="r"><code>sim_df_nonconst %&gt;% 
   modelr::bootstrap(n = 1000) %&gt;% 
-  mutate(models = map(strap, ~lm(y ~ x, data = .x) ),
-         results = map(models, broom::tidy)) %&gt;% 
+  mutate(
+    models = map(strap, ~lm(y ~ x, data = .x) ),
+    results = map(models, broom::tidy)) %&gt;% 
   select(-strap, -models) %&gt;% 
-  unnest() %&gt;% 
+  unnest(results) %&gt;% 
   group_by(term) %&gt;% 
   summarize(boot_se = sd(estimate))
-## Warning: `cols` is now required.
-## Please use `cols = c(results)`
 ## # A tibble: 2 x 2
 ##   term        boot_se
 ##   &lt;chr&gt;         &lt;dbl&gt;
@@ -756,11 +761,9 @@ as_data_frame(boot_straps$strap[[1]])
   mutate(models = map(strap, ~lm(y ~ x, data = .x) ),
          results = map(models, broom::tidy)) %&gt;% 
   select(-strap, -models) %&gt;% 
-  unnest() %&gt;% 
+  unnest(results) %&gt;% 
   group_by(term) %&gt;% 
   summarize(boot_se = sd(estimate))
-## Warning: `cols` is now required.
-## Please use `cols = c(results)`
 ## # A tibble: 2 x 2
 ##   term        boot_se
 ##   &lt;chr&gt;         &lt;dbl&gt;
@@ -781,29 +784,29 @@ as_data_frame(boot_straps$strap[[1]])
 <p>To obtain a distribution for <span class="math inline">\(\hat{r}^2\)</span>, we’ll follow basically the same procedure we used for regression coefficients: draw bootstrap samples; the a model to each; extract the value I’m concerned with; and summarize. Here, we’ll use <code>modelr::bootstrap</code> to draw the samples and <code>broom::glance</code> to produce <code>r.squared</code> values.</p>
 <pre class="r"><code>sim_df %&gt;% 
   modelr::bootstrap(n = 1000) %&gt;% 
-  mutate(models = map(strap, ~lm(y ~ x, data = .x) ),
-         results = map(models, broom::glance)) %&gt;% 
+  mutate(
+    models = map(strap, ~lm(y ~ x, data = .x) ),
+    results = map(models, broom::glance)) %&gt;% 
   select(-strap, -models) %&gt;% 
-  unnest() %&gt;% 
-  ggplot(aes(x = r.squared)) + geom_density()
-## Warning: `cols` is now required.
-## Please use `cols = c(results)`</code></pre>
+  unnest(results) %&gt;% 
+  ggplot(aes(x = r.squared)) + geom_density()</code></pre>
 <p><img src="bootstrapping_files/figure-html/unnamed-chunk-17-1.png" width="90%" /></p>
 <p>In this example, the <span class="math inline">\(\hat{r}^2\)</span> value is high, and the upper bound at 1 may be a cause for the generally skewed shape of the distribution. If we wanted to construct a confidence interval for <span class="math inline">\(R^2\)</span>, we could take the 2.5% and 97.5% quantiles of the estimates across bootstrap samples. However, because the shape isn’t symmetric, using the mean +/- 1.96 times the standard error probably wouldn’t work well.</p>
 <p>We can produce a distribution for <span class="math inline">\(\log(\beta_0 * \beta1)\)</span> using a similar approach, with a bit more wrangling before we make our plot.</p>
 <pre class="r"><code>sim_df %&gt;% 
   modelr::bootstrap(n = 1000) %&gt;% 
-  mutate(models = map(strap, ~lm(y ~ x, data = .x) ),
-         results = map(models, broom::tidy)) %&gt;% 
+  mutate(
+    models = map(strap, ~lm(y ~ x, data = .x) ),
+    results = map(models, broom::tidy)) %&gt;% 
   select(-strap, -models) %&gt;% 
-  unnest() %&gt;% 
+  unnest(results) %&gt;% 
   select(id = `.id`, term, estimate) %&gt;% 
-  spread(key = term, value = estimate) %&gt;% 
+  pivot_wider(
+    names_from = term, 
+    values_from = estimate) %&gt;% 
   rename(beta0 = `(Intercept)`, beta1 = x) %&gt;% 
   mutate(log_b0b1 = (beta0 * beta1)) %&gt;% 
-  ggplot(aes(x = log_b0b1)) + geom_density()
-## Warning: `cols` is now required.
-## Please use `cols = c(results)`</code></pre>
+  ggplot(aes(x = log_b0b1)) + geom_density()</code></pre>
 <p><img src="bootstrapping_files/figure-html/unnamed-chunk-18-1.png" width="90%" /></p>
 <p>As with <span class="math inline">\(r^2\)</span>, this distrubtion is somewhat skewed and has some outliers.</p>
 <p>The point of this is not to say you should always use the bootstrap – it’s possible to establish “large sample” distributions for strange parameters / values / summaries in a lot of cases, and those are great to hvae. But it is helpful to know that there’s a way to do inference even in tough cases.</p>
@@ -816,23 +819,29 @@ as_data_frame(boot_straps$strap[[1]])
 nyc_airbnb = 
   nyc_airbnb %&gt;% 
   mutate(stars = review_scores_location / 2) %&gt;% 
-  rename(boro = neighbourhood_group,
-         neighborhood = neighbourhood) %&gt;% 
+  rename(
+    boro = neighbourhood_group,
+    neighborhood = neighbourhood) %&gt;% 
   filter(boro != &quot;Staten Island&quot;) %&gt;% 
   select(price, stars, boro, neighborhood, room_type)</code></pre>
-<p>In <a href="linear_models.html">linear models</a>, we noticed that some large outliers in price might affect estimates and inference for the association between star rating and price. Although estimates are likely to be sensitive to those outliers, the code chunk below uses the bootstrap to examine the distribution of regression coefficients under repeated sampling.</p>
+<p>I’ll make a quick plot showing these data, with particular emphasis on the features I’m interested in analyzing: <code>price</code> as an outcome with <code>stars</code> and <code>room_type</code> as covariates.</p>
+<pre class="r"><code>nyc_airbnb %&gt;% 
+  ggplot(aes(x = stars, y = price, color = room_type)) + 
+  geom_point() 
+## Warning: Removed 9962 rows containing missing values (geom_point).</code></pre>
+<p><img src="bootstrapping_files/figure-html/unnamed-chunk-20-1.png" width="90%" /></p>
+<p>In this plot (and in <a href="linear_models.html">linear models</a>, we noticed that some large outliers in price might affect estimates and inference for the association between star rating and price. Because estimates are likely to be sensitive to those outliers and “usual” rules for inference may not apply, the code chunk below uses the bootstrap to examine the distribution of regression coefficients under repeated sampling.</p>
 <pre class="r"><code>nyc_airbnb %&gt;% 
   filter(boro == &quot;Manhattan&quot;) %&gt;% 
   modelr::bootstrap(n = 1000) %&gt;% 
-  mutate(models = map(strap, ~ lm(price ~ stars + room_type, data = .x)),
-         results = map(models, broom::tidy)) %&gt;% 
+  mutate(
+    models = map(strap, ~ lm(price ~ stars + room_type, data = .x)),
+    results = map(models, broom::tidy)) %&gt;% 
   select(results) %&gt;% 
-  unnest() %&gt;% 
+  unnest(results) %&gt;% 
   filter(term == &quot;stars&quot;) %&gt;% 
-  ggplot(aes(x = estimate)) + geom_density()
-## Warning: `cols` is now required.
-## Please use `cols = c(results)`</code></pre>
-<p><img src="bootstrapping_files/figure-html/unnamed-chunk-20-1.png" width="90%" /></p>
+  ggplot(aes(x = estimate)) + geom_density()</code></pre>
+<p><img src="bootstrapping_files/figure-html/unnamed-chunk-21-1.png" width="90%" /></p>
 <p>This distribution has a heavy tail extending to low values and a bit of a “shoulder”, features that may be related to the frequency with which large outliers are included in the bootstrap sample.</p>
 </div>
 </div>
