@@ -771,46 +771,6 @@ as_data_frame(boot_straps$strap[[1]])
 ## 2 x            0.0737</code></pre>
 <p>These results generally agree with the output of the OLS procedure, which is nice.</p>
 </div>
-<div id="non-standard-parameters" class="section level3">
-<h3>Non-standard parameters</h3>
-<p>The boostrap is also helpful when you’d like to construct a confidence interval for a parameter / value / summary that doesn’t have an easy-to-write-down distribution in the usual repeated sampling framework. In the following, we’ll look at the distribution of <span class="math inline">\(\hat{r}^2\)</span> and <span class="math inline">\(\log(\beta_0 * \beta1)\)</span> in a simple linear regression.</p>
-<p>First, we’ll generate data. This is similar to the constant-variance dataset we saw previously, but contains a sample of size 25.</p>
-<pre class="r"><code>sim_df = 
-  tibble(
-    x = rnorm(25, 1, 1),
-    error = rnorm(25, 0, 1),
-    y = 2 + 3 * x + error
-  )</code></pre>
-<p>To obtain a distribution for <span class="math inline">\(\hat{r}^2\)</span>, we’ll follow basically the same procedure we used for regression coefficients: draw bootstrap samples; the a model to each; extract the value I’m concerned with; and summarize. Here, we’ll use <code>modelr::bootstrap</code> to draw the samples and <code>broom::glance</code> to produce <code>r.squared</code> values.</p>
-<pre class="r"><code>sim_df %&gt;% 
-  modelr::bootstrap(n = 1000) %&gt;% 
-  mutate(
-    models = map(strap, ~lm(y ~ x, data = .x) ),
-    results = map(models, broom::glance)) %&gt;% 
-  select(-strap, -models) %&gt;% 
-  unnest(results) %&gt;% 
-  ggplot(aes(x = r.squared)) + geom_density()</code></pre>
-<p><img src="bootstrapping_files/figure-html/unnamed-chunk-17-1.png" width="90%" /></p>
-<p>In this example, the <span class="math inline">\(\hat{r}^2\)</span> value is high, and the upper bound at 1 may be a cause for the generally skewed shape of the distribution. If we wanted to construct a confidence interval for <span class="math inline">\(R^2\)</span>, we could take the 2.5% and 97.5% quantiles of the estimates across bootstrap samples. However, because the shape isn’t symmetric, using the mean +/- 1.96 times the standard error probably wouldn’t work well.</p>
-<p>We can produce a distribution for <span class="math inline">\(\log(\beta_0 * \beta1)\)</span> using a similar approach, with a bit more wrangling before we make our plot.</p>
-<pre class="r"><code>sim_df %&gt;% 
-  modelr::bootstrap(n = 1000) %&gt;% 
-  mutate(
-    models = map(strap, ~lm(y ~ x, data = .x) ),
-    results = map(models, broom::tidy)) %&gt;% 
-  select(-strap, -models) %&gt;% 
-  unnest(results) %&gt;% 
-  select(id = `.id`, term, estimate) %&gt;% 
-  pivot_wider(
-    names_from = term, 
-    values_from = estimate) %&gt;% 
-  rename(beta0 = `(Intercept)`, beta1 = x) %&gt;% 
-  mutate(log_b0b1 = (beta0 * beta1)) %&gt;% 
-  ggplot(aes(x = log_b0b1)) + geom_density()</code></pre>
-<p><img src="bootstrapping_files/figure-html/unnamed-chunk-18-1.png" width="90%" /></p>
-<p>As with <span class="math inline">\(r^2\)</span>, this distrubtion is somewhat skewed and has some outliers.</p>
-<p>The point of this is not to say you should always use the bootstrap – it’s possible to establish “large sample” distributions for strange parameters / values / summaries in a lot of cases, and those are great to hvae. But it is helpful to know that there’s a way to do inference even in tough cases.</p>
-</div>
 <div id="airbnb-data" class="section level3">
 <h3>Airbnb data</h3>
 <p>As a final example, we’ll revisit the <a href="dataset_airbnb.html">Airbnb data</a>. The code chunk below loads and tidies the data.</p>
@@ -829,7 +789,7 @@ nyc_airbnb =
   ggplot(aes(x = stars, y = price, color = room_type)) + 
   geom_point() 
 ## Warning: Removed 9962 rows containing missing values (geom_point).</code></pre>
-<p><img src="bootstrapping_files/figure-html/unnamed-chunk-20-1.png" width="90%" /></p>
+<p><img src="bootstrapping_files/figure-html/unnamed-chunk-17-1.png" width="90%" /></p>
 <p>In this plot (and in <a href="linear_models.html">linear models</a>, we noticed that some large outliers in price might affect estimates and inference for the association between star rating and price. Because estimates are likely to be sensitive to those outliers and “usual” rules for inference may not apply, the code chunk below uses the bootstrap to examine the distribution of regression coefficients under repeated sampling.</p>
 <pre class="r"><code>nyc_airbnb %&gt;% 
   filter(boro == &quot;Manhattan&quot;) %&gt;% 
@@ -841,7 +801,7 @@ nyc_airbnb =
   unnest(results) %&gt;% 
   filter(term == &quot;stars&quot;) %&gt;% 
   ggplot(aes(x = estimate)) + geom_density()</code></pre>
-<p><img src="bootstrapping_files/figure-html/unnamed-chunk-21-1.png" width="90%" /></p>
+<p><img src="bootstrapping_files/figure-html/unnamed-chunk-18-1.png" width="90%" /></p>
 <p>This distribution has a heavy tail extending to low values and a bit of a “shoulder”, features that may be related to the frequency with which large outliers are included in the bootstrap sample.</p>
 </div>
 </div>

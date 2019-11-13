@@ -244,60 +244,6 @@ These results generally agree with the output of the OLS procedure, which is nic
 
 
 
-### Non-standard parameters
-
-The boostrap is also helpful when you'd like to construct a confidence interval for a parameter / value / summary that doesn't have an easy-to-write-down distribution in the usual repeated sampling framework. In the following, we'll look at the distribution of $\hat{r}^2$ and $\log(\beta_0 * \beta1)$ in a simple linear regression. 
-
-First, we'll generate data. This is similar to the constant-variance dataset we saw previously, but contains a sample of size 25. 
-
-```{r}
-sim_df = 
-  tibble(
-    x = rnorm(25, 1, 1),
-    error = rnorm(25, 0, 1),
-    y = 2 + 3 * x + error
-  )
-```
-
-To obtain a distribution for $\hat{r}^2$, we'll follow basically the same procedure we used for regression coefficients: draw bootstrap samples; the a model to each; extract the value I'm concerned with; and summarize. Here, we'll use `modelr::bootstrap` to draw the samples and `broom::glance` to produce `r.squared` values. 
-
-```{r}
-sim_df %>% 
-  modelr::bootstrap(n = 1000) %>% 
-  mutate(
-    models = map(strap, ~lm(y ~ x, data = .x) ),
-    results = map(models, broom::glance)) %>% 
-  select(-strap, -models) %>% 
-  unnest(results) %>% 
-  ggplot(aes(x = r.squared)) + geom_density()
-```
-
-In this example, the $\hat{r}^2$ value is high, and the upper bound at 1 may be a cause for the generally skewed shape of the distribution. If we wanted to construct a confidence interval for $R^2$, we could take the 2.5% and 97.5% quantiles of the estimates across bootstrap samples. However, because the shape isn't symmetric, using the mean +/- 1.96 times the standard error probably wouldn't work well.
-
-We can produce a distribution for $\log(\beta_0 * \beta1)$ using a similar approach, with a bit more wrangling before we make our plot.
-
-```{r}
-sim_df %>% 
-  modelr::bootstrap(n = 1000) %>% 
-  mutate(
-    models = map(strap, ~lm(y ~ x, data = .x) ),
-    results = map(models, broom::tidy)) %>% 
-  select(-strap, -models) %>% 
-  unnest(results) %>% 
-  select(id = `.id`, term, estimate) %>% 
-  pivot_wider(
-    names_from = term, 
-    values_from = estimate) %>% 
-  rename(beta0 = `(Intercept)`, beta1 = x) %>% 
-  mutate(log_b0b1 = (beta0 * beta1)) %>% 
-  ggplot(aes(x = log_b0b1)) + geom_density()
-```
-
-As with $r^2$, this distrubtion is somewhat skewed and has some outliers. 
-
-The point of this is not to say you should always use the bootstrap -- it's possible to establish "large sample" distributions for strange parameters / values / summaries in a lot of cases, and those are great to hvae. But it is helpful to know that there's a way to do inference even in tough cases. 
-
-
 ### Airbnb data
 
 As a final example, we'll revisit the [Airbnb data](dataset_airbnb.html). The code chunk below loads and tidies the data. 
