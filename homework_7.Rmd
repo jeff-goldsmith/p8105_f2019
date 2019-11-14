@@ -8,7 +8,7 @@ output:
 
 ### Context
 
-This assignment reinforces ideas in [Linear Models](topic_linear_models.html). 
+This assignment reinforces ideas in Extra Topics.
 
 ### Due date and submission
 
