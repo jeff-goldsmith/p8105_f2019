@@ -30,15 +30,17 @@ library(tidyverse)
 
 ## Example
 
-As always, I'll work on today's example in a GitHub repo + local directory / R Project. This template will be the starting point for the `flexdashboard` we'll be creating today; create a new .Rmd file with this structure and put it in your directory.
+As always, I'll work on today's example in a GitHub repo + local directory / R Project. [This template](resources/shiny_dashboard_template.Rmd) will be the starting point for the `flexdashboard` we'll be creating today; create a new .Rmd file with this structure and put it in your directory.
 
 ```{r, echo = FALSE, comment = ""}
-cat(htmltools::includeText("resources/shiny_dashboard_template.Rmd"))
+text = htmltools::includeText("resources/shiny_dashboard_template.Rmd")
+text = str_replace(text, "---\n---\n\n", "")
+cat(text)
 ```
 
 This is very similar to the usual `flexdashboard` template, with some small changes. First, we've added `runtime: shiny` to the YAML header. Second, we are using slightly different layout because we have a sidebar column which will hold our input widgets. 
 
-I'll add the following libraryies to the template, but we won't need much else.
+I'll add the following libraries to the template, but we won't need much else.
 
 ```{r}
 library(tidyverse)
@@ -61,8 +63,9 @@ nyc_airbnb =
   nyc_airbnb %>% 
   mutate(rating = review_scores_location / 2) %>%
   rename(latitude = lat, longitude = long) %>%
-  select(boro = neighbourhood_group, neighbourhood, rating, price, room_type,
-         latitude, longitude) %>%
+  select(
+    boro = neighbourhood_group, neighbourhood, rating, price, room_type,
+    latitude, longitude) %>%
   filter(!is.na(rating))
 ```
 
@@ -78,8 +81,10 @@ The `selectInput` widget creates a drop-down menu with choices for the user to s
 boros = nyc_airbnb %>% distinct(boro) %>% pull()
 
 # selectInput widget
-selectInput("boro_choice", label = h3("Select boro"),
-            choices = boros, selected = "Manhattan")
+selectInput(
+  "boro_choice", 
+  label = h3("Select boro"),
+  choices = boros, selected = "Manhattan")
 ```
 
 Now a user can select each of the different boros in New York, although it's not clear yet where this input goes. In the background, Shiny is creating an object called `input` of class `reactivevalues` -- it's not critical that you know much about this, but it's something you can treat like a named list and use inside `render` functions. The "named" part matters, too -- your input widget names are how you access elements of the `input` object.
@@ -101,8 +106,10 @@ max_price = 1000
 min_price = nyc_airbnb %>% distinct(price) %>% min()
   
 # sliderInput widget
-sliderInput("price_range", label = h3("Choose price range"), min = min_price, 
-            max = max_price, value = c(100, 400))
+sliderInput(
+  "price_range", 
+  label = h3("Choose price range"), 
+  min = min_price, max = max_price, value = c(100, 400))
 ```
 
 The last input widget we'll look at is `radioButtons`, which is helpful for getting users to select among several options. As with the preceeding inputs, add a chunk containing the code below to the sidebar and then update the `renderPrint` function to inspect the behavior of this widget. 
@@ -111,9 +118,10 @@ The last input widget we'll look at is `radioButtons`, which is helpful for gett
 room_choice = nyc_airbnb %>% distinct(room_type) %>% pull()
 
 # radioButtons widget
-radioButtons("room_choice", label = h3("Choose room type"),
-    choices = room_choice, 
-    selected = "Entire home/apt")
+radioButtons(
+  "room_choice", 
+  label = h3("Choose room type"),
+  choices = room_choice, selected = "Entire home/apt")
 ```
 
 For other types of widgets (and there are lots!) check out the [widget gallery](https://shiny.rstudio.com/gallery/widget-gallery.html).
@@ -128,10 +136,9 @@ We'll start with the `plot_ly` scatterplot showing rental location and prices. A
 renderPlotly({ 
   nyc_airbnb %>%
   mutate(text_label = str_c("Price: $", price, '\nRating: ', rating)) %>% 
-  plot_ly(x = ~longitude, y = ~latitude, type = "scatter", mode = "markers",
-          alpha = 0.5, 
-          color = ~price,
-          text = ~text_label)
+  plot_ly(
+    x = ~longitude, y = ~latitude, type = "scatter", mode = "markers",
+    alpha = 0.5, color = ~price, text = ~text_label)
 })
 ```
 
@@ -140,14 +147,14 @@ The plot does appear, but we haven't incorporated user input yet. To do that, we
 ```{r, eval = FALSE}
 renderPlotly({
   nyc_airbnb %>%
-  filter(boro == input$boro_choice, 
-         price %in% input$price_range[1]:input$price_range[2],
-         room_type == input$room_choice) %>%
+  filter(
+    boro == input$boro_choice, 
+    price %in% input$price_range[1]:input$price_range[2],
+    room_type == input$room_choice) %>%
   mutate(text_label = str_c("Price: $", price, '\nRating: ', rating)) %>% 
-  plot_ly(x = ~longitude, y = ~latitude, type = "scatter", mode = "markers",
-          alpha = 0.5, 
-          color = ~price,
-          text = ~text_label)
+  plot_ly(
+    x = ~longitude, y = ~latitude, type = "scatter", mode = "markers",
+    alpha = 0.5, color = ~price, text = ~text_label)
 })
 ```
 
@@ -172,9 +179,10 @@ The code chunk below, when added to the dashboard, will update the bar chart bas
 ```{r, eval = FALSE}
 renderPlotly({
   nyc_airbnb %>% 
-    filter(boro == input$boro_choice, 
-           price %in% input$price_range[1]:input$price_range[2],
-           room_type == input$room_choice) %>%
+    filter(
+      boro == input$boro_choice, 
+      price %in% input$price_range[1]:input$price_range[2],
+      room_type == input$room_choice) %>%
     count(neighbourhood) %>% 
     mutate(neighbourhood = fct_reorder(neighbourhood, n)) %>% 
     plot_ly(x = ~neighbourhood, y = ~n, color = ~neighbourhood, type = "bar")
@@ -189,17 +197,19 @@ Lastly, the code provided below will produce a reactive boxplot showing price ra
 renderPlotly({ 
   common_neighborhoods =
     nyc_airbnb %>% 
-    filter(boro == input$boro_choice,
-           price %in% input$price_range[1]:input$price_range[2],
-           room_type == input$room_choice) %>%
+    filter(
+      boro == input$boro_choice,
+      price %in% input$price_range[1]:input$price_range[2],
+      room_type == input$room_choice) %>%
     count(neighbourhood, sort = TRUE) %>% 
     top_n(8) %>% 
     select(neighbourhood)
 
   nyc_airbnb %>%
-    filter(boro == input$boro_choice,
-                          price %in% input$price_range[1]:input$price_range[2],
-                          room_type == input$room_choice) %>%
+    filter(
+      boro == input$boro_choice,
+      price %in% input$price_range[1]:input$price_range[2],
+      room_type == input$room_choice) %>%
     inner_join(., common_neighborhoods, by = "neighbourhood") %>% 
     plot_ly(y = ~price, color = ~neighbourhood, type = "box")
 })
