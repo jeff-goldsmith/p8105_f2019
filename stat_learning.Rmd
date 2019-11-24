@@ -1,0 +1,211 @@
+---
+title: "Statistical Learning"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+---
+
+Stat learning stuff ...
+
+This page is related to content in [plotly and dashboards](plotly_and_dashboards.html), and the slack channel for extra topics is [here](https://p8105fall2019.slack.com/messages/CN01H0GHX).
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+library(tidyverse)
+
+theme_set(theme_bw() + theme(legend.position = "bottom"))
+```
+
+
+## Some slides
+
+<script async class="speakerdeck-embed" data-id="911acc341b434b02b24df1fdab954c7e" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-statistical-learning" title="Statistical Learning" target="_blank">Shiny</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
+
+
+## Example
+
+As always, I'll work on today's example in a GitHub repo + local directory / R Project. [This zip file](resources/extra_topic_data.zip) has a couple of datasets we'll look at.
+
+```{r}
+library(tidyverse)
+library(glmnet)
+
+set.seed(11)
+```
+
+### Lasso
+
+Birthweight subset
+
+```{r import}
+bwt_df = 
+  read_csv("data/birthweight.csv") %>% 
+  janitor::clean_names() %>%
+  mutate(
+    babysex = as.factor(babysex),
+    babysex = fct_recode(babysex, "male" = "1", "female" = "2"),
+    frace = as.factor(frace),
+    frace = fct_recode(frace, "white" = "1", "black" = "2", "asian" = "3", 
+                       "puerto rican" = "4", "other" = "8"),
+    malform = as.logical(malform),
+    mrace = as.factor(mrace),
+    mrace = fct_recode(mrace, "white" = "1", "black" = "2", "asian" = "3", 
+                       "puerto rican" = "4")) %>% 
+  sample_n(200)
+  
+x = model.matrix(bwt ~ ., bwt_df)[,-1]
+y = bwt_df$bwt
+```
+
+We fit the lasso model for each tuning parameter in a pre-defined grid, and then compare the fits using cross validation.
+
+```{r}
+lambda = 10^(seq(3, -2, -0.1))
+
+fit.glmnet =
+  glmnet(x, y, lambda = lambda)
+
+out.cv.glmnet =
+  cv.glmnet(x, y, lambda = lambda)
+
+lambda_opt = out.cv.glmnet$lambda.min
+```
+
+The plot below shows coefficient estimates corresponding to a subset of the genes in the dataset -- these are genes that have non-zero coefficients for at least one tuning parameter value in the pre-defined grid. As lambda increases, the coefficient values are shrunk to zero and the model becomes more sparse. The optimal tuning parameter, determined using cross validation, is shown by a vertical blue line.
+
+```{r}
+broom::tidy(fit.glmnet) %>% 
+  select(term, lambda, estimate) %>% 
+  complete(term, lambda, fill = list(estimate = 0) ) %>% 
+  filter(term != "(Intercept)") %>% 
+  ggplot(aes(x = log(lambda, 10), y = estimate, group = term, color = term)) + 
+  geom_path() + 
+  geom_vline(xintercept = log(lambda_opt, 10), color = "blue", size = 1.2) +
+  theme(legend.position = "none")
+```
+
+CV curve.
+
+```{r}
+broom::tidy(out.cv.glmnet) %>% 
+  ggplot(aes(x = log(lambda, 10), y = estimate)) + 
+  geom_point()  
+```
+
+
+
+
+
+On the full dataset, lasso doesn't do you so much good.
+
+### Clustering: pokemon
+
+```{r}
+poke_df = 
+  read_csv("./data/pokemon.csv") %>% 
+  select(HP, Speed)
+
+poke_df %>% 
+  ggplot(aes(x = HP, y = Speed)) + 
+  geom_point()
+
+kmeans_fit =
+  kmeans(x = poke_df, centers = 3)
+
+poke_df =
+  broom::augment(kmeans_fit, poke_df)
+
+poke_df %>% 
+  ggplot(aes(x=HP, y=Speed, color=.cluster)) +
+  geom_point()
+```
+
+```{r}
+clusts =
+  tibble(k = 2:4) %>%
+  mutate(
+    km_fit =    map(k, ~kmeans(poke_df, .x)),
+    augmented = map(km_fit, ~broom::augment(.x, poke_df))
+  )
+
+clusts %>% 
+  select(-km_fit) %>% 
+  unnest(augmented) %>% 
+  ggplot(aes(HP, Speed, color = .cluster)) +
+  geom_point(aes(color = .cluster)) +
+  facet_grid(~k)
+```
+
+### Clustering: trajectories
+
+```{r}
+traj_data = 
+  read_csv("~/Desktop/trajectories.csv")
+
+traj_data %>% 
+  ggplot(aes(x = week, y = value, group = subj)) + 
+  geom_point() + 
+  geom_path()
+```
+
+```{r}
+int_slope_df = 
+  traj_data %>% 
+  nest(data = week:value) %>% 
+  mutate(
+    models = map(data, ~lm(value ~ week, data = .x)),
+    result = map(models, broom::tidy)
+  ) %>% 
+  select(subj, result) %>% 
+  unnest(result) %>% 
+  select(subj, term, estimate) %>% 
+  pivot_wider(
+    names_from = term,
+    values_from = estimate
+  ) %>% 
+  rename(int = "(Intercept)", slope = week)
+
+int_slope_df %>% 
+  ggplot(aes(x = int, y = slope)) + 
+  geom_point()
+
+km_fit = 
+  kmeans(
+    x = int_slope_df %>% select(-subj) %>% scale, 
+    centers = 2)
+
+int_slope_df =
+  broom::augment(km_fit, int_slope_df)
+
+int_slope_df %>% 
+  ggplot(aes(x = int, y = slope, color = .cluster)) +
+  geom_point()
+
+left_join(traj_data, int_slope_df) %>% 
+  ggplot(aes(x = week, y = value, group = subj, color = .cluster)) + 
+  geom_point() + 
+  geom_path() 
+```
+
+
+This is "trajectory analysis" ...
+
+
+
+## Other materials
+
+* ISLR, chapters ... and ... 
+* https://shiny.rstudio.com/gallery/kmeans-example.html
+* https://idc9.github.io/stor390/notes/clustering/clustering.html
+* https://cran.microsoft.com//web/packages/broom/vignettes/kmeans.html
+
+The code that I produced working examples in lecture is [here](https://github.com/P8105/extra_topics).
+
