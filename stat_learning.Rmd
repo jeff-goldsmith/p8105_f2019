@@ -6,9 +6,9 @@ output:
     toc_float: true
 ---
 
-Stat learning stuff ...
+Statistical learning methods -- both supervised and unsupervised -- provide techniques for gaining insights from data. These methods have various goals, including prediction, pattern recognition, and classification; they also vary in complexity and interpretability. This lecture is intended to provide a very broad overview of two methods: lasso and k-means clustering.
 
-This page is related to content in [plotly and dashboards](plotly_and_dashboards.html), and the slack channel for extra topics is [here](https://p8105fall2019.slack.com/messages/CN01H0GHX).
+The slack channel for extra topics is [here](https://p8105fall2019.slack.com/messages/CN01H0GHX).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -43,11 +43,11 @@ set.seed(11)
 
 ### Lasso
 
-Birthweight subset
+To illustrat the lasso, we'll data from a study of factors that affect birthweight. The code chunk below loads and cleans these data, converts to factors where appropriate, and takes a sample of size 200 from the result.
 
 ```{r import}
 bwt_df = 
-  read_csv("data/birthweight.csv") %>% 
+  read_csv("./data/birthweight.csv") %>% 
   janitor::clean_names() %>%
   mutate(
     babysex = as.factor(babysex),
@@ -60,29 +60,33 @@ bwt_df =
     mrace = fct_recode(mrace, "white" = "1", "black" = "2", "asian" = "3", 
                        "puerto rican" = "4")) %>% 
   sample_n(200)
-  
+```
+
+To fit a lasso model, we'll use `glmnet`. This package is widely used and broadly useful, but predates the `tidyverse` by a long time. The interface asks for an outcome vector `y` and a matrix of predictors `X`, which are created next. To create a predictor matrix that includes relevant dummy variables based on factors, we're using `model.matrix` and excluding the intercept
+
+```{r}
 x = model.matrix(bwt ~ ., bwt_df)[,-1]
 y = bwt_df$bwt
 ```
 
-We fit the lasso model for each tuning parameter in a pre-defined grid, and then compare the fits using cross validation.
+We fit the lasso model for each tuning parameter in a pre-defined grid `lambda`, and then compare the fits using cross validation. I chose this grid using the trusty "try things until it looks right" method; `glmnet` will pick something reasonable by default if you prefer that.
 
 ```{r}
 lambda = 10^(seq(3, -2, -0.1))
 
-fit.glmnet =
+lasso_fit =
   glmnet(x, y, lambda = lambda)
 
-out.cv.glmnet =
+lasso_cv =
   cv.glmnet(x, y, lambda = lambda)
 
-lambda_opt = out.cv.glmnet$lambda.min
+lambda_opt = lasso_cv$lambda.min
 ```
 
-The plot below shows coefficient estimates corresponding to a subset of the genes in the dataset -- these are genes that have non-zero coefficients for at least one tuning parameter value in the pre-defined grid. As lambda increases, the coefficient values are shrunk to zero and the model becomes more sparse. The optimal tuning parameter, determined using cross validation, is shown by a vertical blue line.
+The plot below shows coefficient estimates corresponding to a subset of the predictors in the dataset -- these are predictors that have non-zero coefficients for at least one tuning parameter value in the pre-defined grid. As lambda increases, the coefficient values are shrunk to zero and the model becomes more sparse. The optimal tuning parameter, determined using cross validation, is shown by a vertical blue line.
 
 ```{r}
-broom::tidy(fit.glmnet) %>% 
+broom::tidy(lasso_fit) %>% 
   select(term, lambda, estimate) %>% 
   complete(term, lambda, fill = list(estimate = 0) ) %>% 
   filter(term != "(Intercept)") %>% 
@@ -92,41 +96,63 @@ broom::tidy(fit.glmnet) %>%
   theme(legend.position = "none")
 ```
 
-CV curve.
+The next plot shows the CV curve itself. This is relatively shallow -- having nothing at all in your model isn't great, but you can get reasonable predictions from models that have "too many" predictors. 
 
 ```{r}
-broom::tidy(out.cv.glmnet) %>% 
+broom::tidy(lasso_cv) %>% 
   ggplot(aes(x = log(lambda, 10), y = estimate)) + 
   geom_point()  
 ```
 
+The coefficients from the optimal model are shown below.
 
+```{r}
+lasso_fit = 
+  glmnet(x, y, lambda = lambda_opt)
 
+lasso_fit %>% broom::tidy()
+```
 
+To be clear, these don't come with p-values and it's really challenging to do inference. These are also different from a usual OLS fit for a multiple linear regression model that uses the same predictors: the lasso penalty affects these even if they're retained by the model. 
 
-On the full dataset, lasso doesn't do you so much good.
+A final point is that on the full dataset, lasso doesn't do you much good. With ~4000 datapoints, the relatively few coefficients are estimated well enough that penalization doesn't make much of a difference in this example. 
 
 ### Clustering: pokemon
+
+For ther first clustering example, we'll use a dataset containing information about pokemon. The full dataset contains several variables (including some that aren't numeric, which is a challenge for clustering we won't address). To make results easy to visualize, we look only at `hp` and `speed`; a scatterplot is below.
 
 ```{r}
 poke_df = 
   read_csv("./data/pokemon.csv") %>% 
-  select(HP, Speed)
+  janitor::clean_names() %>% 
+  select(hp, speed)
 
 poke_df %>% 
-  ggplot(aes(x = HP, y = Speed)) + 
+  ggplot(aes(x = hp, y = speed)) + 
   geom_point()
+```
 
+K-means clustering is established enough that it's implemented in the base R `stats` package in the `kmeans` function. This also has a bit of an outdated interface, but there you go. The code chunk below fits the k-means algorithm with three clusters to the data shown above.
+
+```{r}
 kmeans_fit =
   kmeans(x = poke_df, centers = 3)
+```
 
+More recent tools allow interactions with the `kmeans` output. In particular, we'll use `broom::augment` to add cluster assignments to the data, and plot the results. 
+
+```{r}
 poke_df =
   broom::augment(kmeans_fit, poke_df)
 
 poke_df %>% 
-  ggplot(aes(x=HP, y=Speed, color=.cluster)) +
+  ggplot(aes(x = hp, y = speed, color = .cluster)) +
   geom_point()
 ```
+
+Clusters broadly interpretable, but this still doesn't come with inference. Also, at boundaries between clusters, the distinctions can seem a bit ... arbitrary. 
+
+The code chunk below maps across a few choices for the number of clusters, and then plots the results.
 
 ```{r}
 clusts =
@@ -139,22 +165,34 @@ clusts =
 clusts %>% 
   select(-km_fit) %>% 
   unnest(augmented) %>% 
-  ggplot(aes(HP, Speed, color = .cluster)) +
+  ggplot(aes(hp, speed, color = .cluster)) +
   geom_point(aes(color = .cluster)) +
   facet_grid(~k)
 ```
 
+There are metrics that can suggest which of these is the better choice, but we won't get into that. 
+
 ### Clustering: trajectories
+
+A second clustering example uses longitudinally observed data. The process we'll focus on is: 
+
+* for each subject, estimate a simple linear regression
+* extract the intercept and slope
+* cluster using the intercept and slope
+
+Below we import and plot the trajectory data.
 
 ```{r}
 traj_data = 
-  read_csv("~/Desktop/trajectories.csv")
+  read_csv("./data/trajectories.csv")
 
 traj_data %>% 
   ggplot(aes(x = week, y = value, group = subj)) + 
   geom_point() + 
   geom_path()
 ```
+
+Next we'll do some data manipulation. These steps compute the SLRs, extract estimates, and format the data for k-means clustering.
 
 ```{r}
 int_slope_df = 
@@ -172,7 +210,11 @@ int_slope_df =
     values_from = estimate
   ) %>% 
   rename(int = "(Intercept)", slope = week)
+```
 
+A plot of the intercepts and slopes are below. There does seem to be some structure, and we'll use k-means clustering to try to make that concrete.
+
+```{r}
 int_slope_df %>% 
   ggplot(aes(x = int, y = slope)) + 
   geom_point()
@@ -184,21 +226,26 @@ km_fit =
 
 int_slope_df =
   broom::augment(km_fit, int_slope_df)
+```
 
+The plot below shows the results of k-means based on the intercepts and slopes. This is ... not bad, but honestly maybe not what I'd hoped for. 
+
+```{r}
 int_slope_df %>% 
   ggplot(aes(x = int, y = slope, color = .cluster)) +
   geom_point()
+```
 
+Finally, we'll add the cluster assignments to the original trajectory data and plot based on this. Again, the cluster assignments are okay but maybe not great. 
+
+```{r}
 left_join(traj_data, int_slope_df) %>% 
   ggplot(aes(x = week, y = value, group = subj, color = .cluster)) + 
   geom_point() + 
   geom_path() 
 ```
 
-
-This is "trajectory analysis" ...
-
-
+This example is very much related to "trajectory analysis", which has become pretty popular recently (maybe because `PROC TRAJ` exists in SAS ...). The basic idea is to use tools from longitudinal data analysis to estimate trajectories underlying data -- mixed models rather than SLRs. The subject-level estimates (random effects) are then clustered; cluster means are hopefully interpretable, and cluster assignments are thought to be meaningful. In many cases, though, the distinction between groups is fairly arbitrary.
 
 ## Other materials
 

@@ -456,14 +456,14 @@ div.tocify {
 </div>
 
 
-<p>Stat learning stuff …</p>
-<p>This page is related to content in <a href="plotly_and_dashboards.html">plotly and dashboards</a>, and the slack channel for extra topics is <a href="https://p8105fall2019.slack.com/messages/CN01H0GHX">here</a>.</p>
-<pre><code>## ── Attaching packages ─────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<p>Statistical learning methods – both supervised and unsupervised – provide techniques for gaining insights from data. These methods have various goals, including prediction, pattern recognition, and classification; they also vary in complexity and interpretability. This lecture is intended to provide a very broad overview of two methods: lasso and k-means clustering.</p>
+<p>The slack channel for extra topics is <a href="https://p8105fall2019.slack.com/messages/CN01H0GHX">here</a>.</p>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.2.0     ✔ purrr   0.3.3
 ## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
 ## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
@@ -490,9 +490,9 @@ library(glmnet)
 set.seed(11)</code></pre>
 <div id="lasso" class="section level3">
 <h3>Lasso</h3>
-<p>Birthweight subset</p>
+<p>To illustrat the lasso, we’ll data from a study of factors that affect birthweight. The code chunk below loads and cleans these data, converts to factors where appropriate, and takes a sample of size 200 from the result.</p>
 <pre class="r"><code>bwt_df = 
-  read_csv(&quot;data/birthweight.csv&quot;) %&gt;% 
+  read_csv(&quot;./data/birthweight.csv&quot;) %&gt;% 
   janitor::clean_names() %&gt;%
   mutate(
     babysex = as.factor(babysex),
@@ -509,22 +509,22 @@ set.seed(11)</code></pre>
 ## cols(
 ##   .default = col_double()
 ## )
-## See spec(...) for full column specifications.
-  
-x = model.matrix(bwt ~ ., bwt_df)[,-1]
+## See spec(...) for full column specifications.</code></pre>
+<p>To fit a lasso model, we’ll use <code>glmnet</code>. This package is widely used and broadly useful, but predates the <code>tidyverse</code> by a long time. The interface asks for an outcome vector <code>y</code> and a matrix of predictors <code>X</code>, which are created next. To create a predictor matrix that includes relevant dummy variables based on factors, we’re using <code>model.matrix</code> and excluding the intercept</p>
+<pre class="r"><code>x = model.matrix(bwt ~ ., bwt_df)[,-1]
 y = bwt_df$bwt</code></pre>
-<p>We fit the lasso model for each tuning parameter in a pre-defined grid, and then compare the fits using cross validation.</p>
+<p>We fit the lasso model for each tuning parameter in a pre-defined grid <code>lambda</code>, and then compare the fits using cross validation. I chose this grid using the trusty “try things until it looks right” method; <code>glmnet</code> will pick something reasonable by default if you prefer that.</p>
 <pre class="r"><code>lambda = 10^(seq(3, -2, -0.1))
 
-fit.glmnet =
+lasso_fit =
   glmnet(x, y, lambda = lambda)
 
-out.cv.glmnet =
+lasso_cv =
   cv.glmnet(x, y, lambda = lambda)
 
-lambda_opt = out.cv.glmnet$lambda.min</code></pre>
-<p>The plot below shows coefficient estimates corresponding to a subset of the genes in the dataset – these are genes that have non-zero coefficients for at least one tuning parameter value in the pre-defined grid. As lambda increases, the coefficient values are shrunk to zero and the model becomes more sparse. The optimal tuning parameter, determined using cross validation, is shown by a vertical blue line.</p>
-<pre class="r"><code>broom::tidy(fit.glmnet) %&gt;% 
+lambda_opt = lasso_cv$lambda.min</code></pre>
+<p>The plot below shows coefficient estimates corresponding to a subset of the predictors in the dataset – these are predictors that have non-zero coefficients for at least one tuning parameter value in the pre-defined grid. As lambda increases, the coefficient values are shrunk to zero and the model becomes more sparse. The optimal tuning parameter, determined using cross validation, is shown by a vertical blue line.</p>
+<pre class="r"><code>broom::tidy(lasso_fit) %&gt;% 
   select(term, lambda, estimate) %&gt;% 
   complete(term, lambda, fill = list(estimate = 0) ) %&gt;% 
   filter(term != &quot;(Intercept)&quot;) %&gt;% 
@@ -532,19 +532,42 @@ lambda_opt = out.cv.glmnet$lambda.min</code></pre>
   geom_path() + 
   geom_vline(xintercept = log(lambda_opt, 10), color = &quot;blue&quot;, size = 1.2) +
   theme(legend.position = &quot;none&quot;)</code></pre>
-<p><img src="stat_learning_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
-<p>CV curve.</p>
-<pre class="r"><code>broom::tidy(out.cv.glmnet) %&gt;% 
+<p><img src="stat_learning_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
+<p>The next plot shows the CV curve itself. This is relatively shallow – having nothing at all in your model isn’t great, but you can get reasonable predictions from models that have “too many” predictors.</p>
+<pre class="r"><code>broom::tidy(lasso_cv) %&gt;% 
   ggplot(aes(x = log(lambda, 10), y = estimate)) + 
   geom_point()  </code></pre>
-<p><img src="stat_learning_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
-<p>On the full dataset, lasso doesn’t do you so much good.</p>
+<p><img src="stat_learning_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+<p>The coefficients from the optimal model are shown below.</p>
+<pre class="r"><code>lasso_fit = 
+  glmnet(x, y, lambda = lambda_opt)
+
+lasso_fit %&gt;% broom::tidy()
+## # A tibble: 12 x 5
+##    term               step  estimate lambda dev.ratio
+##    &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;
+##  1 (Intercept)           1 -3659.      12.6     0.627
+##  2 babysexfemale         1    46.2     12.6     0.627
+##  3 bhead                 1    77.9     12.6     0.627
+##  4 blength               1    71.8     12.6     0.627
+##  5 fincome               1     0.252   12.6     0.627
+##  6 gaweeks               1    23.1     12.6     0.627
+##  7 malformTRUE           1   447.      12.6     0.627
+##  8 menarche              1   -29.4     12.6     0.627
+##  9 mraceblack            1  -105.      12.6     0.627
+## 10 mracepuerto rican     1  -145.      12.6     0.627
+## 11 smoken                1    -2.62    12.6     0.627
+## 12 wtgain                1     2.32    12.6     0.627</code></pre>
+<p>To be clear, these don’t come with p-values and it’s really challenging to do inference. These are also different from a usual OLS fit for a multiple linear regression model that uses the same predictors: the lasso penalty affects these even if they’re retained by the model.</p>
+<p>A final point is that on the full dataset, lasso doesn’t do you much good. With ~4000 datapoints, the relatively few coefficients are estimated well enough that penalization doesn’t make much of a difference in this example.</p>
 </div>
 <div id="clustering-pokemon" class="section level3">
 <h3>Clustering: pokemon</h3>
+<p>For ther first clustering example, we’ll use a dataset containing information about pokemon. The full dataset contains several variables (including some that aren’t numeric, which is a challenge for clustering we won’t address). To make results easy to visualize, we look only at <code>hp</code> and <code>speed</code>; a scatterplot is below.</p>
 <pre class="r"><code>poke_df = 
   read_csv(&quot;./data/pokemon.csv&quot;) %&gt;% 
-  select(HP, Speed)
+  janitor::clean_names() %&gt;% 
+  select(hp, speed)
 ## Parsed with column specification:
 ## cols(
 ##   `#` = col_double(),
@@ -563,20 +586,22 @@ lambda_opt = out.cv.glmnet$lambda.min</code></pre>
 ## )
 
 poke_df %&gt;% 
-  ggplot(aes(x = HP, y = Speed)) + 
+  ggplot(aes(x = hp, y = speed)) + 
   geom_point()</code></pre>
-<p><img src="stat_learning_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
-<pre class="r"><code>
-kmeans_fit =
-  kmeans(x = poke_df, centers = 3)
-
-poke_df =
+<p><img src="stat_learning_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+<p>K-means clustering is established enough that it’s implemented in the base R <code>stats</code> package in the <code>kmeans</code> function. This also has a bit of an outdated interface, but there you go. The code chunk below fits the k-means algorithm with three clusters to the data shown above.</p>
+<pre class="r"><code>kmeans_fit =
+  kmeans(x = poke_df, centers = 3)</code></pre>
+<p>More recent tools allow interactions with the <code>kmeans</code> output. In particular, we’ll use <code>broom::augment</code> to add cluster assignments to the data, and plot the results.</p>
+<pre class="r"><code>poke_df =
   broom::augment(kmeans_fit, poke_df)
 
 poke_df %&gt;% 
-  ggplot(aes(x=HP, y=Speed, color=.cluster)) +
+  ggplot(aes(x = hp, y = speed, color = .cluster)) +
   geom_point()</code></pre>
-<p><img src="stat_learning_files/figure-html/unnamed-chunk-6-2.png" width="90%" /></p>
+<p><img src="stat_learning_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
+<p>Clusters broadly interpretable, but this still doesn’t come with inference. Also, at boundaries between clusters, the distinctions can seem a bit … arbitrary.</p>
+<p>The code chunk below maps across a few choices for the number of clusters, and then plots the results.</p>
 <pre class="r"><code>clusts =
   tibble(k = 2:4) %&gt;%
   mutate(
@@ -587,15 +612,23 @@ poke_df %&gt;%
 clusts %&gt;% 
   select(-km_fit) %&gt;% 
   unnest(augmented) %&gt;% 
-  ggplot(aes(HP, Speed, color = .cluster)) +
+  ggplot(aes(hp, speed, color = .cluster)) +
   geom_point(aes(color = .cluster)) +
   facet_grid(~k)</code></pre>
-<p><img src="stat_learning_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
+<p><img src="stat_learning_files/figure-html/unnamed-chunk-11-1.png" width="90%" /></p>
+<p>There are metrics that can suggest which of these is the better choice, but we won’t get into that.</p>
 </div>
 <div id="clustering-trajectories" class="section level3">
 <h3>Clustering: trajectories</h3>
+<p>A second clustering example uses longitudinally observed data. The process we’ll focus on is:</p>
+<ul>
+<li>for each subject, estimate a simple linear regression</li>
+<li>extract the intercept and slope</li>
+<li>cluster using the intercept and slope</li>
+</ul>
+<p>Below we import and plot the trajectory data.</p>
 <pre class="r"><code>traj_data = 
-  read_csv(&quot;~/Desktop/trajectories.csv&quot;)
+  read_csv(&quot;./data/trajectories.csv&quot;)
 ## Parsed with column specification:
 ## cols(
 ##   subj = col_double(),
@@ -607,7 +640,8 @@ traj_data %&gt;%
   ggplot(aes(x = week, y = value, group = subj)) + 
   geom_point() + 
   geom_path()</code></pre>
-<p><img src="stat_learning_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+<p><img src="stat_learning_files/figure-html/unnamed-chunk-12-1.png" width="90%" /></p>
+<p>Next we’ll do some data manipulation. These steps compute the SLRs, extract estimates, and format the data for k-means clustering.</p>
 <pre class="r"><code>int_slope_df = 
   traj_data %&gt;% 
   nest(data = week:value) %&gt;% 
@@ -622,12 +656,12 @@ traj_data %&gt;%
     names_from = term,
     values_from = estimate
   ) %&gt;% 
-  rename(int = &quot;(Intercept)&quot;, slope = week)
-
-int_slope_df %&gt;% 
+  rename(int = &quot;(Intercept)&quot;, slope = week)</code></pre>
+<p>A plot of the intercepts and slopes are below. There does seem to be some structure, and we’ll use k-means clustering to try to make that concrete.</p>
+<pre class="r"><code>int_slope_df %&gt;% 
   ggplot(aes(x = int, y = slope)) + 
   geom_point()</code></pre>
-<p><img src="stat_learning_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
+<p><img src="stat_learning_files/figure-html/unnamed-chunk-14-1.png" width="90%" /></p>
 <pre class="r"><code>
 km_fit = 
   kmeans(
@@ -635,20 +669,20 @@ km_fit =
     centers = 2)
 
 int_slope_df =
-  broom::augment(km_fit, int_slope_df)
-
-int_slope_df %&gt;% 
+  broom::augment(km_fit, int_slope_df)</code></pre>
+<p>The plot below shows the results of k-means based on the intercepts and slopes. This is … not bad, but honestly maybe not what I’d hoped for.</p>
+<pre class="r"><code>int_slope_df %&gt;% 
   ggplot(aes(x = int, y = slope, color = .cluster)) +
   geom_point()</code></pre>
-<p><img src="stat_learning_files/figure-html/unnamed-chunk-9-2.png" width="90%" /></p>
-<pre class="r"><code>
-left_join(traj_data, int_slope_df) %&gt;% 
+<p><img src="stat_learning_files/figure-html/unnamed-chunk-15-1.png" width="90%" /></p>
+<p>Finally, we’ll add the cluster assignments to the original trajectory data and plot based on this. Again, the cluster assignments are okay but maybe not great.</p>
+<pre class="r"><code>left_join(traj_data, int_slope_df) %&gt;% 
   ggplot(aes(x = week, y = value, group = subj, color = .cluster)) + 
   geom_point() + 
   geom_path() 
 ## Joining, by = &quot;subj&quot;</code></pre>
-<p><img src="stat_learning_files/figure-html/unnamed-chunk-9-3.png" width="90%" /></p>
-<p>This is “trajectory analysis” …</p>
+<p><img src="stat_learning_files/figure-html/unnamed-chunk-16-1.png" width="90%" /></p>
+<p>This example is very much related to “trajectory analysis”, which has become pretty popular recently (maybe because <code>PROC TRAJ</code> exists in SAS …). The basic idea is to use tools from longitudinal data analysis to estimate trajectories underlying data – mixed models rather than SLRs. The subject-level estimates (random effects) are then clustered; cluster means are hopefully interpretable, and cluster assignments are thought to be meaningful. In many cases, though, the distinction between groups is fairly arbitrary.</p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
