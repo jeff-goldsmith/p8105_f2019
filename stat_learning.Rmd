@@ -249,10 +249,10 @@ This example is very much related to "trajectory analysis", which has become pre
 
 ## Other materials
 
-* ISLR, chapters ... and ... 
-* https://shiny.rstudio.com/gallery/kmeans-example.html
-* https://idc9.github.io/stor390/notes/clustering/clustering.html
-* https://cran.microsoft.com//web/packages/broom/vignettes/kmeans.html
+* Intro to Statistical Learning with R, chapters 6 and 10
+* Nice [shiny app](https://shiny.rstudio.com/gallery/kmeans-example.html) for k-means
+* Good [overview](https://idc9.github.io/stor390/notes/clustering/clustering.html) of clustering
+* Some discussion about [tidying](https://cran.microsoft.com//web/packages/broom/vignettes/kmeans.html) results
 
 The code that I produced working examples in lecture is [here](https://github.com/P8105/extra_topics).
 
